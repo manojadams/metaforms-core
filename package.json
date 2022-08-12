@@ -1,7 +1,7 @@
 {
   "name": "metaform-core",
   "version": "1.0.0",
-  "description": "Ract Library for rendering dynamic forms from json schema",
+  "description": "React Library for rendering dynamic forms from json schema",
   "author": "manojgetwealthy",
   "license": "MIT",
   "repository": "manojgetwealthy/metaform-core",
@@ -25,6 +25,10 @@
   },
   "peerDependencies": {
     "react": "^16.0.0"
+  },
+  "dependencies": {
+    "bootstrap": "4.0.0",
+    "eventemitter3": "^4.0.7"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
