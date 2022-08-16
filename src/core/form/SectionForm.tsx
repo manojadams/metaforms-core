@@ -26,7 +26,9 @@ const SectionForm = (props: IProps) => {
     }, [formRef]);
     return (
         <form ref={formRef} className={`needs-validation ${props.validated ? 'was-validated' : ''}`} noValidate>
-            <SectionLayout fields={props.schema.fields} form={props.form} />
+            <SectionLayout fields={props.schema.fields} 
+                form={props.form}
+            />
             <Submit theme={props.theme.type}
                 form={props.form}
                 buttons={props.buttons}

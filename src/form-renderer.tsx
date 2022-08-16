@@ -8,16 +8,20 @@ import FormUtils from './utils/FormUtil';
 import EventEmitter from "eventemitter3";
 import SchemaErrorBoundary from "./schema-error";
 import Theme from "./constants/Theme";
+import FormImpls from "./constants/FormImpls";
+import FormImplsContext from "./core/form-impls.context";
 
 export default class FormRenderer extends React.Component<IFormRenderer> {
     schema: ISchema;
     state: IState;
     metaform: MetaForm;
+    formImpls: FormImpls;
     constructor(props: IFormRenderer) {
         super(props);
         this.schema = props.schema;
         try {
             this.metaform = new MetaForm(this.props.schema, new EventEmitter());
+            this.formImpls = new FormImpls();
             if (props.icons) {
                 this.metaform.setIcons(props.icons);
             }
@@ -36,6 +40,15 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
             }
             if (props.onError) {
                 this.metaform.setErrorHandler(props.onError);
+            }
+            if (props.baseFormControl) {
+                this.formImpls.setFormControl(props.baseFormControl);
+            }
+            if (props.baseFormGroup) {
+                this.formImpls.setFormGroup(props.baseFormGroup);
+            }
+            if (props.baseFormStepper) {
+                this.formImpls.setFormStepper(props.baseFormStepper);
             }
         } catch (e) {
             this.metaform = new MetaForm({
@@ -68,37 +81,39 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
         return (
             <SchemaErrorBoundary error={this.state.error}>
                 <FormContext.Provider value={this.metaform}>
-                    <div className={rootClassname}>
-                        <Form 
-                            schema={this.props.schema} 
-                            validated={this.state.validated} 
-                            validate={this.validate.bind(this)}
-                            form={this.metaform.form}    
-                            theme={this.metaform.theme}
-                            onPrevious={(...params: any) => {
-                                if (this.props.onPrevious) {
-                                    this.props.onPrevious(FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter||{}), params);
+                    <FormImplsContext.Provider value={this.formImpls}>
+                        <div className={rootClassname}>
+                            <Form 
+                                schema={this.props.schema} 
+                                validated={this.state.validated} 
+                                validate={this.validate.bind(this)}
+                                form={this.metaform.form}    
+                                theme={this.metaform.theme}
+                                onPrevious={(...params: any) => {
+                                    if (this.props.onPrevious) {
+                                        this.props.onPrevious(FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter||{}), params);
+                                    }
+                                }}
+                                onNext={(...params: any) => {
+                                    if (this.props.onNext) {
+                                        this.props.onNext(FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter||{}), params);
+                                    }
+                                }}
+                                onSubmit={(...params: any) => {
+                                    if (this.props.onSubmit) {
+                                        this.props.onSubmit(FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter||{}), params)}
+                                    }
                                 }
-                            }}
-                            onNext={(...params: any) => {
-                                if (this.props.onNext) {
-                                    this.props.onNext(FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter||{}), params);
-                                }
-                            }}
-                            onSubmit={(...params: any) => {
-                                if (this.props.onSubmit) {
-                                    this.props.onSubmit(FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter||{}), params)}
-                                }
-                            }
-                            emit={(eventType: string, payload: any) => {
-                                this.metaform.emit(eventType, payload);
-                            }}
-                            buttons={this.props.buttons}
-                            formValidated={(validated) => {
-                                this.setState({validated});
-                            }}
-                        />
-                    </div>
+                                emit={(eventType: string, payload: any) => {
+                                    this.metaform.emit(eventType, payload);
+                                }}
+                                buttons={this.props.buttons}
+                                formValidated={(validated) => {
+                                    this.setState({validated});
+                                }}
+                            />
+                        </div>
+                    </FormImplsContext.Provider>
                 </FormContext.Provider>
             </SchemaErrorBoundary>
             )

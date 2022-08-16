@@ -5,9 +5,9 @@ import { IField } from '../../constants/model-interfaces';
 import BaseFormGroup from './base-form-group';
 
 function FormGroup(props: {fields: Array<IField>}) {
-    const {theme, page} = useContext(FormContext);
+    const {IBaseFormGroup} = useContext(FormContext);
     return (
-        <BaseFormGroup {...props} />
+        <IBaseFormGroup {...props} />
     )
 }
 

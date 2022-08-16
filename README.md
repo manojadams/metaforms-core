@@ -1,28 +1,39 @@
 # metaform-core
-
-> Ract Library for rendering dynamic forms from json schema
-
-[![NPM](https://img.shields.io/npm/v/metaform-core.svg)](https://www.npmjs.com/package/metaform-core) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+This is a simple react library core for rendering json forms.
 
 ## Install
 
 ```bash
-npm install --save metaform-core
+npm install --save @manojadams/metaform-core
 ```
 
-## Usage
-
+## Basic usage
 ```tsx
-import React, { Component } from 'react'
+import CoreFormRenderer, { IFormRenderer } from "@manojadams/metaforms-core";
+import React from "react";
+import FormControl from "./forms/FormControl";
+import FormGroup from "./forms/FormGroup";
+import { FormStepper } from "./forms/FormStepper";
 
-import MyComponent from 'metaform-core'
-import 'metaform-core/dist/index.css'
+class FormRenderer extends React.Component<IFormRenderer> {
 
-class Example extends Component {
+  constructor(props: IFormRenderer) {
+    super(props);
+  }
+
   render() {
-    return <MyComponent />
+    return (
+      <CoreFormRenderer 
+        {...this.props} 
+        baseFormControl={FormControl}
+        baseFormGroup={FormGroup}
+        baseFormStepper={FormStepper}
+      />
+    )
   }
 }
+
+export default FormRenderer;
 ```
 
 ## License

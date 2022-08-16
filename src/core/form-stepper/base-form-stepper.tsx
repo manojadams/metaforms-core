@@ -4,7 +4,7 @@ import BaseFormWizard from "../form-wizard/base-form-wizard";
 import { IField } from '../../constants/model-interfaces';
 import { IEventPayload } from '../../constants/common-interface';
 
-export abstract class BaseFormStepper extends BaseFormWizard {
+export default abstract class BaseFormStepper extends BaseFormWizard {
     componentDidMount() {
         this.setState({activeIndex: this.context?.page?.pageNumber ? this.context.page.pageNumber - 1 : 1});
         this.context.listener('switch',(payload: {payload:string,callback?: Function}) => {

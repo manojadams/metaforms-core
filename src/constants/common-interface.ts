@@ -1,3 +1,6 @@
+import BaseFormControl from "../core/form-controls/base-form-control";
+import BaseFormGroup from "../core/form-group/base-form-group";
+import BaseFormStepper from "../core/form-stepper/base-form-stepper";
 import { IField, IFormatterType, IMeta, IMUITheme, IOption, ITheme, IUISchema, IValidation, TParam } from "./model-interfaces";
 
 export interface IBasicFormControl {
@@ -14,6 +17,9 @@ export interface IRenderField extends IField {
 }
 
 export interface IFormRenderer extends IUISchema {
+    baseFormControl?: Function;
+    baseFormGroup?: Function;
+    baseFormStepper?: Function
     onError?: Function;
     onPrevious?: Function;
     onNext?: Function;

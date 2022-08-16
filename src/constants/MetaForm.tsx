@@ -1,5 +1,11 @@
 import EventEmitter from "eventemitter3";
 import { FORM_CONSTANTS, MSGS, Page, Rest } from ".";
+import BaseFormControl from "../core/form-controls/base-form-control";
+import DummyFormControl from "../core/form-controls/DummyFormControl";
+import BaseFormGroup from "../core/form-group/base-form-group";
+import DummyFormGroup from "../core/form-group/DummyFormGroup";
+import BaseFormStepper from "../core/form-stepper/base-form-stepper";
+import DummyFormStepper from "../core/form-stepper/DummyFormStepper";
 import FormUtils from "../utils/FormUtil";
 import MetaformUtil from "../utils/MetaformUtil";
 import ValidationUtil from "../utils/ValidationUtil";
@@ -15,7 +21,7 @@ export default class MetaForm implements IMetaForm {
     icons: IElementTypes | undefined;
     fns: IFnTypes | undefined;
     errorHandler: Function | undefined;
-    componentMapper: Map<string, JSX.Element>;
+
     constructor(private schema: ISchema, private eventEmitter: EventEmitter) {
         this.form = {};
         this.rest = new Rest(schema.rest);

@@ -38,7 +38,7 @@ export default function (props: IProps) {
     }
     if (hasSection && sectionLayout !== 'default') {
         return (<SectionForm {...props} 
-            formButtons={formButtons} 
+            formButtons={formButtons}
             hasSection={hasSection}
             handleSubmit={handleSubmit} 
             handleNext={handleNext}

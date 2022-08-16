@@ -1,18 +1,19 @@
 import React, { Fragment, useContext } from "react";
 import { IField } from "../constants/model-interfaces";
 import FormContext from "./form-context";
-import FormFieldRenderer from "./form-field-renderer";
 import FormGroup from "./form-group";
-import { BaseFormStepper } from "./form-stepper/base-form-stepper";
+import FormImplsContext from "./form-impls.context";
 import BSFormWizard from "./form-wizard/bs-form-wizard";
 
 
 function SectionLayout(props: IProps) {
     const {theme:{type, sectionLayout}} = useContext(FormContext);
+    const {IBaseFormStepper, IBaseFormGroup} = useContext(FormImplsContext);
+
     switch(sectionLayout) {
         case 'tabs':
             return (
-                <FormGroup fields={props.fields} />
+                <IBaseFormGroup fields={props.fields} />
             )
         case 'wizard':
             return (
@@ -20,7 +21,7 @@ function SectionLayout(props: IProps) {
             )
         case 'stepper':
             return (
-                <BaseFormStepper fields={props.fields} theme={type} />
+                <IBaseFormStepper fields={props.fields} theme={type} />
             )
         default:
             // const fn = () => false;
@@ -37,6 +38,7 @@ function SectionLayout(props: IProps) {
 interface IProps {
     fields: Array<IField>;
     form: any;
+
 }
 
 export default SectionLayout;
