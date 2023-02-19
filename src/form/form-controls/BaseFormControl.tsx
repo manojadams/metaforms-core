@@ -1,10 +1,12 @@
-import React, { Fragment } from "react";
+import React, { Fragment, ReactNode } from "react";
 import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IMeta, IOption } from "../../constants/model-interfaces";
 import { IError, IRenderField } from "../../constants/common-interface";
 import { MSGS } from "../../constants/constants";
+import { TValue } from "../../constants/types";
+import { CONTROLS } from "../../constants/controls";
 
 export default abstract class BaseFormControl extends React.Component {
     static contextType = FormContext;
@@ -80,7 +82,7 @@ export default abstract class BaseFormControl extends React.Component {
         }
     }
 
-    componentDidUpdate(props: any) {
+    componentDidUpdate(props: IRenderField) {
         // no validation for non-displayed fields
         if (props && props?.form?.display) {
             const isDisabled = props.form?.isDisabled;
@@ -132,50 +134,50 @@ export default abstract class BaseFormControl extends React.Component {
 
     control() {
         switch (this.displayType) {
-            case "header":
+            case CONTROLS.HEADER:
                 return this.header();
-            case "paragraph":
+            case CONTROLS.PARAGRAPH:
                 return this.paragraph();
-            case "label":
+            case CONTROLS.LABEL:
                 return this.label();
-            case "month":
+            case CONTROLS.MONTH:
                 return this.month();
-            case "date":
+            case CONTROLS.DATE:
                 return this.date();
-            case "select":
+            case CONTROLS.SELECT:
                 return this.select();
-            case "radio":
+            case CONTROLS.RADIO:
                 return this.radio();
-            case "radio-button":
+            case CONTROLS.RADIO_BUTTON:
                 return this.radioButton();
-            case "checkbox":
+            case CONTROLS.CHECKBOX:
                 return this.checkbox();
-            case "email":
+            case CONTROLS.EMAIL:
                 return this.email();
-            case "number":
+            case CONTROLS.NUMBER:
                 return this.number();
-            case "phone":
+            case CONTROLS.PHONE:
                 return this.phone();
-            case "password":
+            case CONTROLS.PASSWORD:
                 return this.password();
-            case "search":
+            case CONTROLS.SEARCH:
                 return this.search();
-            case "hint":
+            case CONTROLS.HINT:
                 return this.hint();
-            case "modalsearch":
+            case CONTROLS.MODALSEARCH:
                 return this.modalsearch();
-            case "file":
+            case CONTROLS.FILE:
                 return this.file();
-            case "multitext":
+            case CONTROLS.MULTITEXT:
                 return this.multitext();
-            case "text":
-            case "text_field":
+            case CONTROLS.TEXT:
+            case CONTROLS.TEXT_FIELD:
                 return this.text();
-            case "template":
+            case CONTROLS.TEMPATE:
                 return this.templateControl();
-            case "text_custom":
+            case CONTROLS.TEXT_CUSTOM:
                 return this.customTextControl();
-            case "currency":
+            case CONTROLS.CURRENCY:
                 return this.currency();
             default:
                 // use custom control
@@ -241,7 +243,7 @@ export default abstract class BaseFormControl extends React.Component {
         throw Error("Not Implemented");
     }
 
-    handleChange(e: any, val?: any, ref?: any) {
+    handleChange(e: any, val?: TValue, ref?: any) {
         try {
             const value = val !== undefined ? val : e.target.value;
             this.context.setField(this.section, this.field.name, value);
@@ -257,7 +259,7 @@ export default abstract class BaseFormControl extends React.Component {
         }
     }
 
-    handleOpen(e: any) {
+    handleOpen() {
         const field = this.context.getField(this.section, this.field.name);
         const eventItem = field?.events?.open || field.config;
         switch (eventItem.type) {
@@ -290,7 +292,7 @@ export default abstract class BaseFormControl extends React.Component {
         }
     }
 
-    handleDependencies(value: any) {
+    handleDependencies(value: TValue) {
         this.props.sync();
         this.context.handleDependencies(this.section, this.field.name, value, true).then(() => {
             this.props.sync();
@@ -313,7 +315,7 @@ export default abstract class BaseFormControl extends React.Component {
         this.validate(value);
     }
 
-    validate(value: string | number | boolean | undefined) {
+    validate(value: TValue) {
         const meta = this.props.form;
         if (meta.validation?.required) {
             const isEmpty = ValidationUtil.isEmptyField(value);
@@ -354,7 +356,7 @@ export default abstract class BaseFormControl extends React.Component {
     }
 }
 
-function Display(props: any) {
+function Display(props: { form: IMeta; children: ReactNode }) {
     return <Fragment>{props?.form?.display && props.children}</Fragment>;
 }
 

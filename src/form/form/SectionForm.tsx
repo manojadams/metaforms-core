@@ -1,8 +1,23 @@
 import React, { useEffect, useRef } from "react";
-import { IElementTypes } from "../../constants/common-interface";
+import { IElementTypes, IForm } from "../../constants/common-interface";
 import { IField, ISchema, ITheme } from "../../constants/model-interfaces";
 import Submit from "../form-controls/Submit";
 import SectionLayout from "../SectionLayout";
+
+interface IProps {
+    schema: ISchema;
+    validated: boolean;
+    form: IForm;
+    formButtons: Array<IField>;
+    buttons?: IElementTypes;
+    theme: ITheme;
+    hasSection: boolean;
+    handleCustom: (e: React.MouseEvent, field: IField) => void;
+    handleSubmit: (e: React.MouseEvent, field: IField) => void;
+    handleReset: (e: React.MouseEvent, field: IField) => void;
+    handleNext: (e: React.MouseEvent, field: IField, callback: any) => void;
+    handlePrevious: () => void;
+}
 
 const SectionForm = (props: IProps) => {
     const formRef = useRef<HTMLFormElement>(null);
@@ -48,20 +63,5 @@ const SectionForm = (props: IProps) => {
         </form>
     );
 };
-
-interface IProps {
-    schema: ISchema;
-    validated: boolean;
-    form: any;
-    formButtons: Array<IField>;
-    buttons?: IElementTypes;
-    theme: ITheme;
-    hasSection: boolean;
-    handleCustom: (e: React.MouseEvent, field: IField) => void;
-    handleSubmit: (e: React.MouseEvent, field: IField) => void;
-    handleReset: (e: React.MouseEvent, field: IField) => void;
-    handleNext: (e: React.MouseEvent, field: IField, callback: any) => void;
-    handlePrevious: () => void;
-}
 
 export default SectionForm;

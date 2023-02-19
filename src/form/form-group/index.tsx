@@ -1,9 +1,9 @@
-import React, { Fragment, useContext } from "react";
-import FormContext from "../form-context";
+import React, { useContext } from "react";
+import FormImplsContext from "../form-impl-context";
 import { IField } from "../../constants/model-interfaces";
 
 function FormGroup(props: { fields: Array<IField> }) {
-    const { IBaseFormGroup } = useContext(FormContext);
+    const { IBaseFormGroup } = useContext(FormImplsContext);
     return <IBaseFormGroup {...props} />;
 }
 

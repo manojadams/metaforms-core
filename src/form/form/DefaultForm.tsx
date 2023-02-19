@@ -1,8 +1,23 @@
 import React, { useState } from "react";
-import { IElementTypes } from "../../constants/common-interface";
+import { IElementTypes, IForm } from "../../constants/common-interface";
 import { IField, ISchema, ITheme } from "../../constants/model-interfaces";
 import Submit from "../form-controls/Submit";
 import FormFieldRenderer from "../form-field-renderer";
+
+interface IProps {
+    schema: ISchema;
+    validated: boolean;
+    form: IForm;
+    formButtons: Array<IField>;
+    buttons?: IElementTypes;
+    theme: ITheme;
+    hasSection: boolean;
+    handleCustom: (e: any, field: IField) => void;
+    handleSubmit: (e: any, field: IField) => void;
+    handleReset: (e: any, field: IField) => void;
+    handleNext: (e: any, field: IField, callback: any) => void;
+    handlePrevious: () => void;
+}
 
 const DefaultForm = (props: IProps) => {
     const [fields, setFields] = useState(props.schema.fields);
@@ -36,20 +51,5 @@ const DefaultForm = (props: IProps) => {
         </form>
     );
 };
-
-interface IProps {
-    schema: ISchema;
-    validated: boolean;
-    form: any;
-    formButtons: Array<IField>;
-    buttons?: IElementTypes;
-    theme: ITheme;
-    hasSection: boolean;
-    handleCustom: (e: any, field: IField) => void;
-    handleSubmit: (e: any, field: IField) => void;
-    handleReset: (e: any, field: IField) => void;
-    handleNext: (e: any, field: IField, callback: any) => void;
-    handlePrevious: () => void;
-}
 
 export default DefaultForm;

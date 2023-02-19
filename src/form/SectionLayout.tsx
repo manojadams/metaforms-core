@@ -4,7 +4,7 @@ import { IField } from "../constants/model-interfaces";
 import FormContext from "./form-context";
 import FormGroup from "./form-group";
 import BaseFormStepper from "./form-stepper/BaseFormStepper";
-import BaseFormWizard from "./form-wizard/base-form-wizard";
+import BaseFormWizard from "./form-wizard/BaseFormWizard";
 
 function SectionLayout(props: IProps) {
     const {

@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import FormFieldRenderer from "../form-field-renderer";
-import BaseFormWizard from "../form-wizard/base-form-wizard";
+import BaseFormWizard from "../form-wizard/BaseFormWizard";
 import { IField } from "../../constants/model-interfaces";
 import { IEventPayload } from "../../constants/common-interface";
 import { EVENTS } from "../../constants/constants";

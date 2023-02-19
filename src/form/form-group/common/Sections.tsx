@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
-import { IField, ITheme } from "../../../constants/model-interfaces";
-import { IError, ISectionError } from "../../../constants/common-interface";
+import React, { useContext } from "react";
+import { IField } from "../../../constants/model-interfaces";
+import { ISectionError } from "../../../constants/common-interface";
 import FormContext from "./../../form-context";
-import FormFieldRenderer from "../../form-field-renderer";
 import FormUtils from "../../../utils/FormUtil";
+import { Section } from "./Section";
 
 function Sections(props: IProps) {
     const { theme, form } = useContext(FormContext);
     const sections = props.sections;
     const padding = FormUtils.getPadding(theme.type);
     return (
-        <div className={"tab-content " + padding} id='myTabContent'>
+        <div className={"tab-content " + padding} id="tab-content">
             {sections.map((section, index) => (
                 <Section
                     key={section.name}
@@ -21,42 +21,6 @@ function Sections(props: IProps) {
                     activeIndex={props.activeIndex}
                 />
             ))}
-        </div>
-    );
-}
-
-export function Section(props: any) {
-    const form2 =
-        props.form[props.section.name ? props.section.name : "default"];
-    const [cField, setcField] = useState(form2);
-    const sync = () => {
-        if (props.section.meta && props.section.meta.type === "section") {
-            setcField({ ...form2 });
-        }
-    };
-    return (
-        <div
-            className={
-                props.activeIndex === props.index
-                    ? "tab-pane active"
-                    : "tab-pane"
-            }
-            id={props.section.name}
-            role='tabpanel'
-            aria-labelledby='contact-tab'
-        >
-            <div className='row'>
-                {props.section.fields &&
-                    props.section.fields.map((field: IField) => (
-                        <FormFieldRenderer
-                            {...field}
-                            key={field.name}
-                            section={props.section.name}
-                            sync={sync}
-                            form={cField[field.name]}
-                        />
-                    ))}
-            </div>
         </div>
     );
 }

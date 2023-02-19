@@ -1,25 +1,16 @@
-import React, { useContext, useState } from "react";
-import { IField } from "../../constants/model-interfaces";
-import FormUtils from "../../utils/FormUtil";
-import { FormImplsContext } from "../form-context";
+import React, { useContext } from "react";
+import { IRenderField } from "../../constants/common-interface";
+import FormImplsContext from "../form-impl-context";
 
-function FormControlType(props: any) {
-    const [f, set] = useState<Array<IField>>([]);
+interface IProps {
+    cField: any;
+    props: IRenderField;
+    theme: any;
+    sync: () => void;
+}
+function FormControl(props: any) {
     const { IBaseFormControl } = useContext(FormImplsContext);
-    const type = props.props?.meta?.type ? props.props.meta.type : "";
-    const add = (e: any) => {
-        const field = { name: "", meta: {}, fields: props.props.fields };
-        f.push(field);
-        set([...f]);
-        e.preventDefault();
-    };
-    const remove = (e: any, index: number) => {
-        e.preventDefault();
-        f.splice(index, 1);
-        set([...f]);
-    };
-    const vs = FormUtils.getVerticalSpacing(props.theme);
     return <IBaseFormControl {...props.props} sync={props.sync} />;
 }
 
-export default FormControlType;
+export default FormControl;
