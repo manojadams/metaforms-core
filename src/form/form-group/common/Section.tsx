@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IForm } from "../../../constants/common-interface";
 import { IField } from "../../../constants/model-interfaces";
-import FormFieldRenderer from "../../form-field-renderer";
+import FormFieldRenderer from "../../FormFieldRenderer";
 
 interface ISectionProps {
     section: IField;

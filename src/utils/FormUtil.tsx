@@ -145,11 +145,7 @@ export default class FormUtils {
         return newFormData;
     }
 
-    static updateSectionFormData(
-        formData: any,
-        newFormData: any,
-        formatter: IFormatterType
-    ) {
+    static updateSectionFormData(formData: any, newFormData: any, formatter: IFormatterType) {
         Object.keys(formData).forEach((key) => {
             const prop = formData[key].prop;
             if (prop) {

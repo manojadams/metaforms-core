@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useState } from "react";
-import FormUtils from "./../utils/FormUtil";
+import FormUtils from "../utils/FormUtil";
 import { IRenderField } from "../constants/common-interface";
 import FormContext from "./form-context";
 import Row from "./layout/Row";

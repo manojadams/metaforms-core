@@ -1,10 +1,10 @@
-import React, { SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent } from "react";
 import { IElementTypes } from "../constants/common-interface";
 import { EVENTS } from "../constants/constants";
 import { IField, ISchema, ITheme } from "../constants/model-interfaces";
 import FormUtils from "../utils/FormUtil";
-import DefaultForm from "./form/DefaultForm";
-import SectionForm from "./form/SectionForm";
+import DefaultForm from "./formtype/DefaultForm";
+import SectionForm from "./formtype/SectionForm";
 
 export default function (props: IProps) {
     const hasSection = FormUtils.hasSections(props.schema.fields);

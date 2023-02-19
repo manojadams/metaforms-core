@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { IElementTypes, IForm } from "../../constants/common-interface";
 import { IField, ISchema, ITheme } from "../../constants/model-interfaces";
 import Submit from "../form-controls/Submit";
-import FormFieldRenderer from "../form-field-renderer";
+import FormFieldRenderer from "../FormFieldRenderer";
 
 interface IProps {
     schema: ISchema;
