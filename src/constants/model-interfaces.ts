@@ -1,3 +1,6 @@
+import { TValue } from "./types";
+
+/* eslint-disable @typescript-eslint/no-empty-interface */
 export interface IUISchema {
     schema: ISchema;
 }
@@ -53,30 +56,41 @@ export interface IMeta {
     className?: string;
     events?: IEvent;
     labelPlacement?: string;
-    error?: {hasError: boolean, errorMsg: string};
+    error?: { hasError: boolean; errorMsg: string };
     init?: IURLLoaderConfig;
-    config?: IURLLoaderConfig;
+    config?: any;
     icons?: IIconConfig;
 }
 
 export interface IOption {
     value: string;
     label: string;
-    ref?: any;  // reference to original object
+    ref?: any; // reference to original object
+}
+
+export interface ITemplateConfig {
+    params: Record<string, string>;
 }
 
 export interface IURLLoaderConfig {
-    type: string;   // url_loader, lazy_loader
+    type: string; // url_loader, lazy_loader, inputs
     url: string;
+    urlType?: string; // for remote url
     queryParams?: Array<TParam>; // query params
     pathParams?: Array<TParam>; // path params
     responseKey?: string;
     valueKey?: string;
     labelKey?: string;
     loadOn?: Array<string>;
-    openTo?: string;        // for calendar -- year, month, day
-    inputFormat?: string;   // for calendar 
-    views?: string;         // for calendar
+    openTo?: string; // for calendar -- year, month, day
+    inputFormat?: string; // for calendar
+    views?: string; // for calendar
+
+    inputs?: Array<IMultitextInput>; // for inputs
+    separator?: string; // for inputs
+
+    accept?: string; // for input file
+    toolbarVersion?: number; // for datepicker
 }
 export interface IIconConfig {
     [key: string]: {
@@ -85,9 +99,7 @@ export interface IIconConfig {
     };
 }
 
-export interface IFieldConfig extends IURLLoaderConfig {
-
-}
+// export interface IFieldConfig extends IURLLoaderConfig {}
 
 export interface IDisplayProps {
     lg?: number;
@@ -95,9 +107,9 @@ export interface IDisplayProps {
     sm?: number;
     xs?: number;
     offset?: string;
-    rs?: boolean;   // row start
+    rs?: boolean; // row start
     isStandalone?: boolean;
-    align?: string;//left, right, center
+    align?: string; // left, right, center
     fieldLayout?: string;
     optionsLayout?: string;
 }
@@ -113,14 +125,14 @@ export interface ITheme {
 
 export interface IValidation {
     required?: boolean;
-    required_detail?: IValidationDetail;
+    requiredDetail?: IValidationDetail;
     pattern?: string;
-    pattern_detail?: IPatternValidationDetail;
+    patternDetail?: IPatternValidationDetail;
     min?: number | string;
-    min_detail?: IValidationDetail;
+    minDetail?: IValidationDetail;
     max?: number | string;
-    max_detail?: IValidationDetail;
-    info_detail?: IInfoDetail;
+    maxDetail?: IValidationDetail;
+    infoDetail?: IInfoDetail;
 }
 
 export interface IValidationDetail {
@@ -133,6 +145,7 @@ export interface IPatternValidationDetail extends IValidationDetail {
 
 export interface IInfoDetail {
     infoMsg?: string;
+    infoMsgFn?: string;
 }
 
 export interface IDependency {
@@ -145,16 +158,16 @@ export interface IDependency {
 
 export interface IBaseDependency {
     section: string;
-    ref: string;    
+    ref: string;
     value: string;
 }
 
 export interface IExistsDependency extends IBaseDependency {
-
+    // to be added later
 }
 
 export interface IEnabledDependency extends IBaseDependency {
-
+    // to be added later
 }
 
 export interface ILoadDependency extends IBaseDependency {
@@ -167,10 +180,11 @@ export interface IEqualsDependency extends IBaseDependency {
 }
 
 export interface IDisplayTypeDependency extends IBaseDependency {
-    
+    // to be added later
 }
-export interface ILoader {
 
+export interface ILoader {
+    // to be added later
 }
 
 export interface IFieldChange {
@@ -182,7 +196,7 @@ export interface IEvent {
     click?: IClickEvent;
     input?: IInputEvent;
     change?: IChangeEvent | Array<IChangeEvent>;
-    open?: IConfig;   // for select
+    open?: IConfig; // for select
 }
 
 export interface IMUITheme {
@@ -190,12 +204,10 @@ export interface IMUITheme {
     size?: string;
     tabs?: {
         variant: string;
-    }
+    };
 }
 
-export interface IBootstrapTheme {
-    
-}
+export interface IBootstrapTheme {}
 
 export interface IClickEvent {
     type: string; // submit, reset, next, previous, action (custom)
@@ -213,16 +225,16 @@ export interface IInputEvent {
 }
 
 export interface IChangeEvent {
-    type: string;       // setter
+    type: string; // setter
     ref: string;
     valueKey: string;
-    value: any;
+    value: TValue;
 }
 
 export interface IParamType {
     type?: string;
-    ref?: string;       // reference field
-    section?: string;   // reference section
+    ref?: string; // reference field
+    section?: string; // reference section
 }
 
 export type TParamType = IParamType | string | undefined;
@@ -232,3 +244,11 @@ export interface IFormatterType {
     [key: string]: Function;
 }
 
+export interface IMultitextInput {
+    chars: string;
+    width: string;
+    isReadonly?: boolean;
+    required?: boolean;
+    placeholder?: string;
+    value?: string;
+}

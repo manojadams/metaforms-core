@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from "@testing-library/react";
-import FormRenderer from "../form-renderer";
+import FormRenderer from "../FormRenderer";
 import * as schema_1 from "./data/schema_1.json";
 
 describe('FormRenderer', () => {

@@ -1,4 +1,4 @@
-import MetaForm from "../constants/MetaForm";
+import MetaForm from "../core/MetaForm";
 import EventEmitter from 'eventemitter3';
 
 describe('Test Metaform eventemitter', () => {
