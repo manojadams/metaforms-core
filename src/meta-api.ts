@@ -1,3 +1,4 @@
+import { SECTION_LAYOUT } from "./constants/constants";
 import MetaFormUpdater from "./core/MetaFormUpdater";
 
 export interface IMetaAPI {
@@ -5,5 +6,5 @@ export interface IMetaAPI {
 }
 
 export const metaAPI: IMetaAPI = {
-    metaForm: new MetaFormUpdater("default", null)
+    metaForm: new MetaFormUpdater(SECTION_LAYOUT.DEFAULT, null)
 };

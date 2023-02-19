@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IElementTypes, IForm } from "../../constants/common-interface";
+import { SECTION_LAYOUT } from "../../constants/constants";
 import { IField, ISchema, ITheme } from "../../constants/model-interfaces";
 import Submit from "../form-controls/Submit";
 import FormFieldRenderer from "../FormFieldRenderer";
@@ -31,8 +32,10 @@ const DefaultForm = (props: IProps) => {
                     <FormFieldRenderer
                         {...field}
                         key={field.name}
-                        section="default"
-                        form={props.hasSection ? props.form[field.name] : props.form["default"][field.name]}
+                        section={SECTION_LAYOUT.DEFAULT}
+                        form={
+                            props.hasSection ? props.form[field.name] : props.form[SECTION_LAYOUT.DEFAULT][field.name]
+                        }
                         sync={sync}
                     />
                 ))}

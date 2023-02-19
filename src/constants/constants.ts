@@ -67,6 +67,7 @@ export const BUTTON_TYPE = {
  * Events with $ in prefix is meant to be used for internal purpose only
  */
 export const EVENTS = {
+    SUBMIT: "submit",
     SWITCH: "switch",
     VALIDATION_ERROR: "validation_error",
     PAGE_CHANGE: "page_change",

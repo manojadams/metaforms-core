@@ -557,7 +557,7 @@ export default class MetaForm implements IMetaForm {
                 hasErrors = ValidationUtil.validateFormSection(this.form, section.name);
             }
         } else {
-            hasErrors = ValidationUtil.validateFormSection(this.form, "default");
+            hasErrors = ValidationUtil.validateFormSection(this.form, SECTION_LAYOUT.DEFAULT);
         }
         return !hasErrors;
     }

@@ -5,7 +5,7 @@ import { ISchema } from "./constants/model-interfaces";
 import { IError, IFormRenderer } from "./constants/common-interface";
 import { metaAPI } from "./meta-api";
 import Theme from "./core/Theme";
-import { EVENTS, NEXT_RESPONSE_MODE } from "./constants/constants";
+import { EVENTS, NEXT_RESPONSE_MODE, SECTION_LAYOUT } from "./constants/constants";
 import MetaForm from "./core/MetaForm";
 import MetaFormUpdater from "./core/MetaFormUpdater";
 import SchemaErrorBoundary from "./form/SchemaErrorBoundary";
@@ -70,7 +70,7 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
                 {
                     theme: new Theme({
                         type: "default",
-                        sectionLayout: "default"
+                        sectionLayout: SECTION_LAYOUT.DEFAULT
                     }),
                     fields: [],
                     buttons: []
@@ -108,9 +108,9 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
     }
 
     componentWillUnmount() {
-        this.metaform.removeListener("submit");
-        this.metaform.removeListener("$field_change");
-        this.metaform.removeListener("$field_close");
+        this.metaform.removeListener(EVENTS.SUBMIT);
+        this.metaform.removeListener(EVENTS._FIELD_CHANGE);
+        this.metaform.removeListener(EVENTS._FIELD_CLOSE);
     }
 
     render() {

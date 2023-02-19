@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IForm } from "../../../constants/common-interface";
+import { SECTION_LAYOUT } from "../../../constants/constants";
 import { IField } from "../../../constants/model-interfaces";
 import FormFieldRenderer from "../../FormFieldRenderer";
 
@@ -12,7 +13,7 @@ interface ISectionProps {
 }
 
 export function Section(props: ISectionProps) {
-    const form2 = props.form[props.section.name ? props.section.name : "default"];
+    const form2 = props.form[props.section.name ? props.section.name : SECTION_LAYOUT.DEFAULT];
     const [cField, setcField] = useState(form2);
     const sync = () => {
         if (props.section.meta && props.section.meta.type === "section") {

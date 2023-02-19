@@ -1,6 +1,6 @@
 import React, { SyntheticEvent } from "react";
 import { IElementTypes } from "../constants/common-interface";
-import { EVENTS } from "../constants/constants";
+import { EVENTS, SECTION_LAYOUT } from "../constants/constants";
 import { IField, ISchema, ITheme } from "../constants/model-interfaces";
 import FormUtils from "../utils/FormUtil";
 import DefaultForm from "./formtype/DefaultForm";
@@ -55,7 +55,7 @@ export default function (props: IProps) {
         props.emit(EVENTS.SWITCH, { payload: "previous" });
         props.onPrevious();
     };
-    if (hasSection && sectionLayout !== "default") {
+    if (hasSection && sectionLayout !== SECTION_LAYOUT.DEFAULT) {
         return (
             <SectionForm
                 {...props}

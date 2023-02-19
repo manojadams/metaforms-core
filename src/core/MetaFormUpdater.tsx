@@ -1,3 +1,4 @@
+import { SECTION_LAYOUT } from "../constants/constants";
 import MetaForm from "./MetaForm";
 
 class MetaFormUpdater {
@@ -7,7 +8,7 @@ class MetaFormUpdater {
     }
 
     updateField(section: string, field: string, value: any) {
-        const defaultForm = this.metaformMap.get("default");
+        const defaultForm = this.metaformMap.get(SECTION_LAYOUT.DEFAULT);
         if (defaultForm) {
             defaultForm.updateField(section, field, value);
         }
