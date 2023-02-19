@@ -19,7 +19,7 @@ import { IField, IOption, ISchema, ITheme, IURLLoaderConfig, TParam } from "../c
 import Theme from "./Theme";
 import { Rest } from "./Rest";
 import { Page } from "./Page";
-import { CHANGE_TYPE, DEP_TYPE, FIELD_DISPLAY_TYPES, URL_TYPE } from "../constants/constants";
+import { CHANGE_TYPE, DEP_TYPE, EVENTS, FIELD_DISPLAY_TYPES, SECTION_LAYOUT, URL_TYPE } from "../constants/constants";
 import { TValue } from "../constants/types";
 
 export default class MetaForm implements IMetaForm {
@@ -36,8 +36,8 @@ export default class MetaForm implements IMetaForm {
     constructor(private schema: ISchema, private eventEmitter: EventEmitter) {
         this.form = {};
         this.rest = new Rest(schema.rest);
-        const themeType = schema?.theme?.type || "default";
-        const sectionLayout = schema?.theme?.sectionLayout || "default";
+        const themeType = schema?.theme?.type || SECTION_LAYOUT.DEFAULT;
+        const sectionLayout = schema?.theme?.sectionLayout || SECTION_LAYOUT.DEFAULT;
         this.theme = new Theme({
             type: themeType,
             sectionLayout: sectionLayout,
@@ -64,7 +64,7 @@ export default class MetaForm implements IMetaForm {
                 DependencyUtil.initDependencies(this.form, "", schema.fields);
                 this.applyDependencies("", schema.fields);
             } else {
-                const section = "default";
+                const section = SECTION_LAYOUT.DEFAULT;
                 this.setSection(section);
                 schema.fields &&
                     schema.fields.forEach((field) => {
@@ -75,9 +75,9 @@ export default class MetaForm implements IMetaForm {
             }
         }
         if (
-            (this.theme && this.theme.sectionLayout === "tabs") ||
-            this.theme.sectionLayout === "stepper" ||
-            this.theme.sectionLayout === "wizard"
+            (this.theme && this.theme.sectionLayout === SECTION_LAYOUT.TABS) ||
+            this.theme.sectionLayout === SECTION_LAYOUT.STEPPER ||
+            this.theme.sectionLayout === SECTION_LAYOUT.WIZARD
         ) {
             this.page = new Page(true, totalSections);
         } else {
@@ -96,17 +96,17 @@ export default class MetaForm implements IMetaForm {
 
     updatePage(pageNumber: number) {
         this.page.update(pageNumber);
-        this.eventEmitter.emit("page_change");
+        this.eventEmitter.emit(EVENTS.PAGE_CHANGE);
     }
 
     setEndOfPage(pageNumber: number | undefined) {
         this.page.setEndOfPage(pageNumber);
-        this.eventEmitter.emit("page_change");
+        this.eventEmitter.emit(EVENTS.PAGE_CHANGE);
     }
 
     resetEndOfPage() {
         this.page.resetEndOfPage();
-        this.eventEmitter.emit("page_change");
+        this.eventEmitter.emit(EVENTS.PAGE_CHANGE);
     }
 
     /** event emitter functions */
@@ -150,7 +150,7 @@ export default class MetaForm implements IMetaForm {
     ) {
         let query = "";
         params &&
-            params.forEach((param: TParam, index: number) => {
+            params.forEach((param: TParam) => {
                 const [name, value] = param;
                 if (typeof value === "undefined") {
                     query += `&${name}=${currentValue}`;

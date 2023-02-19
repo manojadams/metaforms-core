@@ -69,6 +69,7 @@ export const BUTTON_TYPE = {
 export const EVENTS = {
     SWITCH: "switch",
     VALIDATION_ERROR: "validation_error",
+    PAGE_CHANGE: "page_change",
     _FIELD_CHANGE: "$field_change",
     _FIELD_CLOSE: "$field_close",
     _ENABLE_CURRENT_TAB: "$enable-current-tab",
@@ -77,6 +78,7 @@ export const EVENTS = {
 };
 
 export const SECTION_LAYOUT = {
+    DEFAULT: "default",
     TABS: "tabs",
     WIZARD: "wizard",
     STEPPER: "stepper"
