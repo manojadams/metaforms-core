@@ -1,35 +1,37 @@
-import { MSGS } from "../constants";
+import { IForm, IFormField, TCondition } from "../constants/common-interface";
+import { MSGS } from "../constants/constants";
 import { IMeta } from "../constants/model-interfaces";
+import { TValue } from "../constants/types";
 
 export default class ValidationUtil {
-    constructor() {
-
-    }
-    static updateMaxError(meta: IMeta, value: string | boolean | number | undefined, setError: Function) {
+    static updateMaxError(meta: IMeta, value: TValue, setError: Function) {
         let hasError = false;
         if (!meta?.validation?.max) {
-            return hasError;;
+            return hasError;
         }
-        switch(meta.displayType) {
-            case 'number':
+        switch (meta.displayType) {
+            case "number":
+            case "currency":
                 if (value) {
-                    const strValue = value ? value + '' : '';
+                    const strValue = value ? value + "" : "";
                     const val = parseInt(strValue);
                     if (val > meta.validation.max) {
-                        setError(true, meta.validation?.max_detail?.errorMsg || MSGS.ERROR_MSG.MAX);
+                        const errorMsg = meta.validation?.maxDetail?.errorMsg || MSGS.ERROR_MSG.MAX;
+                        setError(true, errorMsg);
                         hasError = true;
                         return hasError;
                     }
                 }
                 break;
-            case 'month':
-            case 'date':
+            case "month":
+            case "date":
                 if (value) {
-                    const strValue = value ? value + '' : '';
+                    const strValue = value ? value + "" : "";
                     const valDate = new Date(strValue);
                     const maxDate = new Date(meta.validation.max);
                     if (valDate.getTime() > maxDate.getTime()) {
-                        setError(true, meta.validation.max_detail?.errorMsg || MSGS.ERROR_MSG.MAX);
+                        const errorMsg = meta.validation?.maxDetail?.errorMsg || MSGS.ERROR_MSG.MAX;
+                        setError(true, errorMsg);
                         hasError = true;
                         return hasError;
                     }
@@ -43,31 +45,142 @@ export default class ValidationUtil {
         if (!meta?.validation?.min) {
             return hasError;
         }
-        switch(meta.displayType) {
-            case 'number':
+        switch (meta.displayType) {
+            case "number":
+            case "currency":
                 if (value) {
-                    const strValue = value ? value + '' : '';
+                    const strValue = value ? value + "" : "";
                     const val = parseInt(strValue);
                     if (val < meta.validation.min) {
-                        setError(true, meta.validation?.min_detail?.errorMsg || MSGS.ERROR_MSG.MIN);
+                        const errorMsg = meta.validation?.minDetail?.errorMsg || MSGS.ERROR_MSG.MIN;
+                        setError(true, errorMsg);
                         hasError = true;
                         return hasError;
                     }
                 }
                 break;
-            case 'month':
-            case 'date':
+            case "month":
+            case "date":
                 if (value) {
-                    const strValue = value ? value + '' : '';
+                    const strValue = value ? value + "" : "";
                     const valDate = new Date(strValue);
                     const minDate = new Date(meta.validation?.min);
                     if (valDate.getTime() < minDate.getTime()) {
-                        setError(true, meta.validation.min_detail?.errorMsg || MSGS.ERROR_MSG.MIN);
+                        const errorMsg = meta.validation?.minDetail?.errorMsg || MSGS.ERROR_MSG.MIN;
+                        setError(true, errorMsg);
                         hasError = true;
                         return hasError;
                     }
                 }
         }
         return hasError;
+    }
+
+    static isEmptyField(value: any) {
+        if (value === "" || value === undefined || value === null) {
+            return true;
+        }
+        return false;
+    }
+
+    static validateFormSection(form: IForm, sectionName: string) {
+        let hasErrors = false;
+        if (form && form[sectionName]) {
+            Object.keys(form[sectionName]).forEach((field) => {
+                const formField: IFormField = form[sectionName][field];
+                if (formField.display) {
+                    // for displayed fields only
+                    // reset disabled fields
+                    // disabled fields do not require validation
+                    if (formField.isDisabled) {
+                        formField.error.hasError = false;
+                        formField.error.errorMsg = "";
+                    } else {
+                        if (formField.value !== false && formField.value !== 0) {
+                            // for required field
+                            if (formField.validation?.required && !formField.value) {
+                                formField.error.hasError = true;
+                                formField.error.errorMsg =
+                                    formField.validation?.requiredDetail?.errorMsg || MSGS.ERROR_MSG.REQUIRED;
+                                hasErrors = true;
+                            }
+
+                            // for pattern validation - string only
+                            if (formField.value && formField.validation?.pattern) {
+                                const regexp = new RegExp(formField.validation.pattern);
+                                if (!regexp.test(formField.value as string)) {
+                                    formField.error.hasError = true;
+                                    formField.error.errorMsg =
+                                        formField.validation.patternDetail?.errorMsg ||
+                                        formField.validation.patternDetail?.errorMsg ||
+                                        MSGS.ERROR_MSG.PATTERN;
+                                    hasErrors = true;
+                                }
+                            }
+
+                            // for min/max validation
+                            if (formField.value !== undefined) {
+                                // min validation
+                                if (formField.validation?.min !== undefined) {
+                                    this.updateMinError(
+                                        formField,
+                                        formField.value,
+                                        (hasError: boolean, errorMsg: string) => {
+                                            formField.error.hasError = hasError;
+                                            formField.error.errorMsg = errorMsg;
+                                            hasErrors = true;
+                                        }
+                                    );
+                                }
+                                // max validation
+                                if (formField.validation?.max !== undefined) {
+                                    this.updateMaxError(
+                                        formField,
+                                        formField.value,
+                                        (hasError: boolean, errorMsg: string) => {
+                                            formField.error.hasError = hasError;
+                                            formField.error.errorMsg = errorMsg;
+                                            hasErrors = true;
+                                        }
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        return hasErrors;
+    }
+
+    /**
+     * Condition parser
+     */
+    static parseCondition(form: IForm, condition: Array<TCondition>, section: string) {
+        let parsedCondition = "";
+        condition.forEach((c) => {
+            const [leftOperand, operator, rightOperand, nextCondition] = c;
+            const lSection = leftOperand?.section || section;
+            const lField = this.getField(form, lSection, leftOperand.ref);
+            const lValue = lField.value === "" ? '""' : lField.value;
+            let rValue;
+            if (typeof rightOperand === "object" && "ref" in rightOperand) {
+                // means its an operand
+                const rSection = rightOperand?.section || section;
+                const rField = this.getField(form, rSection, rightOperand.ref);
+                rValue = rField.value;
+            } else {
+                rValue = rightOperand;
+            }
+            rValue = rValue === "" ? '""' : rValue;
+            parsedCondition += "(" + lValue + operator + rValue + ")" + (nextCondition || "");
+        });
+        // eslint-disable-next-line no-new-func
+        const evalCondition = parsedCondition ? Function(`return ${parsedCondition}`) : () => false;
+        return evalCondition(parsedCondition);
+    }
+
+    static getField(form: IForm, section: string, field: string) {
+        return form[section][field];
     }
 }

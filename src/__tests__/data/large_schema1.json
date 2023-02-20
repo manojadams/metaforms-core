@@ -157,7 +157,7 @@
                         },
                         "validation": {
                             "required": true,
-                            "required_detail": {
+                            "requiredDetail": {
                                 "errorMsg": "This field is required"
                             }
                         }
@@ -209,7 +209,7 @@
                         },
                         "validation": {
                             "required": true,
-                            "required_detail": {
+                            "requiredDetail": {
                                 "erroMsg": "This field is required"
                             }
                         }
@@ -236,7 +236,7 @@
                         "validation": {
                             "max": "2022-07-22",
                             "required": true,
-                            "required_detail": {
+                            "requiredDetail": {
                                 "errorMsg": "This field is required"
                             }
                         }
@@ -381,7 +381,7 @@
                         },
                         "validation": {
                             "required": true,
-                            "required_detail": {
+                            "requiredDetail": {
                                 "errorMsg": "Third Party cover is mandatory for Standalone OD. You are advised to opt for Comprehensive cover."
                             }
                         }
@@ -474,7 +474,7 @@
                         "events": {
                             "change": {
                                 "type": "prop_setter",
-                                "name": "validation#info_detail#infoMsg",
+                                "name": "validation#infoDetail#infoMsg",
                                 "valueMap": {
                                     "1": "",
                                     "2": "",
@@ -484,7 +484,7 @@
                             }
                         },
                         "validation": {
-                            "info_detail": {
+                            "infoDetail": {
                                 "infoMsg": ""
                             }
                         },
