@@ -24,6 +24,9 @@ const cssClassMap = {
     default: "col-md"
 };
 
+/**
+ * @ignore
+ */
 export default class FormUtils {
     static getCssClassName(prop: IDisplayProps | undefined) {
         if (!prop) {
@@ -341,7 +344,7 @@ export default class FormUtils {
             switch (ref) {
                 case "page_number": {
                     const pageNumber = page.pageNumber;
-                    const pageNumberFromDependency = parseInt(deps.exists.value);
+                    const pageNumberFromDependency = parseInt(deps.exists.value as string);
                     if (pageNumberFromDependency === pageNumber) {
                         return true;
                     }

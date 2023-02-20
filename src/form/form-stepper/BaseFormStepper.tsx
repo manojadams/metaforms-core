@@ -5,6 +5,10 @@ import { IField } from "../../constants/model-interfaces";
 import { IEventPayload } from "../../constants/common-interface";
 import { EVENTS } from "../../constants/constants";
 
+/**
+ * Displays a grouped form with many steps
+ * * @category To be implemented
+ */
 abstract class BaseFormStepper extends BaseFormWizard {
     componentDidMount() {
         this.setState({

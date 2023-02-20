@@ -36,7 +36,7 @@ export interface IFormRenderer extends IUISchema {
     onNext?: Function;
     onSubmit: Function;
     name?: string;
-    nextResponseMode: TNextResponseMode;
+    nextResponseMode?: TNextResponseMode;
     useNextResponse?: boolean;
     formatter?: IFormatterType;
     controls?: IElementTypes;

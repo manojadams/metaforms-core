@@ -13,6 +13,10 @@ import FormContext from "./form/form-context";
 import Form from "./form/Form";
 import FormImpls from "./core/FormImpl";
 
+/**
+ * The core class responsible for form rendering 
+ * @category Form renderer
+ */
 export default class FormRenderer extends React.Component<IFormRenderer> {
     schema: ISchema;
     state: IState;

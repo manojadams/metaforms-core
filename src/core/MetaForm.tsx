@@ -22,6 +22,10 @@ import { Page } from "./Page";
 import { CHANGE_TYPE, DEP_TYPE, EVENTS, FIELD_DISPLAY_TYPES, SECTION_LAYOUT, URL_TYPE } from "../constants/constants";
 import { TValue } from "../constants/types";
 
+/**
+ * This class is responsible for handling all the heavy lifting work in the forms
+ * @category Form handler
+ */
 export default class MetaForm implements IMetaForm {
     theme: ITheme;
     form: IForm;

@@ -4,6 +4,10 @@ import { EVENTS } from "../../constants/constants";
 import { IField, IMeta, ISchema } from "../../constants/model-interfaces";
 import FormContext from "../form-context";
 
+/**
+ * Displays a grouped form (Form with many sections like tabs)
+ * * @category To be implemented
+ */
 export default abstract class BaseFormGroup extends React.Component<ISchema> {
     static contextType = FormContext;
     context!: React.ContextType<typeof FormContext>;

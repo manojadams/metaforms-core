@@ -10,7 +10,6 @@ import Sections from "./form/form-group/common/Sections";
 
 export default FormRenderer;
 
-/** Export for implementation */
 export { BaseFormControl, BaseFormGroup, BaseFormStepper };
 
 /** Export constants */

@@ -8,10 +8,16 @@ import { MSGS } from "../../constants/constants";
 import { TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
 
+/**
+ * This is the base form control that contains methods that render fields depending upon `displayType` property.
+ * Control rendering methods must be implemented in libs implementing metaform-core 
+ * @category To be implemented
+ */
 export default abstract class BaseFormControl extends React.Component {
+    /**@internal */
     static contextType = FormContext;
     context!: React.ContextType<typeof FormContext>;
-    displayType: string | undefined;
+    displayType?: string;
     field: IField;
     isFormControl: boolean;
     uuid: string;
@@ -82,6 +88,7 @@ export default abstract class BaseFormControl extends React.Component {
         }
     }
 
+    /**@internal */
     componentDidUpdate(props: IRenderField) {
         // no validation for non-displayed fields
         if (props && props?.form?.display) {
@@ -109,12 +116,14 @@ export default abstract class BaseFormControl extends React.Component {
         }
     }
 
+    /**@internal */
     componentDidCatch(error: any, errorInfo: any) {
         this.setState({
             componentError: { hasError: true, errorMsg: error.message }
         });
     }
 
+    /**@internal */
     componentDidMount() {
         this.initConfig();
     }
@@ -189,6 +198,9 @@ export default abstract class BaseFormControl extends React.Component {
     abstract phone(): JSX.Element;
     abstract date(): JSX.Element;
     abstract search(): JSX.Element;
+    /**
+     * Input text control
+     */
     abstract text(): JSX.Element;
     abstract label(): JSX.Element;
     abstract password(): JSX.Element;
