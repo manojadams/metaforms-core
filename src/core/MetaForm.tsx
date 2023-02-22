@@ -117,7 +117,7 @@ export default class MetaForm implements IMetaForm {
     }
 
     /** event emitter functions */
-    emit(eventType: string, payload: IEventPayload) {
+    emit(eventType: string, payload?: IEventPayload) {
         this.eventEmitter.emit(eventType, payload);
     }
 
