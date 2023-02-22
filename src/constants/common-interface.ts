@@ -87,7 +87,7 @@ export interface IForm {
     [key: string]: IFormField | object;
 }
 
-export interface IFieldChange {
+interface IFieldChange {
     section: string;
     field: string;
     value: TValue;
