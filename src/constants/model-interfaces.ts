@@ -190,10 +190,10 @@ export interface IEqualsDependency extends IBaseDependency {
 
 export type IDisplayTypeDependency = IBaseDependency;
 
-export interface IFieldChange {
-    type: string;
-    reference: string;
-}
+// interface IFieldChange {
+//     type: string;
+//     reference: string;
+// }
 
 export interface IDependency {
     exists?: IExistsDependency;
