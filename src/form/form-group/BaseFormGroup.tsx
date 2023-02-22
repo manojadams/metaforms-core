@@ -2,7 +2,14 @@ import React, { Fragment } from "react";
 import { IEventPayload, ISectionError } from "../../constants/common-interface";
 import { EVENTS } from "../../constants/constants";
 import { IField, IMeta, ISchema } from "../../constants/model-interfaces";
+import { TCallback } from "../../constants/types";
 import FormContext from "../form-context";
+
+interface IState {
+    error: ISectionError;
+    activeIndex: number;
+    tabFields: Array<IField>;
+}
 
 /**
  * Displays a grouped form (Form with many sections like tabs)
@@ -10,7 +17,7 @@ import FormContext from "../form-context";
  */
 export default abstract class BaseFormGroup extends React.Component<ISchema> {
     static contextType = FormContext;
-    context!: React.ContextType<typeof FormContext>;
+    declare context: React.ContextType<typeof FormContext>;
     state: IState;
     tabFields: Array<IField>;
     sectionFields: Array<{
@@ -41,7 +48,7 @@ export default abstract class BaseFormGroup extends React.Component<ISchema> {
         this.setState({
             activeIndex: this.context?.page?.pageNumber ? this.context.page.pageNumber - 1 : 1
         });
-        this.context.listener(EVENTS.SWITCH, (payload: { payload: string; callback?: Function }) => {
+        this.context.listener(EVENTS.SWITCH, (payload: { payload: string; callback?: TCallback }) => {
             switch (payload.payload) {
                 case "next":
                     this.setActiveIndex(this.state.activeIndex + 1, payload.callback);
@@ -51,7 +58,7 @@ export default abstract class BaseFormGroup extends React.Component<ISchema> {
                     break;
             }
         });
-        this.context.listener(EVENTS.VALIDATION_ERROR, (payload: { payload: string; callback: Function }) => {
+        this.context.listener(EVENTS.VALIDATION_ERROR, (payload: { payload: string; callback: TCallback }) => {
             this.setState({
                 error: {
                     hasError: true,
@@ -105,7 +112,7 @@ export default abstract class BaseFormGroup extends React.Component<ISchema> {
         );
     }
 
-    setActiveIndex(index: number, callback?: Function) {
+    setActiveIndex(index: number, callback?: TCallback) {
         this.setState({ activeIndex: index }, () => {
             this.context.updatePage(this.state.activeIndex + 1);
             if (callback) {
@@ -116,10 +123,4 @@ export default abstract class BaseFormGroup extends React.Component<ISchema> {
 
     abstract tabs(): JSX.Element;
     abstract panels(): JSX.Element;
-}
-
-interface IState {
-    error: ISectionError;
-    activeIndex: number;
-    tabFields: Array<IField>;
 }

@@ -1,21 +1,31 @@
-import React from 'react';
+import React from "react";
 import { render } from "@testing-library/react";
 import FormRenderer from "../FormRenderer";
-import * as schema_1 from "./data/schema_1.json";
+import * as schema1 from "./data/schema_1.json";
 
-describe('FormRenderer', () => {
-    it('is truthy', () => {
+describe("FormRenderer", () => {
+    it("is truthy", () => {
         expect(FormRenderer).toBeTruthy();
     });
-    it('Min. schema test', () => {
-        render(<FormRenderer  
-            schema={{fields:[]}}
-            onSubmit={()=>{}} />)
+    it("Min. schema test", () => {
+        const output = render(
+            <FormRenderer
+                schema={{ fields: [] }}
+                onSubmit={() => {
+                    console.log("Schema submit");
+                }}
+            />
+        );
+        expect(output.getByText("")).toBeTruthy();
     });
-    it('Schema 1 test', () => {
-        render(<FormRenderer 
-            schema={schema_1}
-            onSubmit={() => {}}
-        />)
+    it("Schema 1 test", () => {
+        render(
+            <FormRenderer
+                schema={schema1}
+                onSubmit={() => {
+                    console.log("Schema1 submit");
+                }}
+            />
+        );
     });
 });

@@ -52,6 +52,7 @@ export const URL_TYPE = {
 
 export const _INTERNAL_VALUES = {
     INPUT: "$input",
+    INITIAL: "$initial",
     VALUE_FN: "$valueFn",
     NOT_EMPTY: "$notempty",
     CONDITION: "$condition"
@@ -83,4 +84,25 @@ export const SECTION_LAYOUT = {
     TABS: "tabs",
     WIZARD: "wizard",
     STEPPER: "stepper"
+};
+
+export const FORM_ACTION = {
+    NEXT: "next",
+    PREVIOUS: "previous",
+    SUBMIT: "submit",
+    DEFAULT: "default",
+    CUSTOM: "custom",
+    RESET: "reset"
+};
+
+export const DATA_LOADER = {
+    URL: "url",
+    URL_LOADDER: "url_loader",
+    OPTIONS_LOADER: "options_loader"
+};
+
+export const API_METHOD = {
+    GET: "get",
+    POST: "post",
+    PUT: "put"
 };

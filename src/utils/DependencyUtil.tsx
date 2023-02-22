@@ -1,6 +1,6 @@
-import { IDepdendencyItem, IForm } from "../constants/common-interface";
-import { DEP_TYPE, FORM_CONSTANTS, _INTERNAL_VALUES } from "../constants/constants";
-import { IDependency, IField, IURLLoaderConfig } from "../constants/model-interfaces";
+import { IDepdendencyItem, IForm, IValueMapRef, TVALUE_MAP_TYPE_REF } from "../constants/common-interface";
+import { API_METHOD, DEP_TYPE, FORM_CONSTANTS, _INTERNAL_VALUES } from "../constants/constants";
+import { IDependency, IField, IOption, IURLLoaderConfig } from "../constants/model-interfaces";
 import { TValue } from "../constants/types";
 import MetaForm from "../core/MetaForm";
 import ValidationUtil from "./ValidationUtil";
@@ -165,7 +165,7 @@ class DependencyUtil {
         fieldDisplayed: boolean
     ) {
         // eslint-disable-next-line promise/param-names
-        return new Promise((sucessCallback: Function) => {
+        return new Promise((sucessCallback: (arg?: boolean) => void) => {
             const deps = this.getDependencies(metaform.form, section, fieldName);
             const totalDeps = deps && deps.length > 0 ? deps.length : 0;
             if (totalDeps === 0) {
@@ -214,7 +214,7 @@ class DependencyUtil {
                                                             if (valueFn) {
                                                                 const fn = metaform.getFn(valueFn);
                                                                 if (fn) {
-                                                                    conditionMatch = fn(value);
+                                                                    conditionMatch = fn(value) as boolean;
                                                                 }
                                                             }
                                                         }
@@ -258,49 +258,49 @@ class DependencyUtil {
                             }
                             break;
                         case DEP_TYPE.LOAD:
-                            {
+                            if (value && dep.url) {
                                 const field = dep.field;
-                                // const url = dep.url.replace('{0}', value);
-                                if (value && dep.url) {
-                                    const field = dep.field;
-                                    const queryParams = dep.queryParams || [];
-                                    // reset options
-                                    metaform.setFieldOptions(dep.section, field, []);
-                                    metaform
-                                        .api("get", dep.url, queryParams, value, section)
-                                        .then((response: any) => {
-                                            const results = dep.responseKey ? response[dep.responseKey] : response;
-                                            let newResults = [];
-                                            if (dep.labelKey && dep.valueKey) {
-                                                newResults = results.map((r: any) => {
-                                                    return {
-                                                        label: r[dep.labelKey!],
-                                                        value: r[dep.valueKey!],
-                                                        ref: r
-                                                    };
-                                                });
-                                            } else {
-                                                newResults = results;
-                                            }
-                                            metaform.setFieldOptions(dep.section, field, newResults);
-                                            resolved.next();
-                                        })
-                                        .catch(() => {
-                                            resolved.next();
-                                        });
-                                } else {
-                                    resolved.next();
-                                }
+                                const queryParams = dep.queryParams || [];
+                                // reset options
+                                metaform.setFieldOptions(dep.section, field, []);
+                                metaform
+                                    .api(API_METHOD.GET, dep.url, queryParams, value, section)
+                                    .then((response: object) => {
+                                        const results = dep.responseKey ? response[dep.responseKey] : response;
+                                        let newResults = [];
+                                        if (dep.labelKey && dep.valueKey) {
+                                            newResults = results.map((r: object) => {
+                                                return {
+                                                    label: r[dep.labelKey],
+                                                    value: r[dep.valueKey],
+                                                    ref: r
+                                                };
+                                            });
+                                        } else {
+                                            newResults = results;
+                                        }
+                                        metaform.setFieldOptions(dep.section, field, newResults);
+                                        resolved.next();
+                                    })
+                                    .catch(() => {
+                                        resolved.next();
+                                    });
+                            } else {
+                                resolved.next();
                             }
                             break;
                         case DEP_TYPE.LOAD_OPTIONS:
                             {
                                 const field = dep.field;
-                                const val = dep.value;
+                                // const val = dep.value;
                                 const valueMap = dep.valueMap;
                                 if (valueMap !== undefined) {
                                     if (valueMap[value as string]) {
-                                        metaform.setFieldOptions(dep.section, field, valueMap[value as string]);
+                                        metaform.setFieldOptions(
+                                            dep.section,
+                                            field,
+                                            valueMap[value as string] as IOption[]
+                                        );
                                     }
                                 } else {
                                     if (value) {
@@ -341,14 +341,14 @@ class DependencyUtil {
                                                 metaform.setField(
                                                     dep.section,
                                                     dep.field,
-                                                    dep.valueMap[value as string]
+                                                    dep.valueMap[value as string] as TValue
                                                 );
                                                 const field = metaform.getField(dep.section, dep.field);
                                                 this.handleDependencies(
                                                     metaform,
                                                     dep.section,
                                                     dep.field,
-                                                    dep.valueMap[value as string],
+                                                    dep.valueMap[value as string] as TValue,
                                                     field.display
                                                 ).then(() => resolved.next());
                                             } else {
@@ -443,7 +443,7 @@ class DependencyUtil {
                                     resolved.next();
                                 }
                             } else if (dep.valueMap !== undefined) {
-                                const mappedValue = dep.valueMap[value as string];
+                                const mappedValue = dep.valueMap[value as string] as IValueMapRef;
                                 if (mappedValue !== undefined) {
                                     if (typeof mappedValue !== "object") {
                                         metaform.setFieldProp(dep.section, dep.field, dep.propName, mappedValue);
@@ -453,7 +453,7 @@ class DependencyUtil {
                                         const type = mappedValue.type;
                                         if (type !== undefined) {
                                             switch (type) {
-                                                case "fieldValue":
+                                                case TVALUE_MAP_TYPE_REF.fieldValue:
                                                     {
                                                         const ref = mappedValue.ref;
                                                         const fieldValue = metaform.getFieldProp(
@@ -470,14 +470,14 @@ class DependencyUtil {
                                                         resolved.next();
                                                     }
                                                     break;
-                                                case "fieldProp":
+                                                case TVALUE_MAP_TYPE_REF.fieldProp:
                                                     {
                                                         const ref = mappedValue.ref;
                                                         const prop = mappedValue.propName;
                                                         const fieldValue = metaform.getFieldProp(
                                                             mappedValue.section || dep.section,
                                                             ref,
-                                                            prop
+                                                            prop || ""
                                                         );
                                                         metaform.setFieldProp(
                                                             dep.section,

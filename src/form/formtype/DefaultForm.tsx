@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { IElementTypes, IForm } from "../../constants/common-interface";
 import { SECTION_LAYOUT } from "../../constants/constants";
 import { IField, ISchema, ITheme } from "../../constants/model-interfaces";
+import { TCallback } from "../../constants/types";
 import Submit from "../form-controls/Submit";
 import FormFieldRenderer from "../FormFieldRenderer";
 
@@ -13,10 +14,10 @@ interface IProps {
     buttons?: IElementTypes;
     theme: ITheme;
     hasSection: boolean;
-    handleCustom: (e: any, field: IField) => void;
-    handleSubmit: (e: any, field: IField) => void;
-    handleReset: (e: any, field: IField) => void;
-    handleNext: (e: any, field: IField, callback: any) => void;
+    handleCustom: (e: React.MouseEvent, field: IField) => void;
+    handleSubmit: (e: React.MouseEvent, field: IField) => void;
+    handleReset: (e: React.MouseEvent, field: IField) => void;
+    handleNext: (e: React.MouseEvent, field: IField, callback: TCallback) => void;
     handlePrevious: () => void;
 }
 

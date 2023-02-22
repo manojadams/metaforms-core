@@ -2,13 +2,18 @@ import React, { Fragment } from "react";
 import { IField, IMeta } from "../../constants/model-interfaces";
 import FormContext from "../form-context";
 
+interface IState {
+    activeIndex: number;
+    tabFields: Array<IField>;
+}
+
 export default abstract class BaseFormWizard extends React.Component<{
     theme: string;
     fields: Array<IField>;
 }> {
     static contextType = FormContext;
-    context!: React.ContextType<typeof FormContext>;
-    state: any;
+    declare context: React.ContextType<typeof FormContext>;
+    state: IState;
     theme: string;
     fields: Array<{
         name: string;
@@ -25,7 +30,8 @@ export default abstract class BaseFormWizard extends React.Component<{
             meta: section.meta
         }));
         this.state = {
-            activeIndex: 0
+            activeIndex: 0,
+            tabFields: []
         };
     }
 

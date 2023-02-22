@@ -4,19 +4,26 @@ import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IMeta, IOption } from "../../constants/model-interfaces";
 import { IError, IRenderField } from "../../constants/common-interface";
-import { MSGS } from "../../constants/constants";
+import { DATA_LOADER, EVENTS, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
 
+interface IState {
+    error: IError;
+    componentError: IError;
+    form: IMeta;
+    loading: boolean;
+}
+
 /**
  * This is the base form control that contains methods that render fields depending upon `displayType` property.
- * Control rendering methods must be implemented in libs implementing metaform-core 
+ * Control rendering methods must be implemented in libs implementing metaform-core
  * @category To be implemented
  */
 export default abstract class BaseFormControl extends React.Component {
-    /**@internal */
+    /** @internal */
     static contextType = FormContext;
-    context!: React.ContextType<typeof FormContext>;
+    declare context: React.ContextType<typeof FormContext>;
     displayType?: string;
     field: IField;
     isFormControl: boolean;
@@ -65,12 +72,18 @@ export default abstract class BaseFormControl extends React.Component {
             }
         }
         if (initData) {
-            if (!(initData?.type === "url" || initData?.type === "url_loader" || initData?.type === "options_loader")) {
+            if (
+                !(
+                    initData?.type === DATA_LOADER.URL ||
+                    initData?.type === DATA_LOADER.URL_LOADDER ||
+                    initData?.type === DATA_LOADER.OPTIONS_LOADER
+                )
+            ) {
                 return;
             }
             this.setLoading(true);
             this.context
-                .getData(initData, this.props.form.value, this.props.section, "$initial")
+                .getData(initData, this.props.form.value, this.props.section, _INTERNAL_VALUES.INITIAL)
                 .then((options: Array<IOption>) => {
                     this.setLoading(false);
                     this.context.setFieldOptions(this.section, this.field.name, options);
@@ -88,7 +101,7 @@ export default abstract class BaseFormControl extends React.Component {
         }
     }
 
-    /**@internal */
+    /** @internal */
     componentDidUpdate(props: IRenderField) {
         // no validation for non-displayed fields
         if (props && props?.form?.display) {
@@ -116,14 +129,14 @@ export default abstract class BaseFormControl extends React.Component {
         }
     }
 
-    /**@internal */
-    componentDidCatch(error: any, errorInfo: any) {
+    /** @internal */
+    componentDidCatch(error: Error) {
         this.setState({
             componentError: { hasError: true, errorMsg: error.message }
         });
     }
 
-    /**@internal */
+    /** @internal */
     componentDidMount() {
         this.initConfig();
     }
@@ -255,13 +268,13 @@ export default abstract class BaseFormControl extends React.Component {
         throw Error("Not Implemented");
     }
 
-    handleChange(e: any, val?: TValue, ref?: any) {
+    handleChange(e: React.MouseEvent | null, val?: TValue, ref?: IOption) {
         try {
-            const value = val !== undefined ? val : e.target.value;
+            const value = val !== undefined ? val : (e?.target as HTMLInputElement)?.value;
             this.context.setField(this.section, this.field.name, value);
             this.context.handleChangeEvents(this.section, this.field.name, value, ref);
             this.handleDependencies(value);
-            this.context.emit("$field_change", {
+            this.context.emit(EVENTS._FIELD_CHANGE, {
                 section: this.section,
                 field: this.field.name,
                 value
@@ -274,19 +287,19 @@ export default abstract class BaseFormControl extends React.Component {
     handleOpen() {
         const field = this.context.getField(this.section, this.field.name);
         const eventItem = field?.events?.open || field.config;
-        switch (eventItem.type) {
+        switch (eventItem?.type) {
             case "url":
             case "options_loader":
                 // eslint-disable-next-line no-lone-blocks
                 {
                     this.context
-                        .api("get", eventItem.url, eventItem.queryParams, "", this.props.section)
-                        .then((response: any) => {
+                        .api("get", eventItem?.url + "", eventItem.queryParams, "", this.props.section)
+                        .then((response: object) => {
                             let options = eventItem.responseKey ? response[eventItem.responseKey] : response;
                             const labelKey = eventItem.labelKey || "label";
                             const valueKey = eventItem.valueKey || "value";
                             if (options) {
-                                options = options.map((o: any) => ({
+                                options = options.map((o: object) => ({
                                     label: o[labelKey],
                                     value: o[valueKey],
                                     ref: o
@@ -295,7 +308,7 @@ export default abstract class BaseFormControl extends React.Component {
                             this.context.setFieldOptions(this.section, this.field.name, options);
                             this.setState({ form: { ...this.props.form } });
                         })
-                        .catch((error: any) => {
+                        .catch((error: Error) => {
                             this.context.handleError(error, this.section, this.field.name);
                             this.setState({ form: { ...this.props.form } });
                         });
@@ -368,13 +381,8 @@ export default abstract class BaseFormControl extends React.Component {
     }
 }
 
+BaseFormControl.contextType = FormContext;
+
 function Display(props: { form: IMeta; children: ReactNode }) {
     return <Fragment>{props?.form?.display && props.children}</Fragment>;
-}
-
-interface IState {
-    error: IError;
-    componentError: IError;
-    form: IMeta;
-    loading: boolean;
 }

@@ -4,7 +4,7 @@ import { IRenderField } from "../constants/common-interface";
 import FormContext from "./form-context";
 import Row from "./layout/Row";
 import FormControl from "./form-controls/FormControl";
-import { IField } from "../constants/model-interfaces";
+import { IField, IMeta } from "../constants/model-interfaces";
 import Col from "./layout/Col";
 
 export default function FormFieldRenderer(props: IRenderField) {
@@ -64,8 +64,8 @@ function RenderColumn({
     props: IRenderField;
     isStandAlone: boolean;
     isSection: boolean;
-    cField: any;
-    sync: Function;
+    cField: IMeta;
+    sync: () => void;
 }) {
     const { theme } = useContext(FormContext);
     const vs = FormUtils.getVerticalSpacing(theme.type);

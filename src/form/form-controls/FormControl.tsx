@@ -1,14 +1,15 @@
 import React, { useContext } from "react";
 import { IRenderField } from "../../constants/common-interface";
+import { IMeta } from "../../constants/model-interfaces";
 import FormImplsContext from "../form-impl-context";
 
 interface IProps {
-    cField: any;
+    cField: IMeta;
     props: IRenderField;
-    theme: any;
+    theme: string;
     sync: () => void;
 }
-function FormControl(props: any) {
+function FormControl(props: IProps) {
     const { IBaseFormControl } = useContext(FormImplsContext);
     return <IBaseFormControl {...props.props} sync={props.sync} />;
 }

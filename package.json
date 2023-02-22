@@ -1,15 +1,16 @@
 {
   "name": "@manojadams/metaforms-core",
-  "version": "2.0.2",
+  "version": "2.0.11",
   "description": "React Library for rendering dynamic forms from json schema",
   "author": "manojgetwealthy",
   "license": "MIT",
   "repository": "manojgetwealthy/metaforms-core",
+  "homepage": "https://manojgetwealthy.github.io/metaforms-core/",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
-  "source": "src/index.tsx",
+  "source": "src/index.ts",
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "scripts": {
     "build": "microbundle-crl --no-compress --format modern,cjs",
@@ -17,7 +18,8 @@
     "prepare": "run-s build",
     "test": "run-s test:unit test:lint test:build",
     "test:build": "run-s build",
-    "test:lint": "eslint .",
+    "test:lint": "eslint src/",
+    "fix:lint": "eslint src/ --fix",
     "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom",
     "predeploy": "cd example && npm install && npm run build",
@@ -45,7 +47,7 @@
     "@typescript-eslint/parser": "^5.52.0",
     "cross-env": "^7.0.2",
     "eslint": "^8.34.0",
-    "eslint-config-prettier": "^6.7.0",
+    "eslint-config-prettier": "^6.7.0", 
     "eslint-config-standard": "^14.1.0",
     "eslint-config-standard-react": "^9.2.0",
     "eslint-plugin-import": "^2.18.2",

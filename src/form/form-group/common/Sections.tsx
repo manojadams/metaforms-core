@@ -5,6 +5,12 @@ import FormContext from "./../../form-context";
 import FormUtils from "../../../utils/FormUtil";
 import { Section } from "./Section";
 
+interface IProps {
+    sections: Array<IField>;
+    activeIndex: number;
+    error: ISectionError;
+}
+
 function Sections(props: IProps) {
     const { theme, form } = useContext(FormContext);
     const sections = props.sections;
@@ -23,12 +29,6 @@ function Sections(props: IProps) {
             ))}
         </div>
     );
-}
-
-interface IProps {
-    sections: Array<IField>;
-    activeIndex: number;
-    error: ISectionError;
 }
 
 export default Sections;

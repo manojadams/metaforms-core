@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { IElementTypes, IForm } from "../../constants/common-interface";
+import { IElementTypes, IForm, MetaformEvent } from "../../constants/common-interface";
 import { IField, ISchema, ITheme } from "../../constants/model-interfaces";
+import { TCallback } from "../../constants/types";
 import Submit from "../form-controls/Submit";
 import SectionLayout from "../SectionLayout";
 
@@ -15,7 +16,7 @@ interface IProps {
     handleCustom: (e: React.MouseEvent, field: IField) => void;
     handleSubmit: (e: React.MouseEvent, field: IField) => void;
     handleReset: (e: React.MouseEvent, field: IField) => void;
-    handleNext: (e: React.MouseEvent, field: IField, callback: any) => void;
+    handleNext: (e: React.MouseEvent, field: IField, callback: TCallback) => void;
     handlePrevious: () => void;
 }
 
@@ -23,7 +24,7 @@ const SectionForm = (props: IProps) => {
     const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
-        const eventCallback = (e: any) => {
+        const eventCallback = (e: MetaformEvent) => {
             const eventType = e.detail?.eventType || "";
             switch (eventType) {
                 case "previous":

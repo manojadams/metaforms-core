@@ -1,17 +1,18 @@
 import { IForm, IFormField, TCondition } from "../constants/common-interface";
 import { MSGS } from "../constants/constants";
+import { CONTROLS } from "../constants/controls";
 import { IMeta } from "../constants/model-interfaces";
-import { TValue } from "../constants/types";
+import { ISetError, TValue } from "../constants/types";
 
 export default class ValidationUtil {
-    static updateMaxError(meta: IMeta, value: TValue, setError: Function) {
+    static updateMaxError(meta: IMeta, value: TValue, setError: ISetError) {
         let hasError = false;
         if (!meta?.validation?.max) {
             return hasError;
         }
         switch (meta.displayType) {
-            case "number":
-            case "currency":
+            case CONTROLS.NUMBER:
+            case CONTROLS.CURRENCY:
                 if (value) {
                     const strValue = value ? value + "" : "";
                     const val = parseInt(strValue);
@@ -23,8 +24,8 @@ export default class ValidationUtil {
                     }
                 }
                 break;
-            case "month":
-            case "date":
+            case CONTROLS.MONTH:
+            case CONTROLS.DATE:
                 if (value) {
                     const strValue = value ? value + "" : "";
                     const valDate = new Date(strValue);
@@ -40,14 +41,14 @@ export default class ValidationUtil {
         return hasError;
     }
 
-    static updateMinError(meta: IMeta, value: string | boolean | number | undefined, setError: Function) {
+    static updateMinError(meta: IMeta, value: string | boolean | number | undefined, setError: ISetError) {
         let hasError = false;
         if (!meta?.validation?.min) {
             return hasError;
         }
         switch (meta.displayType) {
-            case "number":
-            case "currency":
+            case CONTROLS.NUMBER:
+            case CONTROLS.CURRENCY:
                 if (value) {
                     const strValue = value ? value + "" : "";
                     const val = parseInt(strValue);
@@ -59,8 +60,8 @@ export default class ValidationUtil {
                     }
                 }
                 break;
-            case "month":
-            case "date":
+            case CONTROLS.MONTH:
+            case CONTROLS.DATE:
                 if (value) {
                     const strValue = value ? value + "" : "";
                     const valDate = new Date(strValue);
@@ -76,7 +77,7 @@ export default class ValidationUtil {
         return hasError;
     }
 
-    static isEmptyField(value: any) {
+    static isEmptyField(value: unknown) {
         if (value === "" || value === undefined || value === null) {
             return true;
         }

@@ -1,6 +1,6 @@
-import Constants from "../constants";
-import { IFormField } from "../constants/common-interface";
-import { TiconPositionType } from "../constants/types";
+import { IForm, IFormData, IFormField } from "../constants/common-interface";
+import { DEFAULT_DATE_FORMAT, FORM_ACTION, _INTERNAL_VALUES } from "../constants/constants";
+import { TiconPositionType, TValue } from "../constants/types";
 import { Page } from "../core/Page";
 import {
     IDependency,
@@ -85,9 +85,9 @@ export default class FormUtils {
     static getFormDefaultButtons(): Array<IField> {
         return [
             {
-                name: "submit",
+                name: FORM_ACTION.SUBMIT,
                 meta: {
-                    type: "submit",
+                    type: FORM_ACTION.SUBMIT,
                     displayName: "Save",
                     displayType: "button",
                     url: "",
@@ -102,13 +102,13 @@ export default class FormUtils {
     }
 
     static getThemeProp(themeName: string, theme: ITheme, prop: string) {
-        if (theme.mui?.tabs && theme.mui?.tabs[prop]) {
-            return theme.mui.tabs[prop];
+        if (theme.config?.tabs && theme.config?.tabs[prop]) {
+            return theme.config.tabs[prop];
         }
         return "";
     }
 
-    static getNormalizedFormData(formData: any) {
+    static getNormalizedFormData(formData: IFormData) {
         const newFormData = {};
         Object.keys(formData).forEach((key) => {
             newFormData[key] = {};
@@ -119,7 +119,7 @@ export default class FormUtils {
         return newFormData;
     }
 
-    static updateFormData(formData: Record<string, any>, newFormData: Record<string, any>, formatter: IFormatterType) {
+    static updateFormData(formData: IForm, newFormData: IFormData, formatter: IFormatterType) {
         Object.keys(formData).forEach((key) => {
             Object.keys(formData[key]).forEach((key2) => {
                 const prop = formData[key][key2].prop;
@@ -148,38 +148,39 @@ export default class FormUtils {
         return newFormData;
     }
 
-    static updateSectionFormData(formData: any, newFormData: any, formatter: IFormatterType) {
+    static updateSectionFormData(formData: IFormField, newFormData: IFormData, formatter: IFormatterType) {
         Object.keys(formData).forEach((key) => {
-            const prop = formData[key].prop;
+            const prop = (formData[key] as IFormData).prop;
+            const formDataKey = formData[key] as IFormData;
             if (prop) {
-                if (!newFormData[prop]) {
-                    newFormData[prop] = {};
+                if (!newFormData[prop as string]) {
+                    newFormData[prop as string] = {};
                 }
                 if (formatter[key]) {
-                    newFormData[prop][key] = formatter[key](formData[key].value);
+                    newFormData[prop as string][key] = formatter[key](formDataKey.value as string);
                 } else {
-                    newFormData[prop][key] = formData[key].value;
+                    newFormData[prop as string][key] = formDataKey.value;
                 }
             } else {
                 // null prop is ignored
                 if (prop !== null) {
                     if (formatter[key]) {
-                        newFormData[key] = formatter[key](formData[key].value);
+                        newFormData[key] = formatter[key](formDataKey.value as string);
                     } else {
-                        const displayType = formData[key].displayType || "default";
+                        const displayType = formDataKey.displayType || "default";
                         switch (displayType) {
                             case "file":
                                 {
-                                    const files = formData[key].files;
+                                    const files = formDataKey.files as Array<File>;
                                     if (files && files.length > 0) {
                                         newFormData[key] = files;
                                     } else {
-                                        newFormData[key] = formData[key].value;
+                                        newFormData[key] = formDataKey.value;
                                     }
                                 }
                                 break;
                             default:
-                                newFormData[key] = formData[key].value;
+                                newFormData[key] = formDataKey.value;
                         }
                     }
                 }
@@ -189,7 +190,7 @@ export default class FormUtils {
         return newFormData;
     }
 
-    static updateNestedFormData(formData: any) {
+    static updateNestedFormData(formData: IFormData) {
         Object.keys(formData).forEach((key: string) => {
             if (typeof formData[key] === "object") {
                 const props = key.split("#");
@@ -198,34 +199,36 @@ export default class FormUtils {
                     if (!formData[props[0]]) {
                         formData[props[0]] = {};
                     }
-                    this.updateNestedProp(formData[props[0]], props.slice(1), formData[key]);
+                    this.updateNestedProp(formData[props[0]] as IFormData, props.slice(1), formData[key] as TValue);
                     delete formData[key];
                 }
             }
         });
     }
 
-    static updateNestedProp(formData: any, props: Array<string>, value: any) {
+    static updateNestedProp(formData: IFormData, props: Array<string>, value: TValue) {
         if (props.length > 0) {
             if (props.length === 1) {
-                formData[props[0]] = value;
+                if (formData) {
+                    formData[props[0]] = value as Exclude<TValue, undefined>;
+                }
             } else {
                 if (!formData[props[0]]) {
                     formData[props[0]] = {};
                 }
-                this.updateNestedProp(formData[props[0]], props.slice(1), value);
+                this.updateNestedProp(formData[props[0]] as IFormData, props.slice(1), value);
             }
         }
     }
 
-    static getSearchValue(options: Array<IOption>, value: any) {
+    static getSearchValue(options: Array<IOption>, value: TValue) {
         if (value !== undefined && options && options.length > 0) {
             return options.find((option) => option.value === value);
         }
         return value;
     }
 
-    static getDataFromValueKey(data: any, props: string) {
+    static getDataFromValueKey(data: string, props: string) {
         const values = props.split("#");
         let nestedData = data;
         if (values) {
@@ -237,7 +240,7 @@ export default class FormUtils {
         return data;
     }
 
-    static updateParams(queryParams: Array<TParam> | undefined, eventType: string | undefined, currentValue: any) {
+    static updateParams(queryParams: Array<TParam> | undefined, eventType: string | undefined, currentValue: TValue) {
         if (queryParams && eventType) {
             const updatedQueryParams: Array<TParam> = [];
             queryParams.forEach((param) => {
@@ -245,8 +248,8 @@ export default class FormUtils {
                 let actualVal = val;
                 if (val) {
                     switch (val) {
-                        case "$input":
-                        case "$initial":
+                        case _INTERNAL_VALUES.INPUT:
+                        case _INTERNAL_VALUES.INITIAL:
                             actualVal = val === eventType ? currentValue : "";
                             break;
                         default:
@@ -260,11 +263,11 @@ export default class FormUtils {
         return queryParams;
     }
 
-    static updateFieldProp(field: IFormField, prop: string, value: any) {
+    static updateFieldProp(field: IFormField, prop: string, value: TValue) {
         const props = prop.split("#");
         if (props.length > 1) {
             // nested prop
-            const newProp = props.reduce((acc, item, index) => {
+            props.reduce((acc, item, index) => {
                 if (index === props.length - 1) {
                     // last item
                     acc[item] = value;
@@ -292,7 +295,7 @@ export default class FormUtils {
     }
 
     static getLocalDateStringFormat(inputDateString: string, inputFormat: string) {
-        if (inputDateString && inputFormat === Constants.DEFAULT_DATE_FORMAT) {
+        if (inputDateString && inputFormat === DEFAULT_DATE_FORMAT) {
             try {
                 const parts = inputDateString.split("/");
                 const mm = parts[0];

@@ -1,9 +1,21 @@
-import React, { Fragment, MouseEventHandler, SyntheticEvent, useContext, useEffect, useState } from "react";
-import { IElementTypes } from "../../constants/common-interface";
-import { BUTTON_TYPE } from "../../constants/constants";
+import React, { Fragment, useContext, useEffect, useState } from "react";
+import { IElementTypes, IForm } from "../../constants/common-interface";
+import { BUTTON_TYPE, EVENTS, FORM_ACTION } from "../../constants/constants";
 import { IField } from "../../constants/model-interfaces";
 import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
+
+interface IProps {
+    buttons?: IElementTypes;
+    formButtons?: Array<IField>;
+    form: IForm;
+    theme: string;
+    onSubmit: (event: React.MouseEvent, field: IField, callback: () => void) => void;
+    onReset: (event: React.MouseEvent, field: IField, callback: () => void) => void;
+    onPrevious: (event: React.MouseEvent, field: IField, callback: () => void) => void;
+    onNext: (event: React.MouseEvent, field: IField, callback: () => void) => void;
+    onCustom: (event: React.MouseEvent, field: IField, callback: () => void) => void;
+}
 
 export default function (props: IProps) {
     const context = useContext(FormContext);
@@ -14,7 +26,7 @@ export default function (props: IProps) {
         next: page.showNext()
     });
     useEffect(() => {
-        context.listener("page_change", () => {
+        context.listener(EVENTS.PAGE_CHANGE, () => {
             setShowPage({
                 submit: page.showSave(),
                 next: page.showNext(),
@@ -22,10 +34,10 @@ export default function (props: IProps) {
             });
         });
         return () => {
-            context.removeListener("page_change");
+            context.removeListener(EVENTS.PAGE_CHANGE);
         };
     }, []);
-    const handleClick = (e: SyntheticEvent, button: IField) => {
+    const handleClick = (e: React.MouseEvent, button: IField) => {
         e.preventDefault();
         const callback = () => {
             if (button?.meta.events?.click) {
@@ -41,16 +53,16 @@ export default function (props: IProps) {
             }
         };
         switch (button?.meta?.type) {
-            case "submit":
+            case FORM_ACTION.SUBMIT:
                 props.onSubmit(e, button, callback);
                 break;
-            case "reset":
+            case FORM_ACTION.RESET:
                 props.onReset(e, button, callback);
                 break;
-            case "previous":
+            case FORM_ACTION.PREVIOUS:
                 props.onPrevious(e, button, callback);
                 break;
-            case "next":
+            case FORM_ACTION.NEXT:
                 props.onNext(e, button, callback);
                 break;
             default:
@@ -152,15 +164,14 @@ export default function (props: IProps) {
 function FormButton({
     button,
     theme,
-    form,
     className,
     handleClick
 }: {
     button: IField;
     theme: string;
-    form: any;
+    form: IForm;
     className: string;
-    handleClick: Function;
+    handleClick: (e: React.MouseEvent, button: IField) => void;
 }) {
     const btnClassName = button?.meta?.className;
     const colClassName = className || "col";
@@ -193,6 +204,12 @@ function FormButton({
     }
 }
 
+/**
+ * Represents an external button
+ * @param param
+ * @returns
+ */
+
 function ExtButton({
     className,
     children,
@@ -202,7 +219,7 @@ function ExtButton({
     className: string;
     children: JSX.Element;
     type?: string;
-    onClick: MouseEventHandler<any>;
+    onClick: (e: React.MouseEvent) => void;
 }) {
     return (
         <span
@@ -221,16 +238,4 @@ function ExtButton({
             {children}
         </span>
     );
-}
-
-interface IProps {
-    buttons?: IElementTypes;
-    formButtons?: Array<IField>;
-    form: any;
-    theme: string;
-    onSubmit: Function;
-    onReset: Function;
-    onPrevious: Function;
-    onNext: Function;
-    onCustom: Function;
 }
