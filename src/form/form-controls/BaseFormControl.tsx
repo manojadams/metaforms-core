@@ -275,9 +275,11 @@ export default abstract class BaseFormControl extends React.Component {
             this.context.handleChangeEvents(this.section, this.field.name, value, ref);
             this.handleDependencies(value);
             this.context.emit(EVENTS._FIELD_CHANGE, {
-                section: this.section,
-                field: this.field.name,
-                value
+                payload: {
+                    section: this.section,
+                    field: this.field.name,
+                    value
+                }
             });
         } catch (error) {
             console.error(error);

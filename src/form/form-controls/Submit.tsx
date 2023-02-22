@@ -46,7 +46,7 @@ export default function (props: IProps) {
                     case "emit-event":
                         {
                             const eventName = button.meta.events.click.value || "";
-                            context.emit(eventName, "");
+                            context.emit(eventName);
                         }
                         break;
                 }
