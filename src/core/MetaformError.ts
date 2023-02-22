@@ -1,6 +1,6 @@
 class MetaformError extends Error {
-    details: any;
-    constructor(msg: string, details: any) {
+    details: object;
+    constructor(msg: string, details: object) {
         super(msg);
         this.details = details;
     }

@@ -13,7 +13,7 @@ export default FormRenderer;
 export { BaseFormControl, BaseFormGroup, BaseFormStepper };
 
 /** Export constants */
-export * from "./constants";
+export * from "./constants/constants";
 export * from "./constants/model-interfaces";
 export * from "./constants/common-interface";
 

@@ -1,15 +1,19 @@
+import { SyntheticEvent } from "react";
+import BaseFormControl from "../form/form-controls/BaseFormControl";
+import BaseFormGroup from "../form/form-group/BaseFormGroup";
+import BaseFormStepper from "../form/form-stepper/BaseFormStepper";
 import {
+    IEvent,
     IField,
     IFormatterType,
     IMeta,
     IOption,
     ITheme,
     IUISchema,
-    IURLLoaderConfig,
     IValidation,
     TParam
 } from "./model-interfaces";
-import { TNextCondition, TOperator, TValue } from "./types";
+import { TNextCondition, TNextResponseMode, TOperator, TValue } from "./types";
 
 export interface IBasicFormControl {
     date: () => Element;
@@ -21,46 +25,19 @@ export interface IBasicFormControl {
 export interface IRenderField extends IField {
     section: string;
     form: IMeta;
-    sync: Function;
+    sync: () => void;
 }
 
-export interface IFormRenderer extends IUISchema {
-    baseFormControl?: Function;
-    baseFormGroup?: Function;
-    baseFormStepper?: Function;
-    onChange?: Function;
-    onCustom?: Function;
-    onError?: Function;
-    onPopupClose?: Function;
-    onPrevious?: Function;
-    onNext?: Function;
-    onSubmit: Function;
-    name?: string;
-    nextResponseMode?: TNextResponseMode;
-    useNextResponse?: boolean;
-    formatter?: IFormatterType;
-    controls?: IElementTypes;
-    buttons?: IElementTypes;
-    icons?: IElementTypes;
-    pageNumber?: number;
-    lastPageNumber?: number;
-    className?: string;
-    fns?: IFnTypes;
+export interface IFnTypes {
+    [key: string]: (arg: TValue, ref?: IOption) => TValue;
 }
 
 export interface IElementTypes {
     [key: string]: JSX.Element;
 }
 
-export type TComponent = (props: any) => JSX.Element;
-
-export interface IFnTypes {
-    [key: string]: Function;
-}
-
-export interface IMetaForm {
-    theme: ITheme;
-    form: any;
+export interface IFormData {
+    [key: string]: string | number | boolean | IFormData | Array<string | number | File>;
 }
 
 export interface IError {
@@ -68,34 +45,104 @@ export interface IError {
     errorMsg: string;
 }
 
+export interface IRestConfig {
+    type?: string;
+    url?: string;
+    queryParams?: Array<TParam>;
+    responseKey?: string;
+}
+
+export interface IFieldConfig {
+    type?: string;
+    labelKey?: string;
+    valueKey?: string;
+    responseKey?: string;
+    queryParams?: Array<TParam>;
+    url?: string;
+    urlType?: string;
+    loadOn?: string | Array<string>;
+}
+
+export interface IFormField {
+    prop?: string;
+
+    className?: string;
+    config?: IFieldConfig;
+    events?: IEvent;
+    error: IError; // internal
+
+    display: boolean; // internal
+    displayName?: string;
+    displayType?: string;
+    type?: string;
+    value: TValue;
+
+    isDisabled?: boolean;
+    isReadonly?: boolean;
+    options?: Array<IOption>;
+    validation?: IValidation;
+}
+
+export interface IForm {
+    [key: string]: IFormField | object;
+}
+
+export interface IFieldChange {
+    section: string;
+    field: string;
+    value: TValue;
+}
+
+export interface IFormRenderer extends IUISchema {
+    baseFormControl?: typeof BaseFormControl;
+    baseFormGroup?: typeof BaseFormGroup;
+    baseFormStepper?: typeof BaseFormStepper;
+
+    buttons?: IElementTypes;
+    className?: string;
+    controls?: IElementTypes;
+    fns?: IFnTypes;
+    formatter?: IFormatterType;
+    icons?: IElementTypes;
+    lastPageNumber?: number;
+    name?: string;
+    nextResponseMode?: TNextResponseMode;
+    pageNumber?: number;
+    useNextResponse?: boolean;
+
+    onChange?: (change: IFieldChange) => void;
+    onCustom?: (formData: IFormData, e: SyntheticEvent) => void;
+    onError?: () => void;
+    onPopupClose?: (params: Array<unknown>) => void;
+    onPrevious?: (formData: IFormData, pageNumber: number) => void;
+    onNext?: (formData: IFormData, pageNumber: number) => void;
+    onSubmit: (formData: IFormData, params: unknown) => void;
+}
+
+export type TComponent<T> = (props: T) => JSX.Element;
+
 export interface ISectionError {
     hasError: boolean;
     section: string;
 }
 
-export interface IForm {
-    [key: string]: IFormField | {};
+export interface IOperand {
+    ref: string;
+    section?: string;
 }
 
-export interface IFormField {
-    prop: string | undefined;
-    display: boolean;
-    type: string | undefined;
-    value: TValue;
-    isDisabled: boolean | undefined;
-    isReadonly: boolean | undefined;
-    displayName: string | undefined;
-    displayType: string | undefined;
-    options: Array<IOption> | undefined;
-    isArray: boolean | undefined;
-    url: string | undefined;
-    validation: IValidation;
-    mui: any;
-    bootstrap: any;
-    className: string;
-    config: any;
-    events: any;
-    error: IError;
+export type TCondition = [IOperand, TOperator, IOperand | TValue, TNextCondition?];
+
+export const TVALUE_MAP_TYPE_REF = {
+    fieldValue: "fieldValue",
+    fieldProp: "fieldProp"
+};
+
+export interface IValueMapRef {
+    type?: "fieldValue" | "fieldProp";
+    ref: string;
+    section?: string;
+    propName?: string;
 }
 
 export interface IDepdendencyItem {
@@ -110,39 +157,40 @@ export interface IDepdendencyItem {
     labelKey: string;
     valueFn?: string; // function name to be called to evaluated
     valueKey: string;
-    valueMap: Array<any>;
+    valueMap: Record<string, TValue | Array<IOption> | IValueMapRef>;
     queryParams: Array<TParam>;
     pathParams: Array<TParam>;
     field: string;
     url: string;
     urlType: string;
-    currentValue: any;
-    resetValue: any;
+    currentValue: TValue;
+    resetValue: TValue;
     pattern: string;
-
-    propValue: any;
+    propValue: TValue;
     propName: string;
 }
 
 export interface IEventPayload {
-    value?: number;
+    payload: string | number | IFieldChange;
 }
 
-export interface IModalPayload {
-    config: IURLLoaderConfig | undefined;
-    field: string;
-    label: string;
-    options: Array<IOption>;
-    value: string;
-    section: string;
-    valueCallback: Function;
+export interface IMetaForm {
+    theme: ITheme;
+    form: IForm;
 }
 
-export type TNextResponseMode = "form-data" | "page-data";
+export interface IFieldRef {
+    ref?: string;
+}
 
-export type TCondition = [IOperand, TOperator, IOperand | TValue, TNextCondition?];
+export type TFieldRef = string | IFieldRef;
 
-export interface IOperand {
-    ref: string;
-    section?: string;
+export type TErrorCallback = (error: Error, section: string, field: string) => void;
+
+interface IEventDetail {
+    eventType: string;
+}
+
+export class MetaformEvent extends Event {
+    detail: IEventDetail;
 }

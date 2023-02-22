@@ -12,10 +12,15 @@ import {
     IDepdendencyItem,
     IElementTypes,
     IFnTypes,
-    TCondition
+    TCondition,
+    TErrorCallback,
+    IFieldRef,
+    TFieldRef,
+    IFieldConfig,
+    IEventPayload
 } from "../constants/common-interface";
 import MetaformError from "./MetaformError";
-import { IField, IOption, ISchema, ITheme, IURLLoaderConfig, TParam } from "../constants/model-interfaces";
+import { IField, IOption, ISchema, ITheme, TParam } from "../constants/model-interfaces";
 import Theme from "./Theme";
 import { Rest } from "./Rest";
 import { Page } from "./Page";
@@ -31,11 +36,10 @@ export default class MetaForm implements IMetaForm {
     form: IForm;
     rest: Rest;
     page: Page;
-    icons: IElementTypes | undefined;
-    fns: IFnTypes | undefined;
-    errorHandler: Function | undefined;
-    controls: IElementTypes | undefined;
-    controlElements: Record<string, React.FunctionComponent> | undefined;
+    icons?: IElementTypes;
+    fns?: IFnTypes;
+    controls: IElementTypes;
+    errorHandler?: TErrorCallback;
 
     constructor(private schema: ISchema, private eventEmitter: EventEmitter) {
         this.form = {};
@@ -45,8 +49,7 @@ export default class MetaForm implements IMetaForm {
         this.theme = new Theme({
             type: themeType,
             sectionLayout: sectionLayout,
-            mui: schema?.theme?.mui,
-            bootstrap: schema?.theme?.bootstrap
+            config: schema?.theme?.config
         });
         this.page = new Page(false, 1);
     }
@@ -114,15 +117,15 @@ export default class MetaForm implements IMetaForm {
     }
 
     /** event emitter functions */
-    emit(eventType: string, payload: any) {
+    emit(eventType: string, payload: IEventPayload) {
         this.eventEmitter.emit(eventType, payload);
     }
 
-    listener(eventType: string, fn: (...args: any[]) => void) {
+    listener(eventType: string, fn: (data: IEventPayload) => void) {
         this.eventEmitter.addListener(eventType, fn);
     }
 
-    removeListener(event: string, fn?: (...args: any[]) => void) {
+    removeListener(event: string, fn?: (data: IEventPayload) => void) {
         this.eventEmitter.removeListener(event, fn);
     }
 
@@ -148,7 +151,7 @@ export default class MetaForm implements IMetaForm {
         type: string,
         url: string,
         params?: Array<TParam>,
-        currentValue?: any,
+        currentValue?: TValue,
         sectionName?: string,
         isRemote?: boolean
     ) {
@@ -183,7 +186,7 @@ export default class MetaForm implements IMetaForm {
         }
     }
 
-    getData(config: IURLLoaderConfig, val: TValue, section: string, eventType?: string): Promise<Array<IOption>> {
+    getData(config: IFieldConfig, val: TValue, section: string, eventType?: string): Promise<Array<IOption>> {
         return new Promise((resolve, reject) => {
             if (config.type) {
                 switch (config.type) {
@@ -202,14 +205,14 @@ export default class MetaForm implements IMetaForm {
                             section,
                             // eslint-disable-next-line camelcase
                             config?.urlType === URL_TYPE.REMOTE
-                        ).then((response: any) => {
+                        ).then((response: object) => {
                             const responseKey = config?.responseKey;
                             const results = responseKey ? response[responseKey] : response;
                             let newResults: Array<IOption> = [];
                             if (Array.isArray(results)) {
                                 const labelKey = config?.labelKey || "label";
                                 const valueKey = config?.valueKey || "value";
-                                newResults = results.map((r: any) => {
+                                newResults = results.map((r: string) => {
                                     const label = FormUtils.getDataFromValueKey(r, labelKey);
                                     const value = FormUtils.getDataFromValueKey(r, valueKey);
                                     return { label, value, ref: r };
@@ -262,8 +265,6 @@ export default class MetaForm implements IMetaForm {
             placeholder: field.meta.placeholder,
             isArray: field.meta.isArray,
             validation: MetaformUtil.getDefaultValidation(field.meta?.displayType, field.meta.validation),
-            mui: field.meta.mui,
-            bootstrap: field.meta.bootstrap,
             className: field.meta.className,
             events: field.meta.events,
             labelPlacement: field.meta.labelPlacement,
@@ -292,7 +293,7 @@ export default class MetaForm implements IMetaForm {
         return this.form[section][field][prop];
     }
 
-    setFieldProp(section: string, field: string, prop: string, propVal: any) {
+    setFieldProp(section: string, field: string, prop: string, propVal: TValue | Array<TFieldRef> | IError) {
         this.form[section][field][prop] = propVal;
     }
 
@@ -308,7 +309,7 @@ export default class MetaForm implements IMetaForm {
         return this.form[section][field].options || [];
     }
 
-    setFieldOptions(section: string, field: string, options: Array<any> | undefined) {
+    setFieldOptions(section: string, field: string, options: Array<IOption> | undefined) {
         this.form[section][field].options = options;
     }
 
@@ -341,7 +342,7 @@ export default class MetaForm implements IMetaForm {
                                 value: TValue;
                                 valueFn?: string;
                                 url: string;
-                                currentValue: any;
+                                currentValue: TValue;
                                 resetValue: string;
                             }) => {
                                 switch (dep.type) {
@@ -370,7 +371,7 @@ export default class MetaForm implements IMetaForm {
                                                                     if (valueFn) {
                                                                         const fn = this.getFn(valueFn);
                                                                         if (fn) {
-                                                                            conditionMatch = fn(value);
+                                                                            conditionMatch = fn(value) as boolean;
                                                                         }
                                                                     }
                                                                 }
@@ -418,11 +419,11 @@ export default class MetaForm implements IMetaForm {
             });
     }
 
-    handleDependencies(section: string, fieldName: string, value: any, fieldDisplayed: boolean) {
+    handleDependencies(section: string, fieldName: string, value: TValue, fieldDisplayed: boolean) {
         return DependencyUtil.handleDependencies(this, section, fieldName, value, fieldDisplayed);
     }
 
-    handleChangeEvents(gSection: string, gField: string, fieldValue?: any, fieldRef?: any) {
+    handleChangeEvents(gSection: string, gField: string, fieldValue?: TValue, fieldRef?: IOption) {
         const changes = this.getChangeEvents(gSection, gField);
         let actualChanges = [];
         if (changes) {
@@ -438,17 +439,17 @@ export default class MetaForm implements IMetaForm {
                             if (valueMap) {
                                 let matchValue;
                                 if (valueKey) {
-                                    const ref = fieldRef?.ref;
-                                    matchValue = ref ? FormUtils.getDataFromValueKey(ref, valueKey) : value;
+                                    const ref = (fieldRef as IOption)?.ref;
+                                    matchValue = ref ? FormUtils.getDataFromValueKey(ref as string, valueKey) : value;
                                 } else {
-                                    matchValue = valueMap[fieldValue];
+                                    matchValue = valueMap[fieldValue as string];
                                 }
                                 if (matchValue !== undefined) {
                                     actualValue = matchValue;
                                 }
                             } else {
                                 if (valueKey) {
-                                    const ref = fieldRef?.ref;
+                                    const ref = (fieldRef as IFieldRef)?.ref;
                                     actualValue = ref ? FormUtils.getDataFromValueKey(ref, valueKey) : value;
                                 } else if (changes.valueFn) {
                                     const fn = this.getFn(changes.valueFn);
@@ -494,7 +495,7 @@ export default class MetaForm implements IMetaForm {
                                 if (changes.valueMap) {
                                     // to do
                                 } else if (changes.valueKey) {
-                                    const ref = fieldRef?.ref;
+                                    const ref = (fieldRef as IFieldRef)?.ref;
                                     actualValue = ref ? FormUtils.getDataFromValueKey(ref, valueKey) : value;
                                 } else {
                                     actualValue = value !== undefined ? value : fieldValue;
@@ -504,7 +505,7 @@ export default class MetaForm implements IMetaForm {
                                 this.setField(section, ref, actualValue);
                                 const field = this.getField(section, ref);
                                 if (field && field.displayType === "select") {
-                                    this.setFieldProp(section, ref, "options", [fieldRef]);
+                                    this.setFieldProp(section, ref, "options", [fieldRef as TFieldRef]);
                                 }
                             }
                         }
@@ -518,13 +519,18 @@ export default class MetaForm implements IMetaForm {
         displayType: string,
         section: string,
         field: string,
-        resultOptions: Array<any>,
+        resultOptions: Array<IOption>,
         dependency: IDepdendencyItem
     ) {
         switch (displayType) {
             case FIELD_DISPLAY_TYPES.TEXT:
-                {
+                if (dependency.defaultValue === "0") {
                     const firstOption = resultOptions && resultOptions[0] ? resultOptions[0] : "";
+                    if (firstOption) {
+                        this.setFieldProp(section, field, "value", firstOption.value);
+                        this.performDeepUpdate(section, field, firstOption.value, firstOption);
+                    }
+                } else {
                     this.setFieldProp(section, field, "value", "");
                 }
                 break;
@@ -542,7 +548,7 @@ export default class MetaForm implements IMetaForm {
         }
     }
 
-    performDeepUpdate(section: string, field: string, value: any, ref: any) {
+    performDeepUpdate(section: string, field: string, value: TValue, ref: IOption) {
         this.setFieldProp(section, field, "value", value);
         this.handleChangeEvents(section, field, value, ref);
     }
@@ -583,7 +589,7 @@ export default class MetaForm implements IMetaForm {
     }
 
     /** Error handler */
-    handleError(error: any, section: string, field: string) {
+    handleError(error: Error, section: string, field: string) {
         this.setError(section, field, {
             errorMsg: error.message,
             hasError: true
@@ -593,7 +599,7 @@ export default class MetaForm implements IMetaForm {
         }
     }
 
-    setErrorHandler(errorHandler: Function) {
+    setErrorHandler(errorHandler: TErrorCallback) {
         this.errorHandler = errorHandler;
     }
 
@@ -606,16 +612,5 @@ export default class MetaForm implements IMetaForm {
 
     setControls(controls: IElementTypes) {
         this.controls = controls;
-    }
-
-    getControlElements(displayType: string): any {
-        if (this.controlElements && this.controlElements[displayType]) {
-            return this.controlElements[displayType];
-        }
-        return null;
-    }
-
-    setControlElements(controlElements: Record<string, React.FunctionComponent>) {
-        this.controlElements = controlElements;
     }
 }

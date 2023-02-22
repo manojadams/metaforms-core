@@ -2,19 +2,25 @@ import React from "react";
 import FormUtils from "./utils/FormUtil";
 import EventEmitter from "eventemitter3";
 import { ISchema } from "./constants/model-interfaces";
-import { IError, IFormRenderer } from "./constants/common-interface";
+import { IError, IEventPayload, IFieldChange, IFormField, IFormRenderer } from "./constants/common-interface";
 import { metaAPI } from "./meta-api";
 import Theme from "./core/Theme";
-import { EVENTS, NEXT_RESPONSE_MODE, SECTION_LAYOUT } from "./constants/constants";
+import { EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE, SECTION_LAYOUT } from "./constants/constants";
 import MetaForm from "./core/MetaForm";
 import MetaFormUpdater from "./core/MetaFormUpdater";
 import SchemaErrorBoundary from "./form/SchemaErrorBoundary";
 import FormContext from "./form/form-context";
 import Form from "./form/Form";
 import FormImpls from "./core/FormImpl";
+import FormImplsContext from "./form/form-impl-context";
+
+interface IState {
+    validated: boolean;
+    error: IError;
+}
 
 /**
- * The core class responsible for form rendering 
+ * The core class responsible for form rendering
  * @category Form renderer
  */
 export default class FormRenderer extends React.Component<IFormRenderer> {
@@ -31,6 +37,7 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
         this.schema = FormUtils.cleanupSchema(props.schema);
         this.name = props.name || "default";
         this.lastAction = "";
+        this.formImpls = new FormImpls();
         try {
             this.metaform = new MetaForm(this.props.schema, new EventEmitter());
             this.metaformUpdater = new MetaFormUpdater(this.name, this.metaform);
@@ -59,7 +66,6 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
             if (props.lastPageNumber) {
                 this.metaform.setEndOfPage(props.lastPageNumber);
             }
-
             if (props.baseFormControl) {
                 this.formImpls.setFormControl(props.baseFormControl);
             }
@@ -91,7 +97,7 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
     }
 
     componentDidMount() {
-        this.metaform.listener("submit", (...params: any) => {
+        this.metaform.listener(EVENTS.SUBMIT, (...params) => {
             if (this.props.onSubmit) {
                 this.props.onSubmit(
                     FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter || {}),
@@ -99,12 +105,12 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
                 );
             }
         });
-        this.metaform.listener(EVENTS._FIELD_CHANGE, (...params: any) => {
+        this.metaform.listener(EVENTS._FIELD_CHANGE, (params: IEventPayload) => {
             if (this.props.onChange) {
-                this.props.onChange(params);
+                this.props.onChange(params.payload as IFieldChange);
             }
         });
-        this.metaform.listener(EVENTS._FIELD_CLOSE, (...params: any) => {
+        this.metaform.listener(EVENTS._FIELD_CLOSE, (...params) => {
             if (this.props.onPopupClose) {
                 this.props.onPopupClose(params);
             }
@@ -127,102 +133,120 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
         return (
             <SchemaErrorBoundary error={this.state.error}>
                 <FormContext.Provider value={this.metaform}>
-                    <div className={rootClassname}>
-                        <Form
-                            schema={this.props.schema}
-                            validated={this.state.validated}
-                            // eslint-disable-next-line react/jsx-no-bind
-                            validate={this.validate.bind(this)}
-                            form={this.metaform.form}
-                            theme={this.metaform.theme}
-                            onCustom={(...params: any) => {
-                                if (this.props.onCustom) {
-                                    this.props.onCustom(
-                                        FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter || {}),
-                                        params
-                                    );
-                                }
-                            }}
-                            onPrevious={(...params: any) => {
-                                this.lastAction = "previous";
-                                if (this.props.onPrevious) {
-                                    const page = this.metaform.getPage();
-                                    const nextResponseMode =
-                                        this.props.nextResponseMode || NEXT_RESPONSE_MODE.FORM_DATA;
-                                    if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
-                                        const section = this.metaform.getSection(page.pageNumber);
-                                        const formData = section;
-                                        this.props.onPrevious(
-                                            FormUtils.updateSectionFormData(formData, {}, this.props.formatter || {}),
-                                            page.pageNumber
-                                        );
-                                    } else {
-                                        const formData = this.metaform.form;
-                                        this.props.onPrevious(
-                                            FormUtils.updateFormData(formData, {}, this.props.formatter || {}),
-                                            page.pageNumber
-                                        );
-                                    }
-                                }
-                            }}
-                            onNext={async (...params: any) => {
-                                this.lastAction = "next";
-                                if (this.props.onNext) {
-                                    const page = this.metaform.getPage();
-                                    const nextResponseMode =
-                                        this.props.nextResponseMode || NEXT_RESPONSE_MODE.FORM_DATA;
-                                    if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
-                                        const section = this.metaform.getSection(page.pageNumber);
-                                        const formData = section;
-                                        return await this.props.onNext(
-                                            FormUtils.updateSectionFormData(formData, {}, this.props.formatter || {}),
-                                            page.pageNumber
-                                        );
-                                    } else {
-                                        const formData = this.metaform.form;
-                                        return await this.props.onNext(
-                                            FormUtils.updateFormData(formData, {}, this.props.formatter || {}),
-                                            page.pageNumber
-                                        );
-                                    }
-                                }
-                                return true;
-                            }}
-                            onSubmit={(...params: any) => {
-                                this.lastAction = "submit";
-                                if (this.props.onSubmit) {
-                                    const nextResponseMode =
-                                        this.props.nextResponseMode || NEXT_RESPONSE_MODE.FORM_DATA;
-                                    if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
-                                        const page = this.metaform.getPage();
-                                        const section = this.metaform.getSection(page.pageNumber);
-                                        const formData = section;
-                                        this.props.onSubmit(
-                                            FormUtils.updateSectionFormData(formData, {}, this.props.formatter || {}),
-                                            params
-                                        );
-                                    } else {
-                                        this.props.onSubmit(
+                    <FormImplsContext.Provider value={this.formImpls}>
+                        <div className={rootClassname}>
+                            <Form
+                                schema={this.props.schema}
+                                validated={this.state.validated}
+                                // eslint-disable-next-line react/jsx-no-bind
+                                validate={this.validate.bind(this)}
+                                form={this.metaform.form}
+                                theme={this.metaform.theme}
+                                onCustom={(e: React.MouseEvent) => {
+                                    if (this.props.onCustom) {
+                                        this.props.onCustom(
                                             FormUtils.updateFormData(
                                                 this.metaform.form,
                                                 {},
                                                 this.props.formatter || {}
                                             ),
-                                            params
+                                            e
                                         );
                                     }
-                                }
-                            }}
-                            emit={(eventType: string, payload: any) => {
-                                this.metaform.emit(eventType, payload);
-                            }}
-                            buttons={this.props.buttons}
-                            formValidated={(validated) => {
-                                this.setState({ validated });
-                            }}
-                            useNextResponse={this.props.useNextResponse}
-                        />
-                    </div>
+                                }}
+                                onPrevious={() => {
+                                    this.lastAction = FORM_ACTION.PREVIOUS;
+                                    if (this.props.onPrevious) {
+                                        const page = this.metaform.getPage();
+                                        const nextResponseMode =
+                                            this.props.nextResponseMode || NEXT_RESPONSE_MODE.FORM_DATA;
+                                        if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
+                                            const section = this.metaform.getSection(page.pageNumber);
+                                            const formData = section;
+                                            this.props.onPrevious(
+                                                FormUtils.updateSectionFormData(
+                                                    formData as IFormField,
+                                                    {},
+                                                    this.props.formatter || {}
+                                                ),
+                                                page.pageNumber
+                                            );
+                                        } else {
+                                            const formData = this.metaform.form;
+                                            this.props.onPrevious(
+                                                FormUtils.updateFormData(formData, {}, this.props.formatter || {}),
+                                                page.pageNumber
+                                            );
+                                        }
+                                    }
+                                }}
+                                onNext={async () => {
+                                    this.lastAction = FORM_ACTION.NEXT;
+                                    if (this.props.onNext) {
+                                        const page = this.metaform.getPage();
+                                        const nextResponseMode =
+                                            this.props.nextResponseMode || NEXT_RESPONSE_MODE.FORM_DATA;
+                                        if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
+                                            const section = this.metaform.getSection(page.pageNumber);
+                                            const formData = section;
+                                            return await this.props.onNext(
+                                                FormUtils.updateSectionFormData(
+                                                    formData as IFormField,
+                                                    {},
+                                                    this.props.formatter || {}
+                                                ),
+                                                page.pageNumber
+                                            );
+                                        } else {
+                                            const formData = this.metaform.form;
+                                            return await this.props.onNext(
+                                                FormUtils.updateFormData(formData, {}, this.props.formatter || {}),
+                                                page.pageNumber
+                                            );
+                                        }
+                                    }
+                                    return true;
+                                }}
+                                onSubmit={(...params) => {
+                                    this.lastAction = FORM_ACTION.SUBMIT;
+                                    if (this.props.onSubmit) {
+                                        const nextResponseMode =
+                                            this.props.nextResponseMode || NEXT_RESPONSE_MODE.FORM_DATA;
+                                        if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
+                                            const page = this.metaform.getPage();
+                                            const section = this.metaform.getSection(page.pageNumber);
+                                            const formData = section;
+                                            this.props.onSubmit(
+                                                FormUtils.updateSectionFormData(
+                                                    formData as IFormField,
+                                                    {},
+                                                    this.props.formatter || {}
+                                                ),
+                                                params
+                                            );
+                                        } else {
+                                            this.props.onSubmit(
+                                                FormUtils.updateFormData(
+                                                    this.metaform.form,
+                                                    {},
+                                                    this.props.formatter || {}
+                                                ),
+                                                params
+                                            );
+                                        }
+                                    }
+                                }}
+                                emit={(eventType: string, payload: IEventPayload) => {
+                                    this.metaform.emit(eventType, payload);
+                                }}
+                                buttons={this.props.buttons}
+                                formValidated={(validated) => {
+                                    this.setState({ validated });
+                                }}
+                                useNextResponse={this.props.useNextResponse}
+                            />
+                        </div>
+                    </FormImplsContext.Provider>
                 </FormContext.Provider>
             </SchemaErrorBoundary>
         );
@@ -231,18 +255,13 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
     validate(e: React.SyntheticEvent, type: string): boolean {
         e.preventDefault();
         switch (type) {
-            case "next":
+            case FORM_ACTION.NEXT:
                 return this.metaform.validate();
-            case "submit":
+            case FORM_ACTION.SUBMIT:
                 return this.metaform.validate();
             default:
                 this.setState({ validated: true });
         }
         return true;
     }
-}
-
-interface IState {
-    validated: boolean;
-    error: IError;
 }

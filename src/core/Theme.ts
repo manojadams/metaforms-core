@@ -1,14 +1,12 @@
-import { IBootstrapTheme, IMUITheme, ITheme } from "./../constants/model-interfaces";
+import { ITheme, IThemeConfig } from "./../constants/model-interfaces";
 
 export default class Theme {
     type: string;
     sectionLayout?: string | undefined;
-    mui?: IMUITheme;
-    bootstrap?: IBootstrapTheme;
+    config?: IThemeConfig;
     constructor(theme: ITheme) {
         this.type = theme.type;
         this.sectionLayout = theme.sectionLayout;
-        this.mui = theme.mui;
-        this.bootstrap = theme.bootstrap;
+        this.config = theme.config;
     }
 }

@@ -1,6 +1,11 @@
 import React, { Fragment, ReactNode } from "react";
 import { IError } from "../constants/common-interface";
 
+interface IProps {
+    children: ReactNode;
+    error: IError;
+}
+
 export default class SchemaErrorBoundary extends React.Component<IProps> {
     state: { error: IError };
     constructor(props: IProps) {
@@ -10,7 +15,7 @@ export default class SchemaErrorBoundary extends React.Component<IProps> {
         };
     }
 
-    componentDidCatch(error: any, errorInfo: any) {
+    componentDidCatch(error: Error, errorInfo: object) {
         console.error(error);
         this.setState({ error: { hasError: true, errorMsg: errorInfo } });
     }
@@ -27,9 +32,4 @@ export default class SchemaErrorBoundary extends React.Component<IProps> {
             return <Fragment>{this.props.children}</Fragment>;
         }
     }
-}
-
-interface IProps {
-    children: ReactNode;
-    error: IError;
 }

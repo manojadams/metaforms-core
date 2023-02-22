@@ -1,10 +1,33 @@
 import React, { SyntheticEvent } from "react";
-import { IElementTypes } from "../constants/common-interface";
-import { EVENTS, SECTION_LAYOUT } from "../constants/constants";
+import { IElementTypes, IForm } from "../constants/common-interface";
+import { EVENTS, FORM_ACTION, SECTION_LAYOUT } from "../constants/constants";
 import { IField, ISchema, ITheme } from "../constants/model-interfaces";
+import { TCallback } from "../constants/types";
 import FormUtils from "../utils/FormUtil";
 import DefaultForm from "./formtype/DefaultForm";
 import SectionForm from "./formtype/SectionForm";
+
+interface IProps {
+    schema: ISchema;
+    validated: boolean;
+    form: IForm;
+    theme: ITheme;
+    onCustom: (e?: React.MouseEvent) => void;
+    onPrevious: (e?: React.MouseEvent, data?: IForm) => void;
+    onNext: () => Promise<boolean | void>;
+    onSubmit: (e: React.MouseEvent, data?: IForm) => void;
+    emit: (
+        event: string,
+        param: {
+            payload: string;
+            callback?: () => void;
+        }
+    ) => void;
+    buttons?: IElementTypes;
+    useNextResponse?: boolean;
+    validate: (e: SyntheticEvent, type: string) => boolean;
+    formValidated: (validated: boolean) => void;
+}
 
 export default function (props: IProps) {
     const hasSection = FormUtils.hasSections(props.schema.fields);
@@ -14,8 +37,8 @@ export default function (props: IProps) {
             ? props.schema.buttons
             : FormUtils.getFormDefaultButtons();
 
-    const handleSubmit = (e: any, field: IField) => {
-        if (props.validate(e, "submit")) {
+    const handleSubmit = (e: React.MouseEvent) => {
+        if (props.validate(e, FORM_ACTION.SUBMIT)) {
             if (props.onSubmit) {
                 const data = props.form;
                 props.onSubmit(e, data);
@@ -24,27 +47,27 @@ export default function (props: IProps) {
         props.formValidated(true);
     };
 
-    const handleReset = (e: any, field: IField) => {
-        // to do
+    const handleReset = (e: React.MouseEvent) => {
+        console.log("Reset handler triggered", e);
     };
 
-    const handleCustom = (e: any, field: IField) => {
+    const handleCustom = (e: React.MouseEvent) => {
         props.onCustom(e);
     };
 
-    const handleNext = async (e: SyntheticEvent, section: IField, callback: any) => {
-        if (props.validate(e, "next")) {
+    const handleNext = async (e: React.MouseEvent, section: IField, callback: TCallback) => {
+        if (props.validate(e, FORM_ACTION.NEXT)) {
             if (props.useNextResponse === true) {
                 const result = await props.onNext();
-                if (result === true) {
+                if (result) {
                     props.emit(EVENTS.SWITCH, {
-                        payload: "next",
+                        payload: FORM_ACTION.NEXT,
                         callback
                     });
                 }
             } else {
                 props.onNext();
-                props.emit(EVENTS.SWITCH, { payload: "next", callback });
+                props.emit(EVENTS.SWITCH, { payload: FORM_ACTION.NEXT, callback });
             }
         } else {
             props.emit(EVENTS.VALIDATION_ERROR, { payload: section.name });
@@ -52,7 +75,7 @@ export default function (props: IProps) {
     };
 
     const handlePrevious = () => {
-        props.emit(EVENTS.SWITCH, { payload: "previous" });
+        props.emit(EVENTS.SWITCH, { payload: FORM_ACTION.PREVIOUS });
         props.onPrevious();
     };
     if (hasSection && sectionLayout !== SECTION_LAYOUT.DEFAULT) {
@@ -82,20 +105,4 @@ export default function (props: IProps) {
             />
         );
     }
-}
-
-interface IProps {
-    schema: ISchema;
-    validated: boolean;
-    form: any;
-    theme: ITheme;
-    onCustom: Function;
-    onPrevious: Function;
-    onNext: Function;
-    onSubmit: Function;
-    emit: Function;
-    buttons?: IElementTypes;
-    useNextResponse?: boolean;
-    validate: (e: SyntheticEvent, type: string) => boolean;
-    formValidated: (validated: boolean) => void;
 }

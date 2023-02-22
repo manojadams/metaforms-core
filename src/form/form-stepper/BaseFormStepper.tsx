@@ -14,7 +14,7 @@ abstract class BaseFormStepper extends BaseFormWizard {
         this.setState({
             activeIndex: this.context?.page?.pageNumber ? this.context.page.pageNumber - 1 : 1
         });
-        this.context.listener(EVENTS.SWITCH, (payload: { payload: string; callback?: Function }) => {
+        this.context.listener(EVENTS.SWITCH, (payload: { payload: string; callback?: () => void }) => {
             switch (payload.payload) {
                 case "next":
                     this.setActiveIndex(this.state.activeIndex + 1);
@@ -26,11 +26,11 @@ abstract class BaseFormStepper extends BaseFormWizard {
                     break;
             }
         });
-        this.context.listener(EVENTS.VALIDATION_ERROR, (payload: { payload: string; callback: Function }) => {
+        this.context.listener(EVENTS.VALIDATION_ERROR, (payload: IEventPayload) => {
             this.setState({
                 error: {
                     hasError: true,
-                    section: payload.payload
+                    section: payload
                 }
             });
         });
@@ -45,8 +45,8 @@ abstract class BaseFormStepper extends BaseFormWizard {
                 });
             }
         });
-        this.context.listener(EVENTS._END_OF_PAGE, (payload: IEventPayload) => {
-            this.context.setEndOfPage(payload?.value);
+        this.context.listener(EVENTS._END_OF_PAGE, (data: IEventPayload) => {
+            this.context.setEndOfPage(data.payload as number);
         });
 
         this.context.listener(EVENTS._RESET_END_OF_PAGE, () => {

@@ -1,4 +1,4 @@
-import { IConfig, IRest } from "../constants/model-interfaces";
+import { IConfig, IRest, TParam } from "../constants/model-interfaces";
 
 export class Rest implements IRest {
     config: IConfig;
@@ -11,7 +11,7 @@ export class Rest implements IRest {
         this.baseurl = apihost + basepath;
     }
 
-    get(url: string, params?: Array<Array<any>>, isRemote?: boolean) {
+    get(url: string, params?: Array<TParam>, isRemote?: boolean) {
         const finalUrl = isRemote ? url : this.baseurl + url;
         return fetch(finalUrl).then((res) => res.json());
     }
