@@ -25,7 +25,7 @@ export default function FormFieldRenderer(props: IRenderField) {
         return <Fragment />;
     }
     if (isStandalone || isSection) {
-        const wrapClassName = isSection ? "row section" : isStandalone ? "col-md-12" : "";
+        const wrapClassName = isSection ? "mrow section" : isStandalone ? "mcol-md-12" : "";
         return (
             <div className={wrapClassName}>
                 <RenderColumn
@@ -70,11 +70,11 @@ function RenderColumn({
     const { theme } = useContext(FormContext);
     const vs = FormUtils.getVerticalSpacing(theme.type);
     const type = props.meta?.type ? props.meta.type : "field";
-    const wrapClassName = cssClassName || type === "field" ? "col-md-12" : "";
+    const wrapClassName = cssClassName || (type === "field" ? "col-md-12" : "");
     if (wrapClassName) {
         return (
             <Row isStandalone={isStandAlone} align={props?.meta?.displayProps?.align}>
-                {props.meta.displayProps?.rs && <div className="col-md-12" />}
+                {props.meta.displayProps?.rs && <div className="mcol-md-12" />}
                 <div className={wrapClassName + " " + vs}>
                     {isSection && props.meta.displayType === "title" && (
                         <h4 className="text-center mt-md-5 mb-md-2 mt-4 mb-2">{props.meta.displayName}</h4>

@@ -16,12 +16,12 @@ import {
 } from "./../constants/model-interfaces";
 
 const cssClassMap = {
-    md: "col-md-",
-    lg: "col-lg-",
-    sm: "col-sm-",
-    xs: "col-",
-    offset: "offset-",
-    default: "col-md"
+    md: "mcol-md-",
+    lg: "mcol-lg-",
+    sm: "mcol-sm-",
+    xs: "mcol-",
+    offset: "moffset-",
+    default: "mcol-md"
 };
 
 /**

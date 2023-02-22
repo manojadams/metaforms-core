@@ -8,11 +8,12 @@ import Theme from "./core/Theme";
 import { EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE, SECTION_LAYOUT } from "./constants/constants";
 import MetaForm from "./core/MetaForm";
 import MetaFormUpdater from "./core/MetaFormUpdater";
-import SchemaErrorBoundary from "./form/SchemaErrorBoundary";
+import SchemaErrorBoundary from "./SchemaErrorBoundary";
 import FormContext from "./form/form-context";
 import Form from "./form/Form";
 import FormImpls from "./core/FormImpl";
 import FormImplsContext from "./form/form-impl-context";
+import { Container } from "layout-emotions";
 
 interface IState {
     validated: boolean;
@@ -129,12 +130,12 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
             : this.props.schema?.theme?.className
             ? this.props.schema.theme.className
             : "";
-        const rootClassname = `container ${outerClassname} ${this.lastAction}`;
+        const rootClassname = `${outerClassname} ${this.lastAction}`;
         return (
             <SchemaErrorBoundary error={this.state.error}>
                 <FormContext.Provider value={this.metaform}>
                     <FormImplsContext.Provider value={this.formImpls}>
-                        <div className={rootClassname}>
+                        <Container className={rootClassname}>
                             <Form
                                 schema={this.props.schema}
                                 validated={this.state.validated}
@@ -245,7 +246,7 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
                                 }}
                                 useNextResponse={this.props.useNextResponse}
                             />
-                        </div>
+                        </Container>
                     </FormImplsContext.Provider>
                 </FormContext.Provider>
             </SchemaErrorBoundary>

@@ -2,6 +2,7 @@ import React, { Fragment, useContext, useEffect, useState } from "react";
 import { IElementTypes, IForm } from "../../constants/common-interface";
 import { BUTTON_TYPE, EVENTS, FORM_ACTION } from "../../constants/constants";
 import { IField } from "../../constants/model-interfaces";
+import { Row as MRow } from "layout-emotions";
 import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
 
@@ -70,7 +71,7 @@ export default function (props: IProps) {
         }
     };
     return (
-        <div className="row footer" data-pagenumber={page.pageNumber}>
+        <MRow className="footer" data-pagenumber={page.pageNumber}>
             {props.formButtons &&
                 props.formButtons.map((button, idx) => {
                     const className = FormUtils.getCssClassName(button.meta?.displayProps);
@@ -157,7 +158,7 @@ export default function (props: IProps) {
                             return <Fragment key={idx} />;
                     }
                 })}
-        </div>
+        </MRow>
     );
 }
 

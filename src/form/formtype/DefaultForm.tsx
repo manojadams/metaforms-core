@@ -3,6 +3,7 @@ import { IElementTypes, IForm } from "../../constants/common-interface";
 import { SECTION_LAYOUT } from "../../constants/constants";
 import { IField, ISchema, ITheme } from "../../constants/model-interfaces";
 import { TCallback } from "../../constants/types";
+import { Row as MRow } from "layout-emotions";
 import Submit from "../form-controls/Submit";
 import FormFieldRenderer from "../FormFieldRenderer";
 
@@ -28,7 +29,7 @@ const DefaultForm = (props: IProps) => {
     };
     return (
         <form name="metaform" className={`needs-validation ${props.validated ? "was-validated" : ""}`} noValidate>
-            <div className="row">
+            <MRow>
                 {props.schema.fields.map((field: IField) => (
                     <FormFieldRenderer
                         {...field}
@@ -40,7 +41,7 @@ const DefaultForm = (props: IProps) => {
                         sync={sync}
                     />
                 ))}
-            </div>
+            </MRow>
             <Submit
                 theme={props.theme.type}
                 form={props.form}

@@ -1,6 +1,6 @@
 {
   "name": "@manojadams/metaforms-core",
-  "version": "2.0.11",
+  "version": "2.0.14",
   "description": "React Library for rendering dynamic forms from json schema",
   "author": "manojgetwealthy",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "node": ">=12"
   },
   "scripts": {
-    "build": "microbundle-crl --no-compress --format modern,cjs",
+    "build": "microbundle-crl --no-compress --format modern,cjs --css",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
     "prepare": "run-s build",
     "test": "run-s test:unit test:lint test:build",
@@ -30,8 +30,10 @@
     "react": "^18.0.0"
   },
   "dependencies": {
-    "bootstrap": "4.0.0",
-    "eventemitter3": "^4.0.7"
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "eventemitter3": "^4.0.7",
+    "layout-emotions": "^1.0.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
@@ -47,7 +49,7 @@
     "@typescript-eslint/parser": "^5.52.0",
     "cross-env": "^7.0.2",
     "eslint": "^8.34.0",
-    "eslint-config-prettier": "^6.7.0", 
+    "eslint-config-prettier": "^6.7.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-config-standard-react": "^9.2.0",
     "eslint-plugin-import": "^2.18.2",

@@ -1,5 +1,5 @@
 import React, { Fragment, ReactNode } from "react";
-import { IError } from "../constants/common-interface";
+import { IError } from "./constants/common-interface";
 
 interface IProps {
     children: ReactNode;

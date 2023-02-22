@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { IForm } from "../../../constants/common-interface";
 import { SECTION_LAYOUT } from "../../../constants/constants";
 import { IField } from "../../../constants/model-interfaces";
+import { Row } from "layout-emotions";
 import FormFieldRenderer from "../../FormFieldRenderer";
 
 interface ISectionProps {
@@ -27,7 +28,7 @@ export function Section(props: ISectionProps) {
             role="tabpanel"
             aria-labelledby="contact-tab"
         >
-            <div className="row">
+            <Row>
                 {props.section.fields &&
                     props.section.fields.map((field: IField) => (
                         <FormFieldRenderer
@@ -38,7 +39,7 @@ export function Section(props: ISectionProps) {
                             form={cField[field.name]}
                         />
                     ))}
-            </div>
+            </Row>
         </div>
     );
 }
