@@ -1,5 +1,7 @@
 export type TValue = string | number | boolean | undefined;
 
+export type TMouseEvent = React.MouseEvent | React.ChangeEvent | React.SyntheticEvent | null;
+
 export type TOperator = "===" | ">=" | "<=";
 
 export type TNextCondition = "&&" | "||";

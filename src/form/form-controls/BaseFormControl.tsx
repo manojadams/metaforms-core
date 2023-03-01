@@ -1,11 +1,11 @@
-import React, { Fragment, ReactNode } from "react";
+import React, { Fragment, ReactNode, SyntheticEvent } from "react";
 import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IMeta, IOption } from "../../constants/model-interfaces";
 import { IError, IRenderField } from "../../constants/common-interface";
 import { DATA_LOADER, EVENTS, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
-import { TValue } from "../../constants/types";
+import { TMouseEvent, TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
 
 interface IState {
@@ -49,6 +49,8 @@ export default abstract class BaseFormControl extends React.Component {
             form: this.props.form,
             loading: false
         };
+        this.handleValidation = this.handleValidation.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     setLoading(loading: boolean) {
@@ -268,7 +270,7 @@ export default abstract class BaseFormControl extends React.Component {
         throw Error("Not Implemented");
     }
 
-    handleChange(e: React.MouseEvent | null, val?: TValue, ref?: IOption) {
+    handleChange(e: TMouseEvent, val?: TValue, ref?: IOption) {
         try {
             const value = val !== undefined ? val : (e?.target as HTMLInputElement)?.value;
             this.context.setField(this.section, this.field.name, value);

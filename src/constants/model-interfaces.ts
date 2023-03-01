@@ -236,10 +236,19 @@ export interface IFormatterType {
     [key: string]: (arg: TValue) => string;
 }
 
+export interface IThemeFieldConfig {
+    [key: string]: string;
+}
+
 export interface IMeta {
-    /** */
+    /**
+     * values - hidden (whether field is to be hidden)
+     * value - section (whether field is a section)
+     */
     type?: string;
-    /** Is field to be displayed */
+    /** Is field to be displayed
+     * @internal
+     */
     display?: boolean;
     /** For future usage */
     isArray?: boolean;
@@ -273,6 +282,10 @@ export interface IMeta {
     error?: { hasError: boolean; errorMsg: string };
     /** Configuration information of the field */
     config?: IFieldConfig;
+    /** Theme configuration information for the field */
+    themeConfig?: IThemeFieldConfig;
+    /** Init config for the field */
+    /** @deprecated */
     init?: IFieldConfig;
     /** Icons used by the field */
     icons?: IIconConfig;

@@ -61,6 +61,10 @@ export interface IFieldConfig {
     url?: string;
     urlType?: string;
     loadOn?: string | Array<string>;
+    // date config
+    inputFormat?: string;
+    views?: Array<string>;
+    openTo?: Array<string>;
 }
 
 export interface IFormField {
