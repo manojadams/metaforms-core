@@ -51,6 +51,7 @@ export default class FormUtils {
         if (theme) {
             switch (theme) {
                 case "mui":
+                default:
                     return "my-2 my-md-3";
             }
         }

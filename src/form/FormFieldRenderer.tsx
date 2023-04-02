@@ -70,7 +70,7 @@ function RenderColumn({
     const { theme } = useContext(FormContext);
     const vs = FormUtils.getVerticalSpacing(theme.type);
     const type = props.meta?.type ? props.meta.type : "field";
-    const wrapClassName = cssClassName || (type === "field" ? "col-md-12" : "");
+    const wrapClassName = cssClassName || (type === "field" ? "mcol-md-12" : "");
     if (wrapClassName) {
         return (
             <Row isStandalone={isStandAlone} align={props?.meta?.displayProps?.align}>
