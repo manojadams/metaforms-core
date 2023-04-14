@@ -8,14 +8,18 @@ describe("Test Metaform eventemitter", () => {
         metaForm.listener("event1", (payload) => {
             expect(payload).toBe("payload1");
         });
-        metaForm.emit("event1", "payload1");
+        metaForm.emit("event1", {
+            payload: "payload1"
+        });
     });
     it("check payload param non-equality", () => {
         const metaForm = new MetaForm(schema, new EventEmitter());
         metaForm.listener("event1", (payload) => {
             expect(payload).not.toBe("payload2");
         });
-        metaForm.emit("event1", "payload1");
+        metaForm.emit("event1", {
+            payload: "payload1"
+        });
     });
     it("check listener to be called", () => {
         const mockFn = jest.fn();
@@ -23,7 +27,9 @@ describe("Test Metaform eventemitter", () => {
         metaform.listener("event1", () => {
             mockFn();
         });
-        metaform.emit("event1", "");
+        metaform.emit("event1", {
+            payload: ""
+        });
         expect(mockFn).toBeCalledTimes(1);
     });
     it("check listener to be called thrice", () => {
@@ -41,7 +47,9 @@ describe("Test Metaform eventemitter", () => {
         metaform.listener("event2", () => {
             mockFn();
         });
-        metaform.emit("event1", "");
+        metaform.emit("event1", {
+            payload: ""
+        });
         expect(mockFn).toBeCalledTimes(3);
     });
     it("check listener not to be called", () => {
@@ -51,7 +59,9 @@ describe("Test Metaform eventemitter", () => {
             mockFn();
         });
         metaform.removeListener("event1");
-        metaform.emit("event1", "");
+        metaform.emit("event1", {
+            payload: ""
+        });
         expect(mockFn).not.toBeCalled();
     });
 });

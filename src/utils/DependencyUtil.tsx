@@ -1,4 +1,10 @@
-import { IDepdendencyItem, IForm, IValueMapRef, TVALUE_MAP_TYPE_REF } from "../constants/common-interface";
+import {
+    IDepdendencyItem,
+    IFieldConfig,
+    IForm,
+    IValueMapRef,
+    TVALUE_MAP_TYPE_REF
+} from "../constants/common-interface";
 import { API_METHOD, DEP_TYPE, FORM_CONSTANTS, _INTERNAL_VALUES } from "../constants/constants";
 import { IDependency, IField, IOption, IURLLoaderConfig } from "../constants/model-interfaces";
 import { TValue } from "../constants/types";
@@ -382,14 +388,14 @@ class DependencyUtil {
                                             switch (changeType) {
                                                 case "url_loader":
                                                     {
-                                                        const itemConfig: IURLLoaderConfig = {
+                                                        const itemConfig: IFieldConfig = {
                                                             type: "url_loader",
                                                             url: dep.url,
                                                             urlType: dep.urlType,
                                                             labelKey: dep.labelKey,
                                                             valueKey: dep.valueKey,
-                                                            queryParams: dep.queryParams,
-                                                            pathParams: dep.pathParams
+                                                            queryParams: dep.queryParams
+                                                            // pathParams: dep.pathParams
                                                         };
                                                         metaform
                                                             .getData(
