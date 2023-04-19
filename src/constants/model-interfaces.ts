@@ -126,6 +126,8 @@ export interface ITheme {
     type: string;
     /** Section layout */
     sectionLayout?: string;
+    /** Field layout - row | column (default) */
+    fieldLayout?: "row" | "column" | string;
     /** Spacing around the field */
     spacing?: string;
     /** Global classname to be used */

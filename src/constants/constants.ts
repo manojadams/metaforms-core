@@ -86,6 +86,12 @@ export const SECTION_LAYOUT = {
     STEPPER: "stepper"
 };
 
+export const FIELD_LAYOUT = {
+    DEFAULT: "column",
+    ROW: "row",
+    COLUMN: "column"
+};
+
 export const FORM_ACTION = {
     NEXT: "next",
     PREVIOUS: "previous",

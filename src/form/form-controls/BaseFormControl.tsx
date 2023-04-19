@@ -4,7 +4,7 @@ import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IMeta, IOption } from "../../constants/model-interfaces";
 import { IError, IRenderField } from "../../constants/common-interface";
-import { DATA_LOADER, EVENTS, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
+import { DATA_LOADER, EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
 
@@ -330,9 +330,13 @@ export default abstract class BaseFormControl extends React.Component {
 
     getWrapperClassName() {
         const customClassName = this.props.meta?.className || "";
+        const fieldLayout = this.props.meta?.displayProps?.fieldLayout || this.context.theme.fieldLayout;
+        const fieldClassName = fieldLayout === FIELD_LAYOUT.ROW ? "mfield-row" : "mfield-col";
         return (
             "meta-form-control-" +
             this.field.name +
+            " " +
+            fieldClassName +
             (this.props.form.isReadonly ? " meta-readonly" : "") +
             (" meta-form-control-" + this.displayType) +
             (customClassName ? " " + customClassName : "")

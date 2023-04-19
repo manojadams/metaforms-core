@@ -24,7 +24,15 @@ import { IField, IOption, ISchema, ITheme, TParam } from "../constants/model-int
 import Theme from "./Theme";
 import { Rest } from "./Rest";
 import { Page } from "./Page";
-import { CHANGE_TYPE, DEP_TYPE, EVENTS, FIELD_DISPLAY_TYPES, SECTION_LAYOUT, URL_TYPE } from "../constants/constants";
+import {
+    CHANGE_TYPE,
+    DEP_TYPE,
+    EVENTS,
+    FIELD_DISPLAY_TYPES,
+    FIELD_LAYOUT,
+    SECTION_LAYOUT,
+    URL_TYPE
+} from "../constants/constants";
 import { TValue } from "../constants/types";
 
 /**
@@ -46,9 +54,11 @@ export default class MetaForm implements IMetaForm {
         this.rest = new Rest(schema.rest);
         const themeType = schema?.theme?.type || SECTION_LAYOUT.DEFAULT;
         const sectionLayout = schema?.theme?.sectionLayout || SECTION_LAYOUT.DEFAULT;
+        const fieldLayout = schema?.theme?.fieldLayout || FIELD_LAYOUT.DEFAULT;
         this.theme = new Theme({
             type: themeType,
-            sectionLayout: sectionLayout,
+            sectionLayout,
+            fieldLayout,
             config: schema?.theme?.config
         });
         this.page = new Page(false, 1);

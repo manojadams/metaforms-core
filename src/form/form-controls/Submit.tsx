@@ -177,19 +177,6 @@ function FormButton({
     const btnClassName = button?.meta?.className;
     const colClassName = className || "col";
     switch (theme) {
-        case "mui":
-            return (
-                <div className={colClassName}>
-                    <button
-                        className={btnClassName}
-                        data-btn-type={button.meta.type}
-                        onClick={(e) => handleClick(e, button)}
-                    >
-                        {button.meta.displayName}
-                    </button>
-                </div>
-            );
-        case "bootstrap":
         default:
             return (
                 <div className={colClassName}>
