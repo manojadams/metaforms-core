@@ -1,6 +1,9 @@
 # metaform-core
 This is core library engine that dynamically creates forms from json based metaforms schema.
 
+## Change logs
+Fixed stepper and wizard not working
+
 ## Introduction
 This library reads the json based metaforms schema and layouts beautiful forms.
 It acts as a base for creating a dynamic form library which needs to implement the core components from this library.  

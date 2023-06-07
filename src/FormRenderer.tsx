@@ -76,6 +76,9 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
             if (props.baseFormStepper) {
                 this.formImpls.setFormStepper(props.baseFormStepper);
             }
+            if (props.baseFormWizard) {
+                this.formImpls.setFormWizard(props.baseFormWizard);
+            }
         } catch (e) {
             this.metaform = new MetaForm(
                 {

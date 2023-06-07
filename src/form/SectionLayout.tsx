@@ -4,8 +4,9 @@ import { SECTION_LAYOUT } from "../constants/constants";
 import { IField } from "../constants/model-interfaces";
 import FormContext from "./form-context";
 import FormGroupRendere from "./form-group";
-import BaseFormStepper from "./form-stepper/BaseFormStepper";
 import BaseFormWizard from "./form-wizard/BaseFormWizard";
+import FormGroupStepper from "./form-stepper";
+import FormGroupWizard from "./form-wizard";
 
 interface IProps {
     fields: Array<IField>;
@@ -20,9 +21,9 @@ function SectionLayout(props: IProps) {
         case SECTION_LAYOUT.TABS:
             return <FormGroupRendere fields={props.fields} />;
         case SECTION_LAYOUT.WIZARD:
-            return <BaseFormWizard fields={props.fields} theme={type} />;
+            return <FormGroupWizard fields={props.fields} theme={type} />;
         case SECTION_LAYOUT.STEPPER:
-            return <BaseFormStepper fields={props.fields} theme={type} />;
+            return <FormGroupStepper fields={props.fields} theme={type} />;
     }
     return <Fragment />;
 }

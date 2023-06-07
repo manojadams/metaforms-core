@@ -14,6 +14,7 @@ import {
     TParam
 } from "./model-interfaces";
 import { TNextCondition, TNextResponseMode, TOperator, TValue } from "./types";
+import BaseFormWizard from "../form/form-wizard/BaseFormWizard";
 
 export interface IBasicFormControl {
     date: () => Element;
@@ -101,6 +102,7 @@ export interface IFormRenderer extends IUISchema {
     baseFormControl?: typeof BaseFormControl;
     baseFormGroup?: typeof BaseFormGroup;
     baseFormStepper?: typeof BaseFormStepper;
+    baseFormWizard?: typeof BaseFormWizard;
 
     buttons?: IElementTypes;
     className?: string;
