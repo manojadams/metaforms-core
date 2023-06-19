@@ -4,6 +4,7 @@ import { SECTION_LAYOUT } from "../../../constants/constants";
 import { IField } from "../../../constants/model-interfaces";
 import { Row } from "layout-emotions";
 import FormFieldRenderer from "../../FormFieldRenderer";
+import styled from "@emotion/styled";
 
 interface ISectionProps {
     section: IField;
@@ -22,8 +23,9 @@ export function Section(props: ISectionProps) {
         }
     };
     return (
-        <div
-            className={props.activeIndex === props.index ? "tab-pane active" : "tab-pane"}
+        <TabStyled
+            active={props.activeIndex === props.index}
+            className="tab-pane"
             id={props.section.name}
             role="tabpanel"
             aria-labelledby="contact-tab"
@@ -40,6 +42,10 @@ export function Section(props: ISectionProps) {
                         />
                     ))}
             </Row>
-        </div>
+        </TabStyled>
     );
 }
+
+const TabStyled = styled.div<{ active: boolean }>`
+    display: ${(props) => (props.active ? "block" : "none")};
+`;

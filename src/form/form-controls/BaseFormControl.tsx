@@ -7,6 +7,7 @@ import { IError, IRenderField } from "../../constants/common-interface";
 import { DATA_LOADER, EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
+import { Header } from "./Styled";
 
 interface IState {
     error: IError;
@@ -239,7 +240,7 @@ export default abstract class BaseFormControl extends React.Component {
     }
 
     header() {
-        return <h2 className={this.getWrapperClassName()}>{this.props.form.displayName}</h2>;
+        return <Header className={this.getWrapperClassName()}>{this.props.form.displayName}</Header>;
     }
 
     modalsearch(): JSX.Element {

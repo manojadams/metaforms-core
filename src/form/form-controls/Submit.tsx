@@ -5,6 +5,7 @@ import { IField } from "../../constants/model-interfaces";
 import { Row as MRow } from "layout-emotions";
 import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
+import styled from "@emotion/styled";
 
 interface IProps {
     buttons?: IElementTypes;
@@ -71,7 +72,7 @@ export default function (props: IProps) {
         }
     };
     return (
-        <MRow className="footer" data-pagenumber={page.pageNumber}>
+        <Footer data-pagenumber={page.pageNumber}>
             {props.formButtons &&
                 props.formButtons.map((button, idx) => {
                     const className = FormUtils.getCssClassName(button.meta?.displayProps);
@@ -88,7 +89,7 @@ export default function (props: IProps) {
                                 props.buttons && props.buttons.next ? (
                                     <ExtButton
                                         key={button.name}
-                                        className={button.meta.className || ""}
+                                        className={`${button.meta.className} ${className}`}
                                         type={button.meta.type}
                                         onClick={(e) => handleClick(e, button)}
                                     >
@@ -105,7 +106,7 @@ export default function (props: IProps) {
                                 props.buttons && props.buttons.previous ? (
                                     <ExtButton
                                         key={button.name}
-                                        className={button.meta.className || ""}
+                                        className={`${button.meta.className} ${className}`}
                                         type={button.meta.type}
                                         onClick={(e) => handleClick(e, button)}
                                     >
@@ -122,7 +123,7 @@ export default function (props: IProps) {
                                 props.buttons && props.buttons.submit ? (
                                     <ExtButton
                                         key={button.name}
-                                        className={button.meta.className || ""}
+                                        className={`${button.meta.className} ${className}`}
                                         type={button.meta.type}
                                         onClick={(e) => handleClick(e, button)}
                                     >
@@ -158,9 +159,14 @@ export default function (props: IProps) {
                             return <Fragment key={idx} />;
                     }
                 })}
-        </MRow>
+        </Footer>
     );
 }
+
+const Footer = styled(MRow)`
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+`;
 
 function FormButton({
     button,
