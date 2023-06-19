@@ -35,6 +35,8 @@ export default function (props: IProps) {
     const formButtons =
         props.schema.buttons && props.schema.buttons.length > 0
             ? props.schema.buttons
+            : hasSection
+            ? FormUtils.getFormGroupDefaultButtons()
             : FormUtils.getFormDefaultButtons();
 
     const handleSubmit = (e: React.MouseEvent) => {
@@ -83,6 +85,7 @@ export default function (props: IProps) {
             <SectionForm
                 {...props}
                 formButtons={formButtons}
+                useDefaultButtons={!(props.schema.buttons && props.schema.buttons.length > 0)}
                 hasSection={hasSection}
                 handleSubmit={handleSubmit}
                 handleNext={handleNext}

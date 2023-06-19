@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from "react";
 import { IElementTypes, IForm, MetaformEvent } from "../../constants/common-interface";
 import { IField, ISchema, ITheme } from "../../constants/model-interfaces";
 import { TCallback } from "../../constants/types";
-import Submit from "../form-controls/Submit";
 import SectionLayout from "../SectionLayout";
+import Footer from "../form-controls/Footer";
 
 interface IProps {
     schema: ISchema;
@@ -13,6 +13,7 @@ interface IProps {
     buttons?: IElementTypes;
     theme: ITheme;
     hasSection: boolean;
+    useDefaultButtons: boolean;
     handleCustom: (e: React.MouseEvent, field: IField) => void;
     handleSubmit: (e: React.MouseEvent, field: IField) => void;
     handleReset: (e: React.MouseEvent, field: IField) => void;
@@ -50,11 +51,12 @@ const SectionForm = (props: IProps) => {
             noValidate
         >
             <SectionLayout fields={props.schema.fields} form={props.form} />
-            <Submit
+            <Footer
                 theme={props.theme.type}
                 form={props.form}
                 buttons={props.buttons}
                 formButtons={props.formButtons}
+                useDefaultButtons={props.useDefaultButtons}
                 onCustom={props.handleCustom}
                 onSubmit={props.handleSubmit}
                 onReset={props.handleReset}

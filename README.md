@@ -2,7 +2,7 @@
 This is core library engine that dynamically creates forms from json based metaforms schema.
 
 ## Change logs
-Export wizard component for external use
+Adding default footer for section forms
 
 ## Introduction
 This library reads the json based metaforms schema and layouts beautiful forms.

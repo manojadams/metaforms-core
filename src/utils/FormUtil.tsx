@@ -102,6 +102,32 @@ export default class FormUtils {
         ];
     }
 
+    static getFormGroupDefaultButtons(): Array<IField> {
+        return [
+            {
+                name: "previous",
+                meta: {
+                    type: "previous",
+                    displayName: "Previous"
+                }
+            },
+            {
+                name: "next",
+                meta: {
+                    type: "next",
+                    displayName: "Next"
+                }
+            },
+            {
+                name: "submit",
+                meta: {
+                    type: "submit",
+                    displayName: "Submit"
+                }
+            }
+        ];
+    }
+
     static getThemeProp(themeName: string, theme: ITheme, prop: string) {
         if (theme.config?.tabs && theme.config?.tabs[prop]) {
             return theme.config.tabs[prop];

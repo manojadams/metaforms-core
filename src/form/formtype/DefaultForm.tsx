@@ -4,8 +4,8 @@ import { SECTION_LAYOUT } from "../../constants/constants";
 import { IField, ISchema, ITheme } from "../../constants/model-interfaces";
 import { TCallback } from "../../constants/types";
 import { Row as MRow } from "layout-emotions";
-import Submit from "../form-controls/Submit";
 import FormFieldRenderer from "../FormFieldRenderer";
+import Footer from "../form-controls/Footer";
 
 interface IProps {
     schema: ISchema;
@@ -42,7 +42,7 @@ const DefaultForm = (props: IProps) => {
                     />
                 ))}
             </MRow>
-            <Submit
+            <Footer
                 theme={props.theme.type}
                 form={props.form}
                 buttons={props.buttons}
