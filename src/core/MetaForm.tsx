@@ -47,6 +47,7 @@ export default class MetaForm implements IMetaForm {
     icons?: IElementTypes;
     fns?: IFnTypes;
     controls: IElementTypes;
+    controlElements: Record<string, React.FunctionComponent> | undefined;
     errorHandler?: TErrorCallback;
 
     constructor(private schema: ISchema, private eventEmitter: EventEmitter) {
@@ -622,5 +623,16 @@ export default class MetaForm implements IMetaForm {
 
     setControls(controls: IElementTypes) {
         this.controls = controls;
+    }
+
+    getControlElements(displayType: string): any {
+        if (this.controlElements && this.controlElements[displayType]) {
+            return this.controlElements[displayType];
+        }
+        return null;
+    }
+
+    setControlElements(controlElements: Record<string, React.FunctionComponent>) {
+        this.controlElements = controlElements;
     }
 }

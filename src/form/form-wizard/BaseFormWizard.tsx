@@ -39,9 +39,19 @@ export default abstract class BaseFormWizard extends React.Component<{
         return <Fragment>{this.screens()}</Fragment>;
     }
 
+    scrollToTop() {
+        try {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     setActiveIndex(index: number) {
         this.setState({ activeIndex: index }, () => {
             this.context.updatePage(this.state.activeIndex + 1);
+            this.scrollToTop();
         });
     }
 

@@ -66,6 +66,13 @@ export interface IFieldConfig {
     inputFormat?: string;
     views?: Array<string>;
     openTo?: Array<string>;
+
+    // autocomplete
+    autocomplete?: any;
+    // file input
+    accept?: string;
+    // template
+    template?: string;
 }
 
 export interface IFormField {
