@@ -24,7 +24,7 @@ interface IState {
  * The core class responsible for form rendering
  * @category Form renderer
  */
-export default class FormRenderer extends React.Component<IFormRenderer> {
+export default class MetaFormRenderer extends React.Component<IFormRenderer> {
     schema: ISchema;
     state: IState;
     name: string;
@@ -45,7 +45,7 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
         this.lastAction = "";
         this.formImpls = new FormImpls();
         try {
-            this.metaform = new MetaForm(this.props.schema, new EventEmitter());
+            this.metaform = new MetaForm(this.props.schema, new EventEmitter(), this.props.rest, this.props.theme);
             this.metaformUpdater = new MetaFormUpdater(this.name, this.metaform);
             metaAPI.metaForm.add(this.name, this.metaform);
             if (props.icons) {
@@ -87,14 +87,15 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
         } catch (e) {
             this.metaform = new MetaForm(
                 {
-                    theme: new Theme({
-                        type: "default",
-                        sectionLayout: SECTION_LAYOUT.DEFAULT
-                    }),
                     fields: [],
                     buttons: []
                 },
-                new EventEmitter()
+                new EventEmitter(),
+                undefined,
+                new Theme({
+                    type: "default",
+                    sectionLayout: SECTION_LAYOUT.DEFAULT
+                })
             );
             this.metaformUpdater = new MetaFormUpdater(this.name, this.metaform);
             this.state = {
@@ -133,11 +134,7 @@ export default class FormRenderer extends React.Component<IFormRenderer> {
     }
 
     render() {
-        const outerClassname = this.props?.className
-            ? this.props.className
-            : this.props.schema?.theme?.className
-            ? this.props.schema.theme.className
-            : "";
+        const outerClassname = this.props?.className ?? this.props.theme?.className;
         const rootClassname = `${outerClassname} ${this.lastAction}`;
         return (
             <SchemaErrorBoundary error={this.state.error}>

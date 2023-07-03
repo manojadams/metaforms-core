@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import FormRenderer from "../FormRenderer";
+import FormRenderer from "../MetaformRenderer";
 // import * as lSchema1 from "./data/large_schema1.json";
 import * as schema1 from "./data/schema_1.json";
 

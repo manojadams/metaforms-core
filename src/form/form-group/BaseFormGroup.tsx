@@ -78,10 +78,11 @@ export default abstract class BaseFormGroup extends React.Component<ISchema> {
             }
         });
         this.context.listener(EVENTS._END_OF_PAGE, (data: IEventPayload) => {
-            this.context.setEndOfPage(data?.payload as number);
+            const payload = data.payload as number;
+            this.context.setEndOfPage(payload);
             // also disable tabs after end of page
             this.state.tabFields.forEach((tab, index) => {
-                if (data.payload && index >= data.payload) {
+                if (data.payload && index >= payload) {
                     tab.meta.isDisabled = true;
                 }
             });

@@ -5,7 +5,7 @@ import { IMeta } from "../constants/model-interfaces";
 import { ISetError, TValue } from "../constants/types";
 
 export default class ValidationUtil {
-    static updateMaxError(meta: IMeta, value: TValue, setError: ISetError) {
+    static updateMaxError(meta: IFormField, value: TValue, setError: ISetError) {
         let hasError = false;
         if (!meta?.validation?.max) {
             return hasError;
@@ -41,7 +41,7 @@ export default class ValidationUtil {
         return hasError;
     }
 
-    static updateMinError(meta: IMeta, value: TValue, setError: ISetError) {
+    static updateMinError(meta: IFormField, value: TValue, setError: ISetError) {
         let hasError = false;
         if (!meta?.validation?.min) {
             return hasError;
@@ -124,7 +124,7 @@ export default class ValidationUtil {
                                 // min validation
                                 if (formField.validation?.min !== undefined) {
                                     this.updateMinError(
-                                        formField as IMeta,
+                                        formField,
                                         formField.value,
                                         (hasError: boolean, errorMsg: string) => {
                                             formField.error.hasError = hasError;
@@ -136,7 +136,7 @@ export default class ValidationUtil {
                                 // max validation
                                 if (formField.validation?.max !== undefined) {
                                     this.updateMaxError(
-                                        formField as IMeta,
+                                        formField,
                                         formField.value,
                                         (hasError: boolean, errorMsg: string) => {
                                             formField.error.hasError = hasError;

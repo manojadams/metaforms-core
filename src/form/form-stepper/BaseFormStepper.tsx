@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import FormFieldRenderer from "../FormFieldRenderer";
 import BaseFormWizard from "../form-wizard/BaseFormWizard";
 import { IField } from "../../constants/model-interfaces";
-import { IEventPayload } from "../../constants/common-interface";
+import { IEventPayload, IFormField } from "../../constants/common-interface";
 import { EVENTS } from "../../constants/constants";
 
 /**
@@ -72,12 +72,12 @@ abstract class BaseFormStepper extends BaseFormWizard {
 
     screens(): JSX.Element {
         const field = this.fields.find((_f, i) => i === this.state.activeIndex);
-        const form = this.context.form[field?.name ? field.name : "default"];
+        const formField = this.context.form[field?.name ?? "default"] as IFormField;
         const sync = () => false;
         return (
             <Fragment>
                 {field && (
-                    <FormFieldRenderer {...field} key={field.name} section={field.name} form={form} sync={sync} />
+                    <FormFieldRenderer {...field} key={field.name} section={field.name} form={formField} sync={sync} />
                 )}
                 {this.footer()}
             </Fragment>

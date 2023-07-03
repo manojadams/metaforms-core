@@ -325,17 +325,9 @@ export interface ISchema {
      */
     fields: Array<IField>;
     /**
-     * Theme information in the form
-     */
-    theme?: ITheme;
-    /**
      * Button definitions in the form
      */
     buttons?: Array<IField>;
-    /**
-     * REST API configruation params in the form
-     */
-    rest?: IRest;
 }
 
 /**

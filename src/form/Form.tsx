@@ -29,7 +29,7 @@ interface IProps {
     formValidated: (validated: boolean) => void;
 }
 
-export default function (props: IProps) {
+function Form(props: IProps) {
     const hasSection = FormUtils.hasSections(props.schema.fields);
     const sectionLayout = props.theme.sectionLayout;
     const formButtons =
@@ -110,3 +110,5 @@ export default function (props: IProps) {
         );
     }
 }
+
+export default Form;

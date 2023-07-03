@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import FormRenderer from "../FormRenderer";
+import FormRenderer from "../MetaformRenderer";
 import React from "react";
 import * as schema from "./data/required_validation.json";
 import * as schema2 from "./data/validation_schema2.json";

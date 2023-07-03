@@ -1,4 +1,4 @@
-import FormRenderer from "./FormRenderer";
+import MetaformRenderer from "./MetaformRenderer";
 import { metaAPI, IMetaAPI } from "./meta-api";
 import BaseFormControl from "./form/form-controls/BaseFormControl";
 import BaseFormGroup from "./form/form-group/BaseFormGroup";
@@ -9,7 +9,7 @@ import FormUtils from "./utils/FormUtil";
 import FormFieldRenderer from "./form/FormFieldRenderer";
 import Sections from "./form/form-group/common/Sections";
 
-export default FormRenderer;
+export default MetaformRenderer;
 
 export { BaseFormControl, BaseFormGroup, BaseFormStepper, BaseFormWizard };
 

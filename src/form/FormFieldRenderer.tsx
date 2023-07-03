@@ -1,13 +1,13 @@
 import React, { Fragment, useContext, useState } from "react";
 import FormUtils from "../utils/FormUtil";
-import { IRenderField } from "../constants/common-interface";
+import { IFormField, IRenderField } from "../constants/common-interface";
 import FormContext from "./form-context";
 import Row from "./layout/Row";
 import FormControl from "./form-controls/FormControl";
-import { IField, IMeta } from "../constants/model-interfaces";
+import { IField } from "../constants/model-interfaces";
 import Col from "./layout/Col";
 
-export default function FormFieldRenderer(props: IRenderField) {
+function FormFieldRenderer(props: IRenderField) {
     if (props?.meta?.type === "hidden") {
         return <Fragment />;
     }
@@ -52,6 +52,8 @@ export default function FormFieldRenderer(props: IRenderField) {
     }
 }
 
+export default FormFieldRenderer;
+
 function RenderColumn({
     cssClassName,
     props,
@@ -64,7 +66,7 @@ function RenderColumn({
     props: IRenderField;
     isStandAlone: boolean;
     isSection: boolean;
-    cField: IMeta;
+    cField: IFormField;
     sync: () => void;
 }) {
     const { theme } = useContext(FormContext);

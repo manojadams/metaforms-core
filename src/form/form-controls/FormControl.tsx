@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
-import { IRenderField } from "../../constants/common-interface";
-import { IMeta } from "../../constants/model-interfaces";
+import { IFormField, IRenderField } from "../../constants/common-interface";
 import FormImplsContext from "../form-impl-context";
 
 interface IProps {
-    cField: IMeta;
+    cField: IFormField;
     props: IRenderField;
     theme: string;
     sync: () => void;

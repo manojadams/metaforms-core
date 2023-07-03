@@ -1,9 +1,9 @@
-import React, { Fragment, ReactNode, SyntheticEvent } from "react";
+import React, { Fragment, ReactNode } from "react";
 import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IMeta, IOption } from "../../constants/model-interfaces";
-import { IError, IRenderField } from "../../constants/common-interface";
+import { IError, IFormField, IRenderField } from "../../constants/common-interface";
 import { DATA_LOADER, EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
@@ -12,7 +12,7 @@ import { Header } from "./Styled";
 interface IState {
     error: IError;
     componentError: IError;
-    form: IMeta;
+    form: IFormField;
     loading: boolean;
 }
 
@@ -60,7 +60,7 @@ export default abstract class BaseFormControl extends React.Component {
 
     initConfig() {
         const configData = this.props.form?.config || null;
-        let initData = this.props.form?.init || null;
+        let initData = null;
         if (configData) {
             // check init mode
             const hasInitCode = configData?.loadOn && configData.loadOn.indexOf("init") >= 0;
@@ -392,6 +392,6 @@ export default abstract class BaseFormControl extends React.Component {
 
 BaseFormControl.contextType = FormContext;
 
-function Display(props: { form: IMeta; children: ReactNode }) {
+function Display(props: { form: IFormField; children: ReactNode }) {
     return <Fragment>{props?.form?.display && props.children}</Fragment>;
 }

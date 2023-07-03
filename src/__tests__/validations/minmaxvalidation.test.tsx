@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import FormRenderer from "../../FormRenderer";
+import FormRenderer from "../../MetaformRenderer";
 import * as minschema from "./../data/validation/min_validation.json";
 import React from "react";
 

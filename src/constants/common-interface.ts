@@ -8,6 +8,7 @@ import {
     IFormatterType,
     IMeta,
     IOption,
+    IRest,
     ITheme,
     IUISchema,
     IValidation,
@@ -21,12 +22,6 @@ export interface IBasicFormControl {
     text: () => Element;
     radio: () => Element;
     select: () => Element;
-}
-
-export interface IRenderField extends IField {
-    section: string;
-    form: IMeta;
-    sync: () => void;
 }
 
 export interface IFnTypes {
@@ -95,6 +90,12 @@ export interface IFormField {
     validation?: IValidation;
 }
 
+export interface IRenderField extends IField {
+    section: string;
+    form: IFormField;
+    sync: () => void;
+}
+
 export interface IForm {
     [key: string]: IFormField | object;
 }
@@ -122,6 +123,15 @@ export interface IFormRenderer extends IUISchema {
     nextResponseMode?: TNextResponseMode;
     pageNumber?: number;
     useNextResponse?: boolean;
+
+    /**
+     * REST API configruation params in the form
+     */
+    rest?: IRest;
+    /**
+     * Theme information in the form
+     */
+    theme?: ITheme;
 
     onChange?: (change: IFieldChange) => void;
     onCustom?: (formData: IFormData, e: SyntheticEvent) => void;

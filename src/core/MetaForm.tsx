@@ -20,7 +20,7 @@ import {
     IEventPayload
 } from "../constants/common-interface";
 import MetaformError from "./MetaformError";
-import { IField, IOption, ISchema, ITheme, TParam } from "../constants/model-interfaces";
+import { IField, IOption, IParamType, IRest, ISchema, ITheme, TParam } from "../constants/model-interfaces";
 import Theme from "./Theme";
 import { Rest } from "./Rest";
 import { Page } from "./Page";
@@ -50,17 +50,17 @@ export default class MetaForm implements IMetaForm {
     controlElements: Record<string, React.FunctionComponent> | undefined;
     errorHandler?: TErrorCallback;
 
-    constructor(private schema: ISchema, private eventEmitter: EventEmitter) {
+    constructor(private schema: ISchema, private eventEmitter: EventEmitter, restConfig?: IRest, theme?: ITheme) {
         this.form = {};
-        this.rest = new Rest(schema.rest);
-        const themeType = schema?.theme?.type || SECTION_LAYOUT.DEFAULT;
-        const sectionLayout = schema?.theme?.sectionLayout || SECTION_LAYOUT.DEFAULT;
-        const fieldLayout = schema?.theme?.fieldLayout || FIELD_LAYOUT.DEFAULT;
+        this.rest = new Rest(restConfig);
+        const themeType = theme?.type || SECTION_LAYOUT.DEFAULT;
+        const sectionLayout = theme?.sectionLayout || SECTION_LAYOUT.DEFAULT;
+        const fieldLayout = theme?.fieldLayout || FIELD_LAYOUT.DEFAULT;
         this.theme = new Theme({
             type: themeType,
             sectionLayout,
             fieldLayout,
-            config: schema?.theme?.config
+            config: theme?.config
         });
         this.page = new Page(false, 1);
     }
@@ -174,14 +174,14 @@ export default class MetaForm implements IMetaForm {
                     query += `&${name}=${currentValue}`;
                 } else if (["string", "boolean", "number"].indexOf(typeof value) >= 0) {
                     query += `&${name}=${value}`;
-                } else if (typeof value === "object") {
-                    const type = value.type;
+                } else if (value && typeof value === "object") {
+                    const type = (value as IParamType).type;
                     switch (type) {
                         case "fieldValue":
                             // eslint-disable-next-line no-case-declarations
-                            const ref = value.ref;
+                            const ref = (value as IParamType).ref;
                             if (ref) {
-                                const section = value.section || sectionName;
+                                const section = (value as IParamType).section || sectionName;
                                 const field = this.getField(section || "", ref);
                                 const fielfValue = field?.value;
                                 query += `&${name}=${fielfValue}`;
