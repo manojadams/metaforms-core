@@ -15,6 +15,7 @@ interface IProps {
     buttons?: IElementTypes;
     theme: ITheme;
     hasSection: boolean;
+    useDefaultButtons: boolean;
     handleCustom: (e: React.MouseEvent, field: IField) => void;
     handleSubmit: (e: React.MouseEvent, field: IField) => void;
     handleReset: (e: React.MouseEvent, field: IField) => void;
@@ -47,6 +48,7 @@ const DefaultForm = (props: IProps) => {
                 form={props.form}
                 buttons={props.buttons}
                 formButtons={props.formButtons}
+                useDefaultButtons={props.useDefaultButtons}
                 onCustom={props.handleCustom}
                 onSubmit={props.handleSubmit}
                 onReset={props.handleReset}

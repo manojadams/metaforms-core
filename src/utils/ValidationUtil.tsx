@@ -16,7 +16,7 @@ export default class ValidationUtil {
                 if (value) {
                     const strValue = value ? value + "" : "";
                     const val = parseInt(strValue);
-                    if (val > meta.validation.max) {
+                    if (val > parseInt(meta.validation.max as string)) {
                         const errorMsg = meta.validation?.maxDetail?.errorMsg || MSGS.ERROR_MSG.MAX;
                         setError(true, errorMsg);
                         hasError = true;
@@ -41,7 +41,7 @@ export default class ValidationUtil {
         return hasError;
     }
 
-    static updateMinError(meta: IMeta, value: string | boolean | number | undefined, setError: ISetError) {
+    static updateMinError(meta: IMeta, value: TValue, setError: ISetError) {
         let hasError = false;
         if (!meta?.validation?.min) {
             return hasError;
@@ -52,7 +52,7 @@ export default class ValidationUtil {
                 if (value) {
                     const strValue = value ? value + "" : "";
                     const val = parseInt(strValue);
-                    if (val < meta.validation.min) {
+                    if (val < parseInt(meta.validation.min as string)) {
                         const errorMsg = meta.validation?.minDetail?.errorMsg || MSGS.ERROR_MSG.MIN;
                         setError(true, errorMsg);
                         hasError = true;
@@ -124,7 +124,7 @@ export default class ValidationUtil {
                                 // min validation
                                 if (formField.validation?.min !== undefined) {
                                     this.updateMinError(
-                                        formField,
+                                        formField as IMeta,
                                         formField.value,
                                         (hasError: boolean, errorMsg: string) => {
                                             formField.error.hasError = hasError;
@@ -136,7 +136,7 @@ export default class ValidationUtil {
                                 // max validation
                                 if (formField.validation?.max !== undefined) {
                                     this.updateMaxError(
-                                        formField,
+                                        formField as IMeta,
                                         formField.value,
                                         (hasError: boolean, errorMsg: string) => {
                                             formField.error.hasError = hasError;
@@ -165,7 +165,7 @@ export default class ValidationUtil {
             const lField = this.getField(form, lSection, leftOperand.ref);
             const lValue = lField.value === "" ? '""' : lField.value;
             let rValue;
-            if (typeof rightOperand === "object" && "ref" in rightOperand) {
+            if (rightOperand && typeof rightOperand === "object" && "ref" in rightOperand) {
                 // means its an operand
                 const rSection = rightOperand?.section || section;
                 const rField = this.getField(form, rSection, rightOperand.ref);

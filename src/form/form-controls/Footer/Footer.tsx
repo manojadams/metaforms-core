@@ -2,7 +2,7 @@ import React, { Fragment, useContext, useEffect, useState } from "react";
 import { IElementTypes, IForm } from "../../../constants/common-interface";
 import { BUTTON_TYPE, EVENTS, FORM_ACTION } from "../../../constants/constants";
 import { IField } from "../../../constants/model-interfaces";
-import { Row as MRow } from "layout-emotions";
+import { Row } from "layout-emotions";
 import FormUtils from "../../../utils/FormUtil";
 import FormContext from "../../form-context";
 import styled from "@emotion/styled";
@@ -89,7 +89,12 @@ function Footer(props: IProps) {
                 switch (button.meta.type) {
                     case BUTTON_TYPE.NEXT:
                         return showPage.next ? (
-                            <FooterButton key={button.name} button={button} handleClick={handleClick}>
+                            <FooterButton
+                                key={button.name}
+                                button={button}
+                                className={className}
+                                handleClick={handleClick}
+                            >
                                 {props?.buttons?.next ?? <Fragment />}
                             </FooterButton>
                         ) : (
@@ -97,7 +102,12 @@ function Footer(props: IProps) {
                         );
                     case BUTTON_TYPE.PREVIOUS:
                         return showPage.previous ? (
-                            <FooterButton key={button.name} button={button} handleClick={handleClick}>
+                            <FooterButton
+                                key={button.name}
+                                button={button}
+                                className={className}
+                                handleClick={handleClick}
+                            >
                                 {props?.buttons?.previous ?? <Fragment />}
                             </FooterButton>
                         ) : (
@@ -105,7 +115,12 @@ function Footer(props: IProps) {
                         );
                     case BUTTON_TYPE.SUBMIT:
                         return showPage.submit ? (
-                            <FooterButton key={button.name} button={button} handleClick={handleClick}>
+                            <FooterButton
+                                key={button.name}
+                                button={button}
+                                className={className}
+                                handleClick={handleClick}
+                            >
                                 {props?.buttons?.submit ?? <Fragment />}
                             </FooterButton>
                         ) : (
@@ -120,7 +135,7 @@ function Footer(props: IProps) {
                             if (isButtonResolved) {
                                 return props.buttons && props.buttons[button.name] ? (
                                     <ExtButton
-                                        className={button.meta.className ?? ""}
+                                        className={button.meta.className ?? "mcol mcol-md-4"}
                                         key={button.name}
                                         type={button.meta.type}
                                         onClick={(e) => handleClick(e, button)}
@@ -139,14 +154,14 @@ function Footer(props: IProps) {
     );
 }
 
-const FooterStyled = styled(MRow)<{ useDefault: boolean }>`
+const FooterStyled = styled(Row)<{ useDefault: boolean }>`
     gap: 1.5rem;
     margin-top: 1.5rem;
+    justify-content: flex-end;
     ${(props) =>
         props.useDefault
             ? `
         display: flex;
-        justify-content: flex-end;
         align-items: center;
         > * {
           width: auto;  

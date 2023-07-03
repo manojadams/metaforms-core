@@ -237,7 +237,7 @@ export default class FormUtils {
         if (props.length > 0) {
             if (props.length === 1) {
                 if (formData) {
-                    formData[props[0]] = value as Exclude<TValue, undefined>;
+                    formData[props[0]] = value as Exclude<TValue, undefined | null | Date>;
                 }
             } else {
                 if (!formData[props[0]]) {

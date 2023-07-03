@@ -1,4 +1,4 @@
-export type TValue = string | number | boolean | undefined;
+export type TValue = string | number | boolean | Date | undefined | null;
 
 export type TMouseEvent = React.MouseEvent | React.ChangeEvent | React.SyntheticEvent | null;
 

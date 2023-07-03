@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import React from "react";
 /**
  * Represents an external button
@@ -17,7 +18,7 @@ function ExtButton({
     onClick: (e: React.MouseEvent) => void;
 }) {
     return (
-        <span
+        <SpanBtn
             data-btn-type={type}
             onClick={(e) => {
                 if (e.currentTarget === e.target) {
@@ -31,8 +32,15 @@ function ExtButton({
             className={className}
         >
             {children}
-        </span>
+        </SpanBtn>
     );
 }
+
+const SpanBtn = styled.span`
+    display: block;
+    > * {
+        width: 100%;
+    }
+`;
 
 export default ExtButton;

@@ -100,6 +100,7 @@ export default function (props: IProps) {
                 {...props}
                 formButtons={formButtons}
                 hasSection={hasSection}
+                useDefaultButtons={!(props.schema.buttons && props.schema.buttons.length > 0)}
                 handleCustom={handleCustom}
                 handleSubmit={handleSubmit}
                 handleNext={handleNext}
