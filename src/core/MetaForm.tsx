@@ -262,7 +262,7 @@ export default class MetaForm implements IMetaForm {
     }
 
     initField(section: string, field: IField) {
-        this.form[section][field.name] = {
+        const formField: IFormField = {
             prop: field.prop,
             display: true,
             type: field.meta.type,
@@ -278,11 +278,10 @@ export default class MetaForm implements IMetaForm {
             validation: MetaformUtil.getDefaultValidation(field.meta?.displayType, field.meta.validation),
             className: field.meta.className,
             events: field.meta.events,
-            labelPlacement: field.meta.labelPlacement,
             error: { hasError: false, errorMsg: "" },
-            config: field.meta.config,
-            icons: field.meta.icons
+            config: field.meta.config
         };
+        this.form[section][field.name] = formField;
     }
 
     getField(section: string, field: string): IFormField {
@@ -304,7 +303,7 @@ export default class MetaForm implements IMetaForm {
         return this.form[section][field][prop];
     }
 
-    setFieldProp(section: string, field: string, prop: string, propVal: TValue | Array<TFieldRef> | IError) {
+    setFieldProp(section: string, field: string, prop: string, propVal: TValue | Array<TFieldRef> | IError | FileList) {
         this.form[section][field][prop] = propVal;
     }
 

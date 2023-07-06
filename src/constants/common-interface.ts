@@ -3,6 +3,7 @@ import BaseFormControl from "../form/form-controls/BaseFormControl";
 import BaseFormGroup from "../form/form-group/BaseFormGroup";
 import BaseFormStepper from "../form/form-stepper/BaseFormStepper";
 import {
+    IDisplayProps,
     IEvent,
     IField,
     IFormatterType,
@@ -22,10 +23,6 @@ export interface IBasicFormControl {
     text: () => Element;
     radio: () => Element;
     select: () => Element;
-}
-
-export interface IFnTypes {
-    [key: string]: (arg: TValue, ref?: IOption) => TValue;
 }
 
 export interface IElementTypes {
@@ -71,23 +68,31 @@ export interface IFieldConfig {
 }
 
 export interface IFormField {
-    prop?: string;
+    prop?: string | null;
 
     className?: string;
-    config?: IFieldConfig;
+    config?: IFieldConfig | Record<string, unknown>;
     events?: IEvent;
     error: IError; // internal
 
     display: boolean; // internal
     displayName?: string;
+    displayProps?: IDisplayProps;
     displayType?: string;
     type?: string;
-    value: TValue;
+    value: Exclude<TValue, Date>;
+    placeholder?: string;
 
     isDisabled?: boolean;
     isReadonly?: boolean;
     options?: Array<IOption>;
     validation?: IValidation;
+
+    isArray?: boolean;
+}
+
+export interface IFnTypes {
+    [key: string]: (arg: TValue, ref?: IOption, formField?: IFormField) => TValue;
 }
 
 export interface IRenderField extends IField {

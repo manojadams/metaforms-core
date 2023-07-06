@@ -2,7 +2,10 @@
 This is core library engine that dynamically creates forms from json based metaforms schema.
 
 ## Change logs
-Adding default footer for section forms
+- Added phone control.
+- Added custom control.
+- Removed theme and rest configuration options from schema and would now be taken as input params.
+- Updated form wizard functionality.
 
 ## Introduction
 This library reads the json based metaforms schema and layouts beautiful forms.
