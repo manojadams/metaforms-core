@@ -17,14 +17,14 @@ function SectionLayout(props: IProps) {
         formConfig: { type, sectionLayout }
     } = useContext(FormContext);
     switch (sectionLayout) {
-        case SECTION_LAYOUT.TABS:
-            return <FormGroupRenderer fields={props.fields} />;
         case SECTION_LAYOUT.WIZARD:
             return <FormGroupWizard fields={props.fields} theme={type} />;
         case SECTION_LAYOUT.STEPPER:
             return <FormGroupStepper fields={props.fields} theme={type} />;
+        case SECTION_LAYOUT.TABS:
+        default:
+            return <FormGroupRenderer fields={props.fields} />;
     }
-    return <Fragment />;
 }
 
 export default SectionLayout;
