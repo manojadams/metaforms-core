@@ -11,7 +11,7 @@ interface IProps {
     schema: ISchema;
     validated: boolean;
     form: IForm;
-    sectionLayout: TSectionLayout;
+    sectionLayout?: TSectionLayout;
     onCustom: (e?: React.MouseEvent) => void;
     onPrevious: (e?: React.MouseEvent, data?: IForm) => void;
     onNext: () => Promise<boolean | void>;

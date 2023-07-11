@@ -115,7 +115,7 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
         this.metaform.listener(EVENTS.SUBMIT, (...params) => {
             if (this.props.onSubmit) {
                 this.props.onSubmit(
-                    FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter || {}),
+                    FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter ?? {}),
                     params
                 );
             }
@@ -151,9 +151,7 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
                                 validated={this.state.validated}
                                 validate={this.validate}
                                 form={this.metaform.form}
-                                sectionLayout={
-                                    this.metaform.formConfig.sectionLayout || (SECTION_LAYOUT.DEFAULT as TSectionLayout)
-                                }
+                                sectionLayout={this.metaform.formConfig?.sectionLayout}
                                 onCustom={this.handleCustom}
                                 onPrevious={this.handlePrevious}
                                 onNext={this.handleNext}
