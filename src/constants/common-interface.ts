@@ -6,16 +6,16 @@ import {
     IDisplayProps,
     IEvent,
     IField,
+    IFormConfig,
     IFormatterType,
-    IMeta,
     IOption,
     IRest,
-    ITheme,
+    IThemeConfig,
     IUISchema,
     IValidation,
     TParam
 } from "./model-interfaces";
-import { TNextCondition, TNextResponseMode, TOperator, TValue } from "./types";
+import { TFormType, TNextCondition, TNextResponseMode, TOperator, TSectionLayout, TValue } from "./types";
 import BaseFormWizard from "../form/form-wizard/BaseFormWizard";
 
 export interface IBasicFormControl {
@@ -111,14 +111,33 @@ export interface IFieldChange {
     value: TValue;
 }
 
-export interface IFormRenderer extends IUISchema {
+export interface IFormRenderer extends IUISchema, IFormConfig {
     baseFormControl?: typeof BaseFormControl;
     baseFormGroup?: typeof BaseFormGroup;
     baseFormStepper?: typeof BaseFormStepper;
     baseFormWizard?: typeof BaseFormWizard;
 
-    buttons?: IElementTypes;
+    /**
+     * Basic inputs params
+     */
+    /** Form class */
     className?: string;
+    /** Form class */
+    type?: TFormType;
+    /** Section layout */
+    sectionLayout?: TSectionLayout;
+    /** Field layout - row | column (default) */
+    fieldLayout?: "row" | "column" | string;
+    /** Spacing around the field */
+    spacing?: string;
+
+    /** theme configuration input params */
+    themeConfig?: IThemeConfig;
+
+    /**
+     * Customization params
+     */
+    buttons?: IElementTypes;
     controls?: IElementTypes;
     fns?: IFnTypes;
     formatter?: IFormatterType;
@@ -133,11 +152,10 @@ export interface IFormRenderer extends IUISchema {
      * REST API configruation params in the form
      */
     rest?: IRest;
-    /**
-     * Theme information in the form
-     */
-    theme?: ITheme;
 
+    /**
+     * Event handling params
+     */
     onChange?: (change: IFieldChange) => void;
     onCustom?: (formData: IFormData, e: SyntheticEvent) => void;
     onError?: () => void;
@@ -203,7 +221,7 @@ export interface IEventPayload {
 }
 
 export interface IMetaForm {
-    theme: ITheme;
+    formConfig: IFormConfig;
     form: IForm;
 }
 

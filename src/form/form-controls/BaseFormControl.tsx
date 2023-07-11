@@ -2,7 +2,7 @@ import React, { Fragment, ReactNode } from "react";
 import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
-import { IField, IMeta, IOption } from "../../constants/model-interfaces";
+import { IField, IOption, TParam } from "../../constants/model-interfaces";
 import { IError, IFormField, IRenderField } from "../../constants/common-interface";
 import { DATA_LOADER, EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
@@ -63,7 +63,8 @@ export default abstract class BaseFormControl extends React.Component {
         let initData = null;
         if (configData) {
             // check init mode
-            const hasInitCode = configData?.loadOn && configData.loadOn.indexOf("init") >= 0;
+            const hasInitCode =
+                configData?.loadOn && Array.isArray(configData.loadOn) ? configData.loadOn.indexOf("init") >= 0 : false;
             if (hasInitCode) {
                 initData = configData;
             } else {
@@ -298,15 +299,15 @@ export default abstract class BaseFormControl extends React.Component {
                 // eslint-disable-next-line no-lone-blocks
                 {
                     this.context
-                        .api("get", eventItem?.url + "", eventItem.queryParams, "", this.props.section)
+                        .api("get", eventItem?.url + "", eventItem.queryParams as Array<TParam>, "", this.props.section)
                         .then((response: object) => {
-                            let options = eventItem.responseKey ? response[eventItem.responseKey] : response;
+                            let options = eventItem.responseKey ? response[eventItem.responseKey as string] : response;
                             const labelKey = eventItem.labelKey || "label";
                             const valueKey = eventItem.valueKey || "value";
                             if (options) {
                                 options = options.map((o: object) => ({
-                                    label: o[labelKey],
-                                    value: o[valueKey],
+                                    label: o[labelKey as string],
+                                    value: o[valueKey as string],
                                     ref: o
                                 }));
                             }
@@ -331,7 +332,7 @@ export default abstract class BaseFormControl extends React.Component {
 
     getWrapperClassName() {
         const customClassName = this.props.meta?.className || "";
-        const fieldLayout = this.props.meta?.displayProps?.fieldLayout || this.context.theme.fieldLayout;
+        const fieldLayout = this.props.meta?.displayProps?.fieldLayout || this.context.formConfig?.fieldLayout;
         const fieldClassName = fieldLayout === FIELD_LAYOUT.ROW ? "mfield-row" : "mfield-col";
         return (
             "meta-form-control-" +

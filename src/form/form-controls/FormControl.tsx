@@ -5,7 +5,6 @@ import FormImplsContext from "../form-impl-context";
 interface IProps {
     cField: IFormField;
     props: IRenderField;
-    theme: string;
     sync: () => void;
 }
 function FormControl(props: IProps) {

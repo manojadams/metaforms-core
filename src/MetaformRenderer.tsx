@@ -4,7 +4,7 @@ import EventEmitter from "eventemitter3";
 import { ISchema } from "./constants/model-interfaces";
 import { IError, IEventPayload, IFieldChange, IFormField, IFormRenderer } from "./constants/common-interface";
 import { metaAPI } from "./meta-api";
-import Theme from "./core/Theme";
+import Theme from "./core/FormConfig";
 import { EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE, SECTION_LAYOUT } from "./constants/constants";
 import MetaForm from "./core/MetaForm";
 import MetaFormUpdater from "./core/MetaFormUpdater";
@@ -14,6 +14,8 @@ import Form from "./form/Form";
 import FormImpls from "./core/FormImpl";
 import FormImplsContext from "./form/form-impl-context";
 import { Container } from "layout-emotions";
+import FormConfig from "./core/FormConfig";
+import { TFormType, TSectionLayout } from "./constants/types";
 
 interface IState {
     validated: boolean;
@@ -44,8 +46,14 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
         this.name = props.name || "default";
         this.lastAction = "";
         this.formImpls = new FormImpls();
+        const formConfig = new FormConfig(
+            props.type ?? "default",
+            props.sectionLayout,
+            props.fieldLayout,
+            props.config
+        );
         try {
-            this.metaform = new MetaForm(this.props.schema, new EventEmitter(), this.props.rest, this.props.theme);
+            this.metaform = new MetaForm(this.props.schema, new EventEmitter(), formConfig, this.props.rest);
             this.metaformUpdater = new MetaFormUpdater(this.name, this.metaform);
             metaAPI.metaForm.add(this.name, this.metaform);
             if (props.icons) {
@@ -91,11 +99,8 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
                     buttons: []
                 },
                 new EventEmitter(),
-                undefined,
-                new Theme({
-                    type: "default",
-                    sectionLayout: SECTION_LAYOUT.DEFAULT
-                })
+                formConfig,
+                this.props.rest
             );
             this.metaformUpdater = new MetaFormUpdater(this.name, this.metaform);
             this.state = {
@@ -134,7 +139,7 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
     }
 
     render() {
-        const outerClassname = this.props?.className ?? this.props.theme?.className;
+        const outerClassname = this.props?.className ?? this.props?.className;
         const rootClassname = `${outerClassname} ${this.lastAction}`;
         return (
             <SchemaErrorBoundary error={this.state.error}>
@@ -146,7 +151,9 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
                                 validated={this.state.validated}
                                 validate={this.validate}
                                 form={this.metaform.form}
-                                theme={this.metaform.theme}
+                                sectionLayout={
+                                    this.metaform.formConfig.sectionLayout || (SECTION_LAYOUT.DEFAULT as TSectionLayout)
+                                }
                                 onCustom={this.handleCustom}
                                 onPrevious={this.handlePrevious}
                                 onNext={this.handleNext}

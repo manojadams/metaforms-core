@@ -1,5 +1,5 @@
 import { IFieldConfig, TFieldRef } from "./common-interface";
-import { TValue } from "./types";
+import { TFormType, TSectionLayout, TValue } from "./types";
 
 export interface IParamType {
     type?: string;
@@ -118,21 +118,10 @@ export interface IThemeConfig {
     };
 }
 
-/**
- * Theme info related to field
- */
-export interface ITheme {
-    /** Type of theme */
-    type: string;
-    /** Section layout */
-    sectionLayout?: string;
-    /** Field layout - row | column (default) */
-    fieldLayout?: "row" | "column" | string;
-    /** Spacing around the field */
-    spacing?: string;
-    /** Global classname to be used */
-    className?: string;
-    /** Theme settings */
+export interface IFormConfig {
+    type?: TFormType;
+    sectionLayout?: TSectionLayout;
+    fieldLayout?: string;
     config?: IThemeConfig;
 }
 

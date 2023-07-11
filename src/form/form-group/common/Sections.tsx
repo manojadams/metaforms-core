@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import { IField } from "../../../constants/model-interfaces";
 import { ISectionError } from "../../../constants/common-interface";
 import FormContext from "./../../form-context";
-import FormUtils from "../../../utils/FormUtil";
 import { Section } from "./Section";
+import styled from "@emotion/styled";
 
 interface IProps {
     sections: Array<IField>;
@@ -12,11 +12,10 @@ interface IProps {
 }
 
 function Sections(props: IProps) {
-    const { theme, form } = useContext(FormContext);
+    const { form } = useContext(FormContext);
     const sections = props.sections;
-    const padding = FormUtils.getPadding(theme.type);
     return (
-        <div className={"tab-content " + padding} id="tab-content">
+        <TabContent className="tab-content" id="tab-content">
             {sections.map((section, index) => (
                 <Section
                     key={section.name}
@@ -27,8 +26,12 @@ function Sections(props: IProps) {
                     activeIndex={props.activeIndex}
                 />
             ))}
-        </div>
+        </TabContent>
     );
 }
+
+const TabContent = styled.div`
+    padding: 0.5rem 0;
+`;
 
 export default Sections;

@@ -11,7 +11,7 @@ import {
     IMeta,
     IOption,
     ISchema,
-    ITheme,
+    IThemeConfig,
     TParam
 } from "./../constants/model-interfaces";
 
@@ -128,9 +128,9 @@ export default class FormUtils {
         ];
     }
 
-    static getThemeProp(themeName: string, theme: ITheme, prop: string) {
-        if (theme.config?.tabs && theme.config?.tabs[prop]) {
-            return theme.config.tabs[prop];
+    static getThemeProp(theme: IThemeConfig, prop: string) {
+        if (theme.tabs && theme?.tabs[prop]) {
+            return theme.tabs[prop];
         }
         return "";
     }

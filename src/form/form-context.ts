@@ -1,6 +1,7 @@
 import { EventEmitter } from "eventemitter3";
 import React from "react";
 import MetaForm from "../core/MetaForm";
+import FormConfig from "../core/FormConfig";
 
 const FormContext = React.createContext(
     new MetaForm(
@@ -8,7 +9,8 @@ const FormContext = React.createContext(
             fields: [],
             buttons: []
         },
-        new EventEmitter()
+        new EventEmitter(),
+        new FormConfig("default")
     )
 );
 

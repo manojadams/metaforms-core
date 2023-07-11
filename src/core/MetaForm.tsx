@@ -20,8 +20,7 @@ import {
     IEventPayload
 } from "../constants/common-interface";
 import MetaformError from "./MetaformError";
-import { IField, IOption, IParamType, IRest, ISchema, ITheme, TParam } from "../constants/model-interfaces";
-import Theme from "./Theme";
+import { IField, IFormConfig, IOption, IParamType, IRest, ISchema, TParam } from "../constants/model-interfaces";
 import { Rest } from "./Rest";
 import { Page } from "./Page";
 import {
@@ -40,7 +39,7 @@ import { TValue } from "../constants/types";
  * @category Form handler
  */
 export default class MetaForm implements IMetaForm {
-    theme: ITheme;
+    formConfig: IFormConfig;
     form: IForm;
     rest: Rest;
     page: Page;
@@ -50,26 +49,24 @@ export default class MetaForm implements IMetaForm {
     controlElements: Record<string, React.FunctionComponent> | undefined;
     errorHandler?: TErrorCallback;
 
-    constructor(private schema: ISchema, private eventEmitter: EventEmitter, restConfig?: IRest, theme?: ITheme) {
+    constructor(
+        private schema: ISchema,
+        private eventEmitter: EventEmitter,
+        formConfig: IFormConfig,
+        restConfig?: IRest
+    ) {
         this.form = {};
+        this.formConfig = formConfig;
         this.rest = new Rest(restConfig);
-        const themeType = theme?.type || SECTION_LAYOUT.DEFAULT;
-        const sectionLayout = theme?.sectionLayout || SECTION_LAYOUT.DEFAULT;
-        const fieldLayout = theme?.fieldLayout || FIELD_LAYOUT.DEFAULT;
-        this.theme = new Theme({
-            type: themeType,
-            sectionLayout,
-            fieldLayout,
-            config: theme?.config
-        });
         this.page = new Page(false, 1);
     }
 
     init() {
         const schema = this.schema;
         let totalSections = 0;
+        let hasSections = false;
         if (schema.fields) {
-            const hasSections = FormUtils.hasSections(schema.fields);
+            hasSections = FormUtils.hasSections(schema.fields);
             if (hasSections) {
                 schema.fields.forEach((section) => {
                     this.setSection(section.name);
@@ -81,6 +78,12 @@ export default class MetaForm implements IMetaForm {
                 });
                 DependencyUtil.initDependencies(this.form, "", schema.fields);
                 this.applyDependencies("", schema.fields);
+                if (this.formConfig.sectionLayout === SECTION_LAYOUT.DEFAULT) {
+                    this.page = new Page(false, 1);
+                } else {
+                    // use default layout as section if not specified
+                    this.page = new Page(true, totalSections);
+                }
             } else {
                 const section = SECTION_LAYOUT.DEFAULT;
                 this.setSection(section);
@@ -90,16 +93,8 @@ export default class MetaForm implements IMetaForm {
                     });
                 DependencyUtil.initDependencies(this.form, section, schema.fields);
                 this.applyDependencies(section, schema.fields);
+                this.page = new Page(false, 1);
             }
-        }
-        if (
-            (this.theme && this.theme.sectionLayout === SECTION_LAYOUT.TABS) ||
-            this.theme.sectionLayout === SECTION_LAYOUT.STEPPER ||
-            this.theme.sectionLayout === SECTION_LAYOUT.WIZARD
-        ) {
-            this.page = new Page(true, totalSections);
-        } else {
-            this.page = new Page(false, 1);
         }
     }
 
@@ -181,8 +176,8 @@ export default class MetaForm implements IMetaForm {
                             // eslint-disable-next-line no-case-declarations
                             const ref = (value as IParamType).ref;
                             if (ref) {
-                                const section = (value as IParamType).section || sectionName;
-                                const field = this.getField(section || "", ref);
+                                const section = (value as IParamType).section ?? sectionName;
+                                const field = this.getField(section ?? "", ref);
                                 const fielfValue = field?.value;
                                 query += `&${name}=${fielfValue}`;
                             }
@@ -205,7 +200,7 @@ export default class MetaForm implements IMetaForm {
                     case "url_loader":
                     default:
                         // eslint-disable-next-line no-case-declarations
-                        const url = config?.url || "";
+                        const url = config?.url ?? "";
                         // eslint-disable-next-line no-case-declarations
                         const qParams = FormUtils.updateParams(config.queryParams, eventType, val);
                         this.api(
@@ -221,8 +216,8 @@ export default class MetaForm implements IMetaForm {
                             const results = responseKey ? response[responseKey] : response;
                             let newResults: Array<IOption> = [];
                             if (Array.isArray(results)) {
-                                const labelKey = config?.labelKey || "label";
-                                const valueKey = config?.valueKey || "value";
+                                const labelKey = config?.labelKey ?? "label";
+                                const valueKey = config?.valueKey ?? "value";
                                 newResults = results.map((r: string) => {
                                     const label = FormUtils.getDataFromValueKey(r, labelKey);
                                     const value = FormUtils.getDataFromValueKey(r, valueKey);
@@ -240,11 +235,6 @@ export default class MetaForm implements IMetaForm {
     }
 
     /** Theme functions */
-    getThemeProp(themeName: string, prop: string) {
-        if (this.theme[themeName]) {
-            return this.theme[themeName][prop];
-        }
-    }
 
     getSection(pageNumber: number) {
         if (this.schema.fields) {

@@ -1,8 +1,8 @@
 import React, { SyntheticEvent } from "react";
 import { IElementTypes, IForm } from "../constants/common-interface";
 import { EVENTS, FORM_ACTION, SECTION_LAYOUT } from "../constants/constants";
-import { IField, ISchema, ITheme } from "../constants/model-interfaces";
-import { TCallback } from "../constants/types";
+import { IField, ISchema } from "../constants/model-interfaces";
+import { TCallback, TSectionLayout } from "../constants/types";
 import FormUtils from "../utils/FormUtil";
 import DefaultForm from "./formtype/DefaultForm";
 import SectionForm from "./formtype/SectionForm";
@@ -11,7 +11,7 @@ interface IProps {
     schema: ISchema;
     validated: boolean;
     form: IForm;
-    theme: ITheme;
+    sectionLayout: TSectionLayout;
     onCustom: (e?: React.MouseEvent) => void;
     onPrevious: (e?: React.MouseEvent, data?: IForm) => void;
     onNext: () => Promise<boolean | void>;
@@ -31,7 +31,7 @@ interface IProps {
 
 function Form(props: IProps) {
     const hasSection = FormUtils.hasSections(props.schema.fields);
-    const sectionLayout = props.theme.sectionLayout;
+    const sectionLayout = props.sectionLayout;
     const formButtons =
         props.schema.buttons && props.schema.buttons.length > 0
             ? props.schema.buttons

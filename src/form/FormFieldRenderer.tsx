@@ -1,11 +1,11 @@
-import React, { Fragment, useContext, useState } from "react";
+import React, { Fragment, useState } from "react";
 import FormUtils from "../utils/FormUtil";
 import { IFormField, IRenderField } from "../constants/common-interface";
-import FormContext from "./form-context";
 import Row from "./layout/Row";
 import FormControl from "./form-controls/FormControl";
 import { IField } from "../constants/model-interfaces";
 import Col from "./layout/Col";
+import styled from "@emotion/styled";
 
 function FormFieldRenderer(props: IRenderField) {
     if (props?.meta?.type === "hidden") {
@@ -69,8 +69,7 @@ function RenderColumn({
     cField: IFormField;
     sync: () => void;
 }) {
-    const { theme } = useContext(FormContext);
-    const vs = FormUtils.getVerticalSpacing(theme.type);
+    const vs = "my-2 my-md-3";
     const type = props.meta?.type ? props.meta.type : "field";
     const wrapClassName = cssClassName || (type === "field" ? "mcol-md-12" : "");
     if (wrapClassName) {
@@ -81,7 +80,7 @@ function RenderColumn({
                     {isSection && props.meta.displayType === "title" && (
                         <h4 className="text-center mt-md-5 mb-md-2 mt-4 mb-2">{props.meta.displayName}</h4>
                     )}
-                    {!isSection && <FormControl props={props} theme={theme.type} cField={cField} sync={sync} />}
+                    {!isSection && <FormControl props={props} cField={cField} sync={sync} />}
                     {props.fields &&
                         props.fields.map((field: IField) => (
                             <FormFieldRenderer
@@ -100,10 +99,10 @@ function RenderColumn({
             <Fragment>
                 {isSection && props.meta.displayType === "title" && (
                     <Col type="12">
-                        <h4 className="text-center mt-md-5 mb-md-2 mt-4 mb-2">{props.meta.displayName}</h4>
+                        <H4>{props.meta.displayName}</H4>
                     </Col>
                 )}
-                {!isSection && <FormControl props={props} theme={theme.type} cField={cField} sync={sync} />}
+                {!isSection && <FormControl props={props} cField={cField} sync={sync} />}
                 {props.fields &&
                     props.fields.map((field: IField) => (
                         <FormFieldRenderer
@@ -118,3 +117,9 @@ function RenderColumn({
         );
     }
 }
+
+const H4 = styled.h4`
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+`;

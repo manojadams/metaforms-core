@@ -15,7 +15,6 @@ interface IProps {
     formButtons: Array<IField>;
     form: IForm;
     useDefaultButtons: boolean;
-    theme: string;
     onSubmit: (event: React.MouseEvent, field: IField, callback: () => void) => void;
     onReset: (event: React.MouseEvent, field: IField, callback: () => void) => void;
     onPrevious: (event: React.MouseEvent, field: IField, callback: () => void) => void;
@@ -82,7 +81,6 @@ function Footer(props: IProps) {
                 const subprops = {
                     className,
                     button,
-                    theme: props.theme,
                     form: props.form,
                     handleClick
                 };

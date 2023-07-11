@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IElementTypes, IForm } from "../../constants/common-interface";
 import { SECTION_LAYOUT } from "../../constants/constants";
-import { IField, ISchema, ITheme } from "../../constants/model-interfaces";
+import { IField, ISchema } from "../../constants/model-interfaces";
 import { TCallback } from "../../constants/types";
 import { Row as MRow } from "layout-emotions";
 import FormFieldRenderer from "../FormFieldRenderer";
@@ -13,7 +13,6 @@ interface IProps {
     form: IForm;
     formButtons: Array<IField>;
     buttons?: IElementTypes;
-    theme: ITheme;
     hasSection: boolean;
     useDefaultButtons: boolean;
     handleCustom: (e: React.MouseEvent, field: IField) => void;
@@ -44,7 +43,6 @@ const DefaultForm = (props: IProps) => {
                 ))}
             </MRow>
             <Footer
-                theme={props.theme.type}
                 form={props.form}
                 buttons={props.buttons}
                 formButtons={props.formButtons}
