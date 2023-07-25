@@ -2,7 +2,7 @@
 This is core library engine that dynamically creates forms from json based metaforms schema.
 
 ## Change logs
-- [enhancement](https://github.com/manojadams/metaforms-core/issues/5) allow only valid characters, if configured
+- [fix for setState issue](https://github.com/manojadams/metaforms-core/issues/6)
 
 ## Introduction
 This library reads the json based metaforms schema and layouts beautiful forms.
