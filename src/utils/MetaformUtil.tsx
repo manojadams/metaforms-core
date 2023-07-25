@@ -10,12 +10,12 @@ class MetaformUtil {
                     if (!emailValidation) {
                         emailValidation = {};
                     }
-                    emailValidation.pattern = emailValidation?.pattern || EMAIL_PATTERN;
+                    emailValidation.pattern = emailValidation?.pattern ?? EMAIL_PATTERN;
                     if (!emailValidation.patternDetail) {
                         emailValidation.patternDetail = {};
                     }
                     emailValidation.patternDetail.errorMsg =
-                        emailValidation?.patternDetail?.errorMsg || MSGS.ERROR_MSG.EMAIL_INVALID;
+                        emailValidation?.patternDetail?.errorMsg ?? MSGS.ERROR_MSG.EMAIL_INVALID;
                     return emailValidation;
                 }
             }

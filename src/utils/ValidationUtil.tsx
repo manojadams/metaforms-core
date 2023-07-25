@@ -102,7 +102,7 @@ export default class ValidationUtil {
                             if (formField.validation?.required && !formField.value) {
                                 formField.error.hasError = true;
                                 formField.error.errorMsg =
-                                    formField.validation?.requiredDetail?.errorMsg || MSGS.ERROR_MSG.REQUIRED;
+                                    formField.validation?.requiredDetail?.errorMsg ?? MSGS.ERROR_MSG.REQUIRED;
                                 hasErrors = true;
                             }
 
@@ -112,8 +112,8 @@ export default class ValidationUtil {
                                 if (!regexp.test(formField.value as string)) {
                                     formField.error.hasError = true;
                                     formField.error.errorMsg =
-                                        formField.validation.patternDetail?.errorMsg ||
-                                        formField.validation.patternDetail?.errorMsg ||
+                                        formField.validation.patternDetail?.errorMsg ??
+                                        formField.validation.patternDetail?.errorMsg ??
                                         MSGS.ERROR_MSG.PATTERN;
                                     hasErrors = true;
                                 }
@@ -161,20 +161,20 @@ export default class ValidationUtil {
         let parsedCondition = "";
         condition.forEach((c) => {
             const [leftOperand, operator, rightOperand, nextCondition] = c;
-            const lSection = leftOperand?.section || section;
+            const lSection = leftOperand?.section ?? section;
             const lField = this.getField(form, lSection, leftOperand.ref);
             const lValue = lField.value === "" ? '""' : lField.value;
             let rValue;
             if (rightOperand && typeof rightOperand === "object" && "ref" in rightOperand) {
                 // means its an operand
-                const rSection = rightOperand?.section || section;
+                const rSection = rightOperand?.section ?? section;
                 const rField = this.getField(form, rSection, rightOperand.ref);
                 rValue = rField.value;
             } else {
                 rValue = rightOperand;
             }
             rValue = rValue === "" ? '""' : rValue;
-            parsedCondition += "(" + lValue + operator + rValue + ")" + (nextCondition || "");
+            parsedCondition += "(" + lValue + operator + rValue + ")" + (nextCondition ?? "");
         });
         // eslint-disable-next-line no-new-func
         const evalCondition = parsedCondition ? Function(`return ${parsedCondition}`) : () => false;

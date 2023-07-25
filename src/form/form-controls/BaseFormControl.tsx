@@ -275,6 +275,17 @@ export default abstract class BaseFormControl extends React.Component {
     handleChange(e: TMouseEvent, val?: TValue, ref?: IOption) {
         try {
             const value = val !== undefined ? val : (e?.target as HTMLInputElement)?.value;
+            // do not allow invalid pattern, if configured
+            if (
+                value &&
+                this.field.meta.validation?.pattern &&
+                this.field.meta.validation?.patternDetail?.allowValidOnly
+            ) {
+                const regexp = new RegExp(this.field.meta.validation?.pattern);
+                if (!regexp.test(value.toString())) {
+                    return;
+                }
+            }
             this.context.setField(this.section, this.field.name, value);
             this.context.handleChangeEvents(this.section, this.field.name, value, ref);
             this.handleDependencies(value);
@@ -355,7 +366,7 @@ export default abstract class BaseFormControl extends React.Component {
         if (meta.validation?.required) {
             const isEmpty = ValidationUtil.isEmptyField(value);
             if (isEmpty) {
-                const errorMsg = meta.validation?.requiredDetail?.errorMsg || MSGS.ERROR_MSG.REQUIRED;
+                const errorMsg = meta.validation?.requiredDetail?.errorMsg ?? MSGS.ERROR_MSG.REQUIRED;
                 this.setError(true, errorMsg);
                 return;
             }
@@ -364,7 +375,7 @@ export default abstract class BaseFormControl extends React.Component {
             const regx = new RegExp(meta.validation?.pattern);
             const strValue = value ? value + "" : "";
             if (value && !regx.test(strValue)) {
-                const errorMsg = meta.validation.patternDetail?.errorMsg || MSGS.ERROR_MSG.PATTERN;
+                const errorMsg = meta.validation.patternDetail?.errorMsg ?? MSGS.ERROR_MSG.PATTERN;
                 this.setError(true, errorMsg);
                 return;
             }
