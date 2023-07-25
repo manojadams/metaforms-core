@@ -2,7 +2,7 @@
 This is core library engine that dynamically creates forms from json based metaforms schema.
 
 ## Change logs
-- Use default section layout as tabbed if not specified
+- Update layout package for row width fix
 
 ## Introduction
 This library reads the json based metaforms schema and layouts beautiful forms.
