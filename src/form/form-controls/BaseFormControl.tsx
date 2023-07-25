@@ -52,6 +52,7 @@ export default abstract class BaseFormControl extends React.Component {
         };
         this.handleValidation = this.handleValidation.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.setError = this.setError.bind(this);
     }
 
     setLoading(loading: boolean) {
