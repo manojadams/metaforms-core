@@ -1,5 +1,5 @@
 # metaform-core
-This is core library engine that dynamically creates forms from json based metaforms schema.
+This is core library engine that dynamically creates react forms from json based metaforms schema.
 
 ## Change logs
 - [fix for setState issue](https://github.com/manojadams/metaforms-core/issues/6)
