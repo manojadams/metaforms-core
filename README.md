@@ -1,12 +1,12 @@
 # metaform-core
-This is core library engine that dynamically creates react forms from json based metaforms schema.
+A framework for building react form libraries. Create your react form components and use this framework for adding form behaviour using json based schema.
 
 ## Change logs
 - [fix for setState issue](https://github.com/manojadams/metaforms-core/issues/6)
 
 ## Introduction
-This library reads the json based metaforms schema and layouts beautiful forms.
-It acts as a base for creating a dynamic form library which needs to implement the core components from this library.  
+This library reads the json based schema and layouts beautiful forms.
+It acts as a base for creating a dynamic form library.
 
 ## Main features
 - Layouting configuration
