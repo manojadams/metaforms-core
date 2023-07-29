@@ -36,9 +36,9 @@ It acts as a base for creating a dynamic form library.
   - Write your own classes (typescript) and extend the above controls.
   - To know details, check the documentation.
   
-## Sample for implementing basic `email` control
+## Implement a `email` control
 ````typescript
-class BootstrapFormControl extends CoreFormControl {
+class MyFormControl extends CoreFormControl {
   /**
    * Implement email
    */
@@ -46,8 +46,37 @@ class BootstrapFormControl extends CoreFormControl {
     return (
       <div className="form-group">
         <label forName="exampleInputEmail1">Email address</label>
-        <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <input
+          type="email"
+          className="form-control"
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Enter email"
+          onChange={this.handleChange}
+        >
+      </div>
+    )
+  }
+}
+````
+
+## Implement a `phone` control
+````typescript
+class MyFormControl extends CoreFormControl {
+  /**
+   * Implement phone
+   */
+  phone() {
+    return (
+      <div className="form-group">
+        <label forName="phone">Your Phone</label>
+        <input
+          type="tel"
+          className="form-control"
+          id="phone" aria-describedby="phoneHelp"
+          placeholder="Enter your phone"
+          onChange={this.handleChange}
+        >
       </div>
     )
   }
