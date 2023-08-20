@@ -262,7 +262,30 @@ export default abstract class BaseFormControl extends React.Component {
     }
 
     templateControl(): JSX.Element {
-        throw Error("Not Implemented");
+        if (this.displayType) {
+            const customWrapperClass = this.getWrapperClassName();
+            const template = this.props.form?.config?.template as string || "";
+            const control = this.context.getControlElements(template);
+            let customComponent: JSX.Element | null = null;
+            if (control) {
+                customComponent = React.cloneElement(
+                    control({
+                        field: this.props.form,
+                        form: this.context.form
+                    })
+                );
+            }
+            if (customComponent) {
+                return (
+                    <div className={customWrapperClass}>
+                        {customComponent}
+                    </div>
+                );
+            } else {
+                return <Fragment />;
+            }
+        }
+        return this.text();
     }
 
     customTextControl(): JSX.Element {

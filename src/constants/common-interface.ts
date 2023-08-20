@@ -139,6 +139,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
      */
     buttons?: IElementTypes;
     controls?: IElementTypes;
+    components?: Record<string, React.FunctionComponent>;
     fns?: IFnTypes;
     formatter?: IFormatterType;
     icons?: IElementTypes;

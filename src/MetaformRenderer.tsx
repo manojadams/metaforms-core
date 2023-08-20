@@ -69,6 +69,9 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             if (props.controls) {
                 this.metaform.setControls(props.controls);
             }
+            if (props.components) {
+                this.metaform.setControlElements(props.components);
+            }
             if (props.onError) {
                 this.metaform.setErrorHandler(props.onError);
             }
