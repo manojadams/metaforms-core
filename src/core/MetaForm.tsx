@@ -25,6 +25,7 @@ import { Rest } from "./Rest";
 import { Page } from "./Page";
 import {
     CHANGE_TYPE,
+    DATA_LOADER,
     DEP_TYPE,
     EVENTS,
     FIELD_DISPLAY_TYPES,
@@ -194,8 +195,10 @@ export default class MetaForm implements IMetaForm {
 
     getData(config: IFieldConfig, val: TValue, section: string, eventType?: string): Promise<Array<IOption>> {
         return new Promise((resolve, reject) => {
-            if (config.type) {
-                switch (config.type) {
+            const configUrl = config.url;
+            const configType = config.type ?? (configUrl ? DATA_LOADER.URL : null);
+            if (configType) {
+                switch (configType) {
                     case "options_loader":
                     case "url_loader":
                     default:
