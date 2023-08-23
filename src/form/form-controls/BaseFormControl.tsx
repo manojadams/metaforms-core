@@ -66,7 +66,8 @@ export default abstract class BaseFormControl extends React.Component {
             // check init mode
             const hasInitCode =
                 configData?.loadOn && Array.isArray(configData.loadOn) ? configData.loadOn.indexOf("init") >= 0 : false;
-            if (hasInitCode) {
+            const hasDefaultinit = configData?.url && !configData?.lazy;
+            if (hasInitCode || hasDefaultinit) {
                 initData = configData;
             } else {
                 // check edit mode
@@ -76,34 +77,26 @@ export default abstract class BaseFormControl extends React.Component {
                 }
             }
         }
-        if (initData) {
-            if (
-                !(
-                    initData?.type === DATA_LOADER.URL ||
-                    initData?.type === DATA_LOADER.URL_LOADDER ||
-                    initData?.type === DATA_LOADER.OPTIONS_LOADER
-                )
-            ) {
-                return;
-            }
-            this.setLoading(true);
-            this.context
-                .getData(initData, this.props.form.value, this.props.section, _INTERNAL_VALUES.INITIAL)
-                .then((options: Array<IOption>) => {
-                    this.setLoading(false);
-                    this.context.setFieldOptions(this.section, this.field.name, options);
-                    if (this.props.form.value !== undefined) {
-                        const ref = options.find((option) => option.value === this.props.form.value);
-                        if (ref) {
-                            this.handleChange(null, this.props.form.value, ref);
-                        }
-                        this.props.sync();
-                    }
-                })
-                .catch(() => {
-                    this.setLoading(false);
-                });
+        if (!(initData && initData.url)) {
+            return;
         }
+        this.setLoading(true);
+        this.context
+            .getData(initData, this.props.form.value, this.props.section, _INTERNAL_VALUES.INITIAL)
+            .then((options: Array<IOption>) => {
+                this.setLoading(false);
+                this.context.setFieldOptions(this.section, this.field.name, options);
+                if (this.props.form.value !== undefined) {
+                    const ref = options.find((option) => option.value === this.props.form.value);
+                    if (ref) {
+                        this.handleChange(null, this.props.form.value, ref);
+                    }
+                    this.props.sync();
+                }
+            })
+            .catch(() => {
+                this.setLoading(false);
+            });
     }
 
     /** @internal */

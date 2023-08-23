@@ -54,6 +54,7 @@ export interface IFieldConfig {
     url?: string;
     urlType?: string;
     loadOn?: string | Array<string>;
+    lazy?: boolean; // load data lazily
     // date config
     inputFormat?: string;
     views?: Array<string>;
