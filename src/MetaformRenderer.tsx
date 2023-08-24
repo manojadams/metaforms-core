@@ -4,8 +4,7 @@ import EventEmitter from "eventemitter3";
 import { ISchema } from "./constants/model-interfaces";
 import { IError, IEventPayload, IFieldChange, IFormField, IFormRenderer } from "./constants/common-interface";
 import { metaAPI } from "./meta-api";
-import Theme from "./core/FormConfig";
-import { EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE, SECTION_LAYOUT } from "./constants/constants";
+import { EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE } from "./constants/constants";
 import MetaForm from "./core/MetaForm";
 import MetaFormUpdater from "./core/MetaFormUpdater";
 import SchemaErrorBoundary from "./SchemaErrorBoundary";
@@ -15,7 +14,6 @@ import FormImpls from "./core/FormImpl";
 import FormImplsContext from "./form/form-impl-context";
 import { Container } from "layout-emotions";
 import FormConfig from "./core/FormConfig";
-import { TFormType, TSectionLayout } from "./constants/types";
 
 interface IState {
     validated: boolean;

@@ -29,7 +29,6 @@ import {
     DEP_TYPE,
     EVENTS,
     FIELD_DISPLAY_TYPES,
-    FIELD_LAYOUT,
     SECTION_LAYOUT,
     URL_TYPE
 } from "../constants/constants";
@@ -617,7 +616,7 @@ export default class MetaForm implements IMetaForm {
         this.controls = controls;
     }
 
-    getControlElements(displayType: string): any {
+    getControlElements(displayType: string): React.FunctionComponent | null {
         if (this.controlElements && this.controlElements[displayType]) {
             return this.controlElements[displayType];
         }

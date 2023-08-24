@@ -4,7 +4,7 @@ import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IOption, TParam } from "../../constants/model-interfaces";
 import { IError, IFormField, IRenderField } from "../../constants/common-interface";
-import { DATA_LOADER, EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
+import { EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
 import { Header } from "./Styled";
@@ -257,7 +257,7 @@ export default abstract class BaseFormControl extends React.Component {
     templateControl(): JSX.Element {
         if (this.displayType) {
             const customWrapperClass = this.getWrapperClassName();
-            const template = this.props.form?.config?.template as string || "";
+            const template = (this.props.form?.config?.template as string) || "";
             const control = this.context.getControlElements(template);
             let customComponent: JSX.Element | null = null;
             if (control) {
@@ -269,11 +269,7 @@ export default abstract class BaseFormControl extends React.Component {
                 );
             }
             if (customComponent) {
-                return (
-                    <div className={customWrapperClass}>
-                        {customComponent}
-                    </div>
-                );
+                return <div className={customWrapperClass}>{customComponent}</div>;
             } else {
                 return <Fragment />;
             }
