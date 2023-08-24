@@ -6,6 +6,8 @@ name: Node.js Package
 on:
   push:
     branches: master
+    paths:
+      - src/**
 
 jobs:
   build:
@@ -28,6 +30,8 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
       - run: npm ci
+      - run: git config --global user.email "manoj.adams@gmail.com"
+      - run: git config --global user.name "Manoj"
       - run: npm version patch
       - run: npm publish
         env:
