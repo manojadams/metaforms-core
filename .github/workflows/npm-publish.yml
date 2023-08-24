@@ -32,7 +32,7 @@ jobs:
       - run: git config --global user.email "manoj.adams@gmail.com"
       - run: git config --global user.name "Manoj"
       - run: npm version patch
-      - run: npm publish
+      - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
           NODE_AUTH_TOKEN2: ${{secrets.npm_token}}
