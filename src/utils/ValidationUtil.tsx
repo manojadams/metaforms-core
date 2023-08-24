@@ -1,7 +1,6 @@
 import { IForm, IFormField, TCondition } from "../constants/common-interface";
 import { MSGS } from "../constants/constants";
 import { CONTROLS } from "../constants/controls";
-import { IMeta } from "../constants/model-interfaces";
 import { ISetError, TValue } from "../constants/types";
 
 export default class ValidationUtil {

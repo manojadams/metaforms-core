@@ -54,6 +54,8 @@ export interface IFieldConfig {
     url?: string;
     urlType?: string;
     loadOn?: string | Array<string>;
+    lazy?: boolean; // load data lazily
+    multiple?: boolean; // allow multiple values, e.g-> checkbox, multi-select
     // date config
     inputFormat?: string;
     views?: Array<string>;
@@ -236,6 +238,11 @@ export type TErrorCallback = (error: Error, section: string, field: string) => v
 
 interface IEventDetail {
     eventType: string;
+}
+
+export interface IControlProps {
+    field: IFormField;
+    form: IForm;
 }
 
 export class MetaformEvent extends Event {

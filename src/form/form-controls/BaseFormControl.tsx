@@ -3,8 +3,8 @@ import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IOption, TParam } from "../../constants/model-interfaces";
-import { IError, IFormField, IRenderField } from "../../constants/common-interface";
-import { DATA_LOADER, EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
+import { IControlProps, IError, IFormField, IRenderField } from "../../constants/common-interface";
+import { EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
 import { Header } from "./Styled";
@@ -66,7 +66,8 @@ export default abstract class BaseFormControl extends React.Component {
             // check init mode
             const hasInitCode =
                 configData?.loadOn && Array.isArray(configData.loadOn) ? configData.loadOn.indexOf("init") >= 0 : false;
-            if (hasInitCode) {
+            const hasDefaultinit = configData?.url && !configData?.lazy;
+            if (hasInitCode || hasDefaultinit) {
                 initData = configData;
             } else {
                 // check edit mode
@@ -76,34 +77,26 @@ export default abstract class BaseFormControl extends React.Component {
                 }
             }
         }
-        if (initData) {
-            if (
-                !(
-                    initData?.type === DATA_LOADER.URL ||
-                    initData?.type === DATA_LOADER.URL_LOADDER ||
-                    initData?.type === DATA_LOADER.OPTIONS_LOADER
-                )
-            ) {
-                return;
-            }
-            this.setLoading(true);
-            this.context
-                .getData(initData, this.props.form.value, this.props.section, _INTERNAL_VALUES.INITIAL)
-                .then((options: Array<IOption>) => {
-                    this.setLoading(false);
-                    this.context.setFieldOptions(this.section, this.field.name, options);
-                    if (this.props.form.value !== undefined) {
-                        const ref = options.find((option) => option.value === this.props.form.value);
-                        if (ref) {
-                            this.handleChange(null, this.props.form.value, ref);
-                        }
-                        this.props.sync();
-                    }
-                })
-                .catch(() => {
-                    this.setLoading(false);
-                });
+        if (!(initData && initData.url)) {
+            return;
         }
+        this.setLoading(true);
+        this.context
+            .getData(initData, this.props.form.value, this.props.section, _INTERNAL_VALUES.INITIAL)
+            .then((options: Array<IOption>) => {
+                this.setLoading(false);
+                this.context.setFieldOptions(this.section, this.field.name, options);
+                if (this.props.form.value !== undefined) {
+                    const ref = options.find((option) => option.value === this.props.form.value);
+                    if (ref) {
+                        this.handleChange(null, this.props.form.value, ref);
+                    }
+                    this.props.sync();
+                }
+            })
+            .catch(() => {
+                this.setLoading(false);
+            });
     }
 
     /** @internal */
@@ -264,23 +257,20 @@ export default abstract class BaseFormControl extends React.Component {
     templateControl(): JSX.Element {
         if (this.displayType) {
             const customWrapperClass = this.getWrapperClassName();
-            const template = this.props.form?.config?.template as string || "";
-            const control = this.context.getControlElements(template);
+            const template = (this.props.form?.config?.template as string) || "";
+            const control = this.context.getControlElements(template) as React.FunctionComponent<IControlProps>;
             let customComponent: JSX.Element | null = null;
             if (control) {
-                customComponent = React.cloneElement(
-                    control({
-                        field: this.props.form,
-                        form: this.context.form
-                    })
-                );
+                const element = control({
+                    field: this.props.form,
+                    form: this.context.form
+                });
+                if (React.isValidElement(element)) {
+                    customComponent = React.cloneElement(element);
+                }
             }
             if (customComponent) {
-                return (
-                    <div className={customWrapperClass}>
-                        {customComponent}
-                    </div>
-                );
+                return <div className={customWrapperClass}>{customComponent}</div>;
             } else {
                 return <Fragment />;
             }

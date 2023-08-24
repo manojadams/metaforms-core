@@ -17,7 +17,8 @@ import {
     IFieldRef,
     TFieldRef,
     IFieldConfig,
-    IEventPayload
+    IEventPayload,
+    IControlProps
 } from "../constants/common-interface";
 import MetaformError from "./MetaformError";
 import { IField, IFormConfig, IOption, IParamType, IRest, ISchema, TParam } from "../constants/model-interfaces";
@@ -25,10 +26,10 @@ import { Rest } from "./Rest";
 import { Page } from "./Page";
 import {
     CHANGE_TYPE,
+    DATA_LOADER,
     DEP_TYPE,
     EVENTS,
     FIELD_DISPLAY_TYPES,
-    FIELD_LAYOUT,
     SECTION_LAYOUT,
     URL_TYPE
 } from "../constants/constants";
@@ -46,7 +47,7 @@ export default class MetaForm implements IMetaForm {
     icons?: IElementTypes;
     fns?: IFnTypes;
     controls: IElementTypes;
-    controlElements: Record<string, React.FunctionComponent> | undefined;
+    controlElements: Record<string, React.FunctionComponent<IControlProps>> | undefined;
     errorHandler?: TErrorCallback;
 
     constructor(
@@ -194,8 +195,10 @@ export default class MetaForm implements IMetaForm {
 
     getData(config: IFieldConfig, val: TValue, section: string, eventType?: string): Promise<Array<IOption>> {
         return new Promise((resolve, reject) => {
-            if (config.type) {
-                switch (config.type) {
+            const configUrl = config.url;
+            const configType = config.type ?? (configUrl ? DATA_LOADER.URL : null);
+            if (configType) {
+                switch (configType) {
                     case "options_loader":
                     case "url_loader":
                     default:
@@ -614,7 +617,7 @@ export default class MetaForm implements IMetaForm {
         this.controls = controls;
     }
 
-    getControlElements(displayType: string): any {
+    getControlElements(displayType: string): React.FunctionComponent<IControlProps> | null {
         if (this.controlElements && this.controlElements[displayType]) {
             return this.controlElements[displayType];
         }

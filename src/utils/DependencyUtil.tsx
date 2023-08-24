@@ -6,7 +6,7 @@ import {
     TVALUE_MAP_TYPE_REF
 } from "../constants/common-interface";
 import { API_METHOD, DEP_TYPE, FORM_CONSTANTS, _INTERNAL_VALUES } from "../constants/constants";
-import { IDependency, IField, IOption, IURLLoaderConfig } from "../constants/model-interfaces";
+import { IDependency, IField, IOption } from "../constants/model-interfaces";
 import { TValue } from "../constants/types";
 import MetaForm from "../core/MetaForm";
 import ValidationUtil from "./ValidationUtil";
