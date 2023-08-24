@@ -17,7 +17,8 @@ import {
     IFieldRef,
     TFieldRef,
     IFieldConfig,
-    IEventPayload
+    IEventPayload,
+    IControlProps
 } from "../constants/common-interface";
 import MetaformError from "./MetaformError";
 import { IField, IFormConfig, IOption, IParamType, IRest, ISchema, TParam } from "../constants/model-interfaces";
@@ -46,7 +47,7 @@ export default class MetaForm implements IMetaForm {
     icons?: IElementTypes;
     fns?: IFnTypes;
     controls: IElementTypes;
-    controlElements: Record<string, React.FunctionComponent> | undefined;
+    controlElements: Record<string, React.FunctionComponent<IControlProps>> | undefined;
     errorHandler?: TErrorCallback;
 
     constructor(
@@ -616,7 +617,7 @@ export default class MetaForm implements IMetaForm {
         this.controls = controls;
     }
 
-    getControlElements(displayType: string): React.FunctionComponent | null {
+    getControlElements(displayType: string): React.FunctionComponent<IControlProps> | null {
         if (this.controlElements && this.controlElements[displayType]) {
             return this.controlElements[displayType];
         }

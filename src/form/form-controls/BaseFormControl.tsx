@@ -3,7 +3,7 @@ import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IOption, TParam } from "../../constants/model-interfaces";
-import { IError, IFormField, IRenderField } from "../../constants/common-interface";
+import { IControlProps, IError, IFormField, IRenderField } from "../../constants/common-interface";
 import { EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
@@ -258,15 +258,16 @@ export default abstract class BaseFormControl extends React.Component {
         if (this.displayType) {
             const customWrapperClass = this.getWrapperClassName();
             const template = (this.props.form?.config?.template as string) || "";
-            const control = this.context.getControlElements(template);
+            const control = this.context.getControlElements(template) as React.FunctionComponent<IControlProps>;
             let customComponent: JSX.Element | null = null;
             if (control) {
-                customComponent = React.cloneElement(
-                    control({
-                        field: this.props.form,
-                        form: this.context.form
-                    })
-                );
+                const element = control({
+                    field: this.props.form,
+                    form: this.context.form
+                });
+                if (React.isValidElement(element)) {
+                    customComponent = React.cloneElement(element);
+                }
             }
             if (customComponent) {
                 return <div className={customWrapperClass}>{customComponent}</div>;

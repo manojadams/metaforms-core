@@ -240,6 +240,11 @@ interface IEventDetail {
     eventType: string;
 }
 
+export interface IControlProps {
+    field: IFormField;
+    form: IForm;
+}
+
 export class MetaformEvent extends Event {
     detail: IEventDetail;
 }
