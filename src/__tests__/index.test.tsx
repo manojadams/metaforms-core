@@ -1,7 +1,7 @@
 import FormRenderer from "../MetaformRenderer";
 
 describe("FormRenderer", () => {
-    it("is truthy", () => {
+    it("MetaformRenderer is truthy", () => {
         expect(FormRenderer).toBeTruthy();
     });
 });
