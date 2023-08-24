@@ -55,6 +55,7 @@ export interface IFieldConfig {
     urlType?: string;
     loadOn?: string | Array<string>;
     lazy?: boolean; // load data lazily
+    multiple?: boolean; // allow multiple values, e.g-> checkbox, multi-select
     // date config
     inputFormat?: string;
     views?: Array<string>;
