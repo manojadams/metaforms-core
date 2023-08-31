@@ -110,8 +110,12 @@ export interface IRest {
     config: IConfig;
 }
 
+export type TFormLayout = "vertical" | "horizontal";
+
 export interface IThemeConfig {
     variant?: string;
+    // form layout - vertical or horizontal (default)
+    layout?: TFormLayout;
     size?: string;
     tabs?: {
         variant: string;

@@ -14,7 +14,7 @@ interface ISectionProps {
     error: boolean;
 }
 
-export function Section(props: ISectionProps) {
+function Section(props: ISectionProps) {
     const form2 = props.form[props.section.name ? props.section.name : SECTION_LAYOUT.DEFAULT];
     const [cField, setcField] = useState(form2);
     const sync = () => {
@@ -49,3 +49,6 @@ export function Section(props: ISectionProps) {
 const TabStyled = styled.div<{ active: boolean }>`
     display: ${(props) => (props.active ? "block" : "none")};
 `;
+
+export default Section;
+

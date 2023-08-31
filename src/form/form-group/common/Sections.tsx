@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { IField } from "../../../constants/model-interfaces";
 import { ISectionError } from "../../../constants/common-interface";
 import FormContext from "./../../form-context";
-import { Section } from "./Section";
+import Section from "./Section";
 import styled from "@emotion/styled";
 
 interface IProps {

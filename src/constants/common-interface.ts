@@ -118,6 +118,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     baseFormGroup?: typeof BaseFormGroup;
     baseFormStepper?: typeof BaseFormStepper;
     baseFormWizard?: typeof BaseFormWizard;
+    form?: React.FunctionComponent;
 
     /**
      * Basic inputs params
