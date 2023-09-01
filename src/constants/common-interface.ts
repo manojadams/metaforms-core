@@ -161,7 +161,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
      */
     onChange?: (change: IFieldChange) => void;
     onCustom?: (formData: IFormData, e: SyntheticEvent) => void;
-    onError?: () => void;
+    onError?: (errorResponse: any) => void;
     onPopupClose?: (params: Array<unknown>) => void;
     onPrevious?: (formData: IFormData, pageNumber: number) => void;
     onNext?: (formData: IFormData, pageNumber: number) => void;
