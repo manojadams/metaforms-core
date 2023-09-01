@@ -8,6 +8,7 @@ import {
     IField,
     IFormConfig,
     IFormatterType,
+    IIconConfig,
     IOption,
     IRest,
     IThemeConfig,
@@ -90,6 +91,7 @@ export interface IFormField {
     options?: Array<IOption>;
     validation?: IValidation;
 
+    icons?: IIconConfig;
     isArray?: boolean;
 }
 
