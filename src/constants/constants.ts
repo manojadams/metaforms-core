@@ -27,7 +27,8 @@ export const FIELD_DISPLAY_TYPES = {
     SELECT: "select"
 };
 
-export const DEP_TYPE = {
+// to be deprecated
+export const DEP_TYPE_OLD = {
     EXISTS: "exists",
     ENABLED: "enabled",
     EQUALS: "equals",
@@ -39,11 +40,33 @@ export const DEP_TYPE = {
     PATTERN_MATCH_URL_LOADER: "pattern_match_url_loader"
 };
 
-export const CHANGE_TYPE = {
+export const DEP_TYPE = {
+    EXISTS: "exists",
+    ENABLED: "enabled",
+    EQUALS: "equals",
+    LOAD: "load",
+    LOAD_OPTIONS: "loadOptions",
+    CHANGE: "change",
+    VALIDATION: "validation",
+    PROP_UPDATE: "propUpdate",
+    PATTERN_MATCH_URL_LOADER: "patternMatchUrlLoader"
+};
+
+// to be deprecated
+export const CHANGE_TYPE_OLD = {
+    URL_LOADER: "url_loader",
     SETTER: "setter",
     PROP_SETTER: "prop_setter",
     EVENT_EMITTER: "event_emitter",
     SETTER_CONDITION: "setter_condition"
+};
+
+export const CHANGE_TYPE = {
+    URL_LOADER: "urlLoader",
+    SETTER: "setter",
+    PROP_SETTER: "propSetter",
+    EVENT_EMITTER: "eventEmitter",
+    SETTER_CONDITION: "setterCondition"
 };
 
 export const URL_TYPE = {
