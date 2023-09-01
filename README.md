@@ -2,7 +2,7 @@
 A framework for building react form libraries. Create your react form components and use this framework for adding form behaviour using json based schema.
 
 ## Change logs
-- Moving snake case properties to camelcase
+- (Adding back icon support)[https://github.com/manojadams/metaforms-core/issues/20] 
 
 ## Introduction
 This library reads the json based schema and layouts beautiful forms.
