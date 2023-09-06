@@ -15,7 +15,7 @@ function Sections(props: IProps) {
     const { form } = useContext(FormContext);
     const sections = props.sections;
     return (
-        <TabContent className="tab-content" id="tab-content">
+        <TabContent id="tab-content">
             {sections.map((section, index) => (
                 <Section
                     key={section.name}
