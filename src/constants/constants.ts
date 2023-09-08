@@ -3,7 +3,9 @@ export const MSGS = {
         REQUIRED: "Is a required field",
         PATTERN: "Pattern is invalid",
         MIN: "Is not a valid value",
+        MIN_TEXT: "Minimum length is {CHARS} chars.",
         MAX: "Out of range",
+        MAX_TEXT: "Maximum length is {CHARS} chars.",
         DATE_INVALID: "Date is not valid",
         EMAIL_INVALID: "Email is not valid"
     }
