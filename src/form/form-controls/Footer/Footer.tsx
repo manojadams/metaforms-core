@@ -75,7 +75,7 @@ function Footer(props: IProps) {
         }
     };
     return (
-        <FooterStyled data-pagenumber={page.pageNumber} useDefault={props.useDefaultButtons}>
+        <FooterStyled className="footer" data-pagenumber={page.pageNumber} useDefault={props.useDefaultButtons}>
             {props.formButtons.map((button: IField) => {
                 const className = FormUtils.getCssClassName(button.meta?.displayProps);
                 const subprops = {
