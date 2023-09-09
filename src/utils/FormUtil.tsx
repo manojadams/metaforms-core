@@ -1,4 +1,4 @@
-import { IForm, IFormData, IFormField } from "../constants/common-interface";
+import { IForm, IFormData, IFormField, IFormProp } from "../constants/common-interface";
 import { DEFAULT_DATE_FORMAT, FORM_ACTION, _INTERNAL_VALUES } from "../constants/constants";
 import { TiconPositionType, TValue } from "../constants/types";
 import { Page } from "../core/Page";
@@ -165,7 +165,7 @@ export default class FormUtils {
                         if (formatter[key2]) {
                             newFormData[key2] = formatter[key2](formData[key][key2].value);
                         } else {
-                            newFormData[key2] = formData[key][key2].value;
+                            newFormData[key2] = formData[key][key2].value as string;
                         }
                     }
                 }
@@ -175,10 +175,11 @@ export default class FormUtils {
         return newFormData;
     }
 
-    static updateSectionFormData(formData: IFormField, newFormData: IFormData, formatter: IFormatterType) {
+    static updateSectionFormData(formData: IFormProp | null, newFormData: IFormData, formatter: IFormatterType) {
+        if (!formData) return {};
         Object.keys(formData).forEach((key) => {
-            const prop = (formData[key] as IFormData).prop;
-            const formDataKey = formData[key] as IFormData;
+            const prop = formData[key].prop;
+            const formDataKey = formData[key];
             if (prop) {
                 if (!newFormData[prop as string]) {
                     newFormData[prop as string] = {};
@@ -202,12 +203,12 @@ export default class FormUtils {
                                     if (files && files.length > 0) {
                                         newFormData[key] = files;
                                     } else {
-                                        newFormData[key] = formDataKey.value;
+                                        newFormData[key] = formDataKey.value as string;
                                     }
                                 }
                                 break;
                             default:
-                                newFormData[key] = formDataKey.value;
+                                newFormData[key] = formDataKey.value as string;
                         }
                     }
                 }

@@ -2,7 +2,7 @@ import React from "react";
 import FormUtils from "./utils/FormUtil";
 import EventEmitter from "eventemitter3";
 import { ISchema } from "./constants/model-interfaces";
-import { IError, IEventPayload, IFieldChange, IFormField, IFormRenderer } from "./constants/common-interface";
+import { IError, IEventPayload, IFieldChange, IFormRenderer } from "./constants/common-interface";
 import { metaAPI } from "./meta-api";
 import { EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE } from "./constants/constants";
 import MetaForm from "./core/MetaForm";
@@ -198,10 +198,9 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             const page = this.metaform.getPage();
             const nextResponseMode = this.props.nextResponseMode || NEXT_RESPONSE_MODE.FORM_DATA;
             if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
-                const section = this.metaform.getSection(page.pageNumber);
-                const formData = section;
+                const sectionData = this.metaform.getSection(page.pageNumber);
                 this.props.onPrevious(
-                    FormUtils.updateSectionFormData(formData as IFormField, {}, this.props.formatter || {}),
+                    FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
                     page.pageNumber
                 );
             } else {
@@ -220,10 +219,9 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             const page = this.metaform.getPage();
             const nextResponseMode = this.props.nextResponseMode || NEXT_RESPONSE_MODE.FORM_DATA;
             if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
-                const section = this.metaform.getSection(page.pageNumber);
-                const formData = section;
+                const sectionData = this.metaform.getSection(page.pageNumber);
                 return await this.props.onNext(
-                    FormUtils.updateSectionFormData(formData as IFormField, {}, this.props.formatter || {}),
+                    FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
                     page.pageNumber
                 );
             } else {
@@ -243,10 +241,9 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             const nextResponseMode = this.props.nextResponseMode || NEXT_RESPONSE_MODE.FORM_DATA;
             if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
                 const page = this.metaform.getPage();
-                const section = this.metaform.getSection(page.pageNumber);
-                const formData = section;
+                const sectionData = this.metaform.getSection(page.pageNumber);
                 this.props.onSubmit(
-                    FormUtils.updateSectionFormData(formData as IFormField, {}, this.props.formatter || {}),
+                    FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
                     params
                 );
             } else {

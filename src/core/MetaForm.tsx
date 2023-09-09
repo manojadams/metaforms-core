@@ -283,7 +283,7 @@ export default class MetaForm implements IMetaForm {
     }
 
     setField(section: string, field: string, value: TValue) {
-        this.form[section][field].value = value;
+        this.form[section][field].value = value as Exclude<TValue, Date>;
     }
 
     updateField(section: string, field: string, value: TValue) {
@@ -449,7 +449,7 @@ export default class MetaForm implements IMetaForm {
                                     matchValue = valueMap[fieldValue as string];
                                 }
                                 if (matchValue !== undefined) {
-                                    actualValue = matchValue;
+                                    actualValue = matchValue as TValue;
                                 }
                             } else {
                                 if (valueKey) {
@@ -457,7 +457,7 @@ export default class MetaForm implements IMetaForm {
                                     actualValue = ref ? FormUtils.getDataFromValueKey(ref, valueKey) : value;
                                 } else if (changes.valueFn) {
                                     const fn = this.getFn(changes.valueFn);
-                                    actualValue = fn ? fn(fieldValue, fieldRef) : "";
+                                    actualValue = fn ? (fn(fieldValue, fieldRef) as TValue) : "";
                                 } else {
                                     if (value === undefined) {
                                         actualValue = fieldValue;
@@ -465,12 +465,12 @@ export default class MetaForm implements IMetaForm {
                                 }
                             }
                             if (changes.type === "setter") {
-                                this.setField(section, ref, actualValue);
+                                this.setField(section, ref ?? "", actualValue);
                             } else if (changes.type === "prop_setter") {
                                 if (actualValue !== undefined) {
                                     const actualRef = ref || gField;
                                     const field = this.getField(section, actualRef);
-                                    FormUtils.updateFieldProp(field, changes.name, actualValue);
+                                    FormUtils.updateFieldProp(field, changes.name as string, actualValue);
                                 }
                             }
                         }
@@ -481,10 +481,10 @@ export default class MetaForm implements IMetaForm {
                             const { eventType, payload } = changes;
                             if (value !== undefined) {
                                 if (value === fieldValue) {
-                                    this.emit(eventType, payload);
+                                    this.emit(eventType as string, payload);
                                 }
                             } else {
-                                this.emit(eventType, payload);
+                                this.emit(eventType as string, payload);
                             }
                         }
                         break;
@@ -493,23 +493,23 @@ export default class MetaForm implements IMetaForm {
                             const { ref, value, valueKey, condition } = changes;
                             const section = changes.section ? changes.section : gSection;
                             let actualValue;
-                            const evalConditionResult = this.parseCondition(condition, section);
+                            const evalConditionResult = this.parseCondition(condition as TCondition[], section);
                             if (evalConditionResult) {
                                 // value map
                                 if (changes.valueMap) {
                                     // to do
                                 } else if (changes.valueKey) {
                                     const ref = (fieldRef as IFieldRef)?.ref;
-                                    actualValue = ref ? FormUtils.getDataFromValueKey(ref, valueKey) : value;
+                                    actualValue = ref ? FormUtils.getDataFromValueKey(ref, valueKey as string) : value;
                                 } else {
                                     actualValue = value !== undefined ? value : fieldValue;
                                 }
                                 // value key
                                 // default
-                                this.setField(section, ref, actualValue);
-                                const field = this.getField(section, ref);
+                                this.setField(section, ref as string, actualValue);
+                                const field = this.getField(section, ref as string);
                                 if (field && field.displayType === "select") {
-                                    this.setFieldProp(section, ref, "options", [fieldRef as TFieldRef]);
+                                    this.setFieldProp(section, ref as string, "options", [fieldRef as TFieldRef]);
                                 }
                             }
                         }

@@ -89,6 +89,7 @@ export interface IFormField {
     isDisabled?: boolean;
     isReadonly?: boolean;
     options?: Array<IOption>;
+    files?: Array<File>; // for file type
     validation?: IValidation;
 
     icons?: IIconConfig;
@@ -96,7 +97,7 @@ export interface IFormField {
 }
 
 export interface IFnTypes {
-    [key: string]: (arg: TValue, ref?: IOption, formField?: IFormField) => TValue;
+    [key: string]: (arg: TValue, ref?: IOption, formField?: IFormField) => TValue | IOption[];
 }
 
 export interface IRenderField extends IField {
@@ -105,8 +106,11 @@ export interface IRenderField extends IField {
     sync: () => void;
 }
 
+export interface IFormProp {
+    [key: string]: IFormField;
+}
 export interface IForm {
-    [key: string]: IFormField | object;
+    [key: string]: IFormProp;
 }
 
 export interface IFieldChange {
@@ -114,6 +118,13 @@ export interface IFieldChange {
     field: string;
     value: TValue;
 }
+
+export interface IControlProps {
+    field: IFormField;
+    form: IForm;
+}
+
+export type TFormResponse = Promise<void> | Promise<boolean> | void;
 
 export interface IFormRenderer extends IUISchema, IFormConfig {
     baseFormControl?: typeof BaseFormControl;
@@ -143,7 +154,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
      */
     buttons?: IElementTypes;
     controls?: IElementTypes;
-    components?: Record<string, React.FunctionComponent>;
+    components?: Record<string, React.FunctionComponent<IControlProps>>;
     fns?: IFnTypes;
     formatter?: IFormatterType;
     icons?: IElementTypes;
@@ -162,12 +173,12 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
      * Event handling params
      */
     onChange?: (change: IFieldChange) => void;
-    onCustom?: (formData: IFormData, e: SyntheticEvent) => void;
-    onError?: (errorResponse: any) => void;
+    onCustom?: (formData: IFormData, e: SyntheticEvent) => TFormResponse;
+    onError?: (errorResponse: any) => TFormResponse;
     onPopupClose?: (params: Array<unknown>) => void;
-    onPrevious?: (formData: IFormData, pageNumber: number) => void;
-    onNext?: (formData: IFormData, pageNumber: number) => void;
-    onSubmit: (formData: IFormData, params: unknown) => void;
+    onPrevious?: (formData: IFormData, pageNumber: number) => TFormResponse;
+    onNext?: (formData: IFormData, pageNumber: number) => TFormResponse;
+    onSubmit: (formData: IFormData, params: unknown) => TFormResponse;
 }
 
 export type TComponent<T> = (props: T) => JSX.Element;
@@ -240,11 +251,6 @@ export type TErrorCallback = (error: Error, section: string, field: string) => v
 
 interface IEventDetail {
     eventType: string;
-}
-
-export interface IControlProps {
-    field: IFormField;
-    form: IForm;
 }
 
 export class MetaformEvent extends Event {
