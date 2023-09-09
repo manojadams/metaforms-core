@@ -1,7 +1,6 @@
 import React, { Fragment } from "react";
 import FormFieldRenderer from "../FormFieldRenderer";
 import BaseFormWizard from "../form-wizard/BaseFormWizard";
-import { IFormField } from "../../constants/common-interface";
 
 /**
  * Displays a grouped form with many steps
@@ -21,12 +20,18 @@ abstract class BaseFormStepper extends BaseFormWizard {
 
     screens(): JSX.Element {
         const field = this.fields.find((_f, i) => i === this.state.activeIndex);
-        const formField = this.context.form[field?.name ?? "default"] as IFormField;
+        const formField = this.context.form[field?.name ?? "default"];
         const sync = () => false;
         return (
             <Fragment>
                 {field && (
-                    <FormFieldRenderer {...field} key={field.name} section={field.name} form={formField} sync={sync} />
+                    <FormFieldRenderer
+                        {...field}
+                        key={field.name}
+                        section={field.name}
+                        form={formField[field.name]}
+                        sync={sync}
+                    />
                 )}
                 {this.footer()}
             </Fragment>

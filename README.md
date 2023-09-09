@@ -2,7 +2,8 @@
 A framework for building react form libraries. Create your react form components and use this framework for adding form behaviour using json based schema.
 
 ## Change logs
-- (fix types)[https://github.com/manojadams/metaforms-core/issues/25]
+- update custom control
+- update form stepper
 
 ## Introduction
 This library reads the json based schema and layouts beautiful forms.
