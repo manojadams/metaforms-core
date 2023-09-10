@@ -4,7 +4,7 @@ import EventEmitter from "eventemitter3";
 import { ISchema } from "./constants/model-interfaces";
 import { IError, IEventPayload, IFieldChange, IFormRenderer } from "./constants/common-interface";
 import { metaAPI } from "./meta-api";
-import { EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE } from "./constants/constants";
+import { DEFAULT, EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE } from "./constants/constants";
 import MetaForm from "./core/MetaForm";
 import MetaFormUpdater from "./core/MetaFormUpdater";
 import SchemaErrorBoundary from "./SchemaErrorBoundary";
@@ -41,11 +41,11 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.validate = this.validate.bind(this);
         this.schema = FormUtils.cleanupSchema(props.schema);
-        this.name = props.name || "default";
+        this.name = props.name ?? DEFAULT;
         this.lastAction = "";
         this.formImpls = new FormImpls();
         const formConfig = new FormConfig(
-            props.type ?? "default",
+            props.type ?? DEFAULT,
             props.sectionLayout,
             props.fieldLayout,
             props.config
@@ -131,12 +131,19 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
                 this.props.onPopupClose(params);
             }
         });
+        this.metaform.listener(EVENTS.VALIDATION_ERROR, (params) => {
+            if (this.props.onSubmitError) {
+                this.props.onSubmitError(params);
+            }
+        });
     }
 
     componentWillUnmount() {
         this.metaform.removeListener(EVENTS.SUBMIT);
         this.metaform.removeListener(EVENTS._FIELD_CHANGE);
         this.metaform.removeListener(EVENTS._FIELD_CLOSE);
+        this.metaform.removeListener(EVENTS.VALIDATION_ERROR);
+        this.metaformUpdater.destroy(this.name);
     }
 
     render() {

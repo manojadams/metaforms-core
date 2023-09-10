@@ -104,6 +104,8 @@ export const EVENTS = {
     _RESET_END_OF_PAGE: "$reset_end_of_page"
 };
 
+export const DEFAULT = "default";
+
 export const SECTION_LAYOUT = {
     DEFAULT: "default",
     TABS: "tabs",

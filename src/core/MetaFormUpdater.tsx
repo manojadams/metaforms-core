@@ -46,6 +46,16 @@ class MetaFormUpdater {
     add(name: string, metaform: MetaForm) {
         this.metaformMap.set(name, metaform);
     }
+
+    /**
+     * Cleanup
+     * @param name 
+     */
+    destroy(name: string) {
+        if (this.metaformMap && this.metaformMap.get(name)) {
+            this.metaformMap.delete(name);
+        }
+    }
 }
 
 export default MetaFormUpdater;

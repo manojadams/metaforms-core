@@ -179,6 +179,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     onPrevious?: (formData: IFormData, pageNumber: number) => TFormResponse;
     onNext?: (formData: IFormData, pageNumber: number) => TFormResponse;
     onSubmit: (formData: IFormData, params: unknown) => TFormResponse;
+    onSubmitError?: (params: IEventPayload) => void;
 }
 
 export type TComponent<T> = (props: T) => JSX.Element;

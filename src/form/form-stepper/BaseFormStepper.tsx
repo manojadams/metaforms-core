@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import FormFieldRenderer from "../FormFieldRenderer";
 import BaseFormWizard from "../form-wizard/BaseFormWizard";
 import { Row } from "layout-emotions";
+import { DEFAULT } from "../../constants/constants";
 
 /**
  * Displays a grouped form with many steps
@@ -23,7 +24,7 @@ abstract class BaseFormStepper extends BaseFormWizard {
         if (this.state.activeIndex < 0) return <Fragment />;
         const section = this.fields.find((_f, i) => i === this.state.activeIndex);
         const fields = section?.fields || [];
-        const form = this.context.form[section?.name ?? "default"];
+        const form = this.context.form[section?.name ?? DEFAULT];
         return (
             <Fragment>
                 {this.steps()}

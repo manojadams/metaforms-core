@@ -1,5 +1,5 @@
 import { IForm, IFormData, IFormField, IFormSection } from "../constants/common-interface";
-import { DEFAULT_DATE_FORMAT, FORM_ACTION, _INTERNAL_VALUES } from "../constants/constants";
+import { DEFAULT, DEFAULT_DATE_FORMAT, FORM_ACTION, _INTERNAL_VALUES } from "../constants/constants";
 import { TiconPositionType, TValue } from "../constants/types";
 import { Page } from "../core/Page";
 import {
@@ -195,7 +195,7 @@ export default class FormUtils {
                     if (formatter[key]) {
                         newFormData[key] = formatter[key](formDataKey.value as string);
                     } else {
-                        const displayType = formDataKey.displayType || "default";
+                        const displayType = formDataKey.displayType ?? DEFAULT;
                         switch (displayType) {
                             case "file":
                                 {
