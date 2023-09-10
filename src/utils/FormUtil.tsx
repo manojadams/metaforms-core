@@ -1,4 +1,4 @@
-import { IForm, IFormData, IFormField, IFormProp } from "../constants/common-interface";
+import { IForm, IFormData, IFormField, IFormSection } from "../constants/common-interface";
 import { DEFAULT_DATE_FORMAT, FORM_ACTION, _INTERNAL_VALUES } from "../constants/constants";
 import { TiconPositionType, TValue } from "../constants/types";
 import { Page } from "../core/Page";
@@ -175,7 +175,7 @@ export default class FormUtils {
         return newFormData;
     }
 
-    static updateSectionFormData(formData: IFormProp | null, newFormData: IFormData, formatter: IFormatterType) {
+    static updateSectionFormData(formData: IFormSection | null, newFormData: IFormData, formatter: IFormatterType) {
         if (!formData) return {};
         Object.keys(formData).forEach((key) => {
             const prop = formData[key].prop;

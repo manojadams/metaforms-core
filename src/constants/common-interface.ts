@@ -106,11 +106,11 @@ export interface IRenderField extends IField {
     sync: () => void;
 }
 
-export interface IFormProp {
+export interface IFormSection {
     [key: string]: IFormField;
 }
 export interface IForm {
-    [key: string]: IFormProp;
+    [key: string]: IFormSection;
 }
 
 export interface IFieldChange {

@@ -28,7 +28,7 @@ export function Section(props: ISectionProps) {
             className="tab-pane"
             id={props.section.name}
             role="tabpanel"
-            aria-labelledby="contact-tab"
+            aria-labelledby={props.section.name}
         >
             <Row>
                 {props.section.fields &&
