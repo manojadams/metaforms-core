@@ -76,7 +76,7 @@ function Footer(props: IProps) {
     };
     return (
         <FooterStyled className="footer" data-pagenumber={page.pageNumber} useDefault={props.useDefaultButtons}>
-            {props.formButtons.map((button: IField) => {
+            {props.formButtons.map((button: IField, idx: number) => {
                 const className = FormUtils.getCssClassName(button.meta?.displayProps);
                 const subprops = {
                     className,
@@ -88,7 +88,7 @@ function Footer(props: IProps) {
                     case BUTTON_TYPE.NEXT:
                         return showPage.next ? (
                             <FooterButton
-                                key={button.name}
+                                key={button.name + idx}
                                 button={button}
                                 className={className}
                                 handleClick={handleClick}
@@ -101,7 +101,7 @@ function Footer(props: IProps) {
                     case BUTTON_TYPE.PREVIOUS:
                         return showPage.previous ? (
                             <FooterButton
-                                key={button.name}
+                                key={button.name + idx}
                                 button={button}
                                 className={className}
                                 handleClick={handleClick}
@@ -114,7 +114,7 @@ function Footer(props: IProps) {
                     case BUTTON_TYPE.SUBMIT:
                         return showPage.submit ? (
                             <FooterButton
-                                key={button.name}
+                                key={button.name + idx}
                                 button={button}
                                 className={className}
                                 handleClick={handleClick}
@@ -134,18 +134,18 @@ function Footer(props: IProps) {
                                 return props.buttons && props.buttons[button.name] ? (
                                     <ExtButton
                                         className={button.meta.className ?? "mcol mcol-md-4"}
-                                        key={button.name}
+                                        key={button.name + idx}
                                         type={button.meta.type}
                                         onClick={(e) => handleClick(e, button)}
                                     >
                                         {props.buttons[button.name]}
                                     </ExtButton>
                                 ) : (
-                                    <FormButton {...subprops} key={button.name} />
+                                    <FormButton {...subprops} key={button.name + idx} />
                                 );
                             }
                         }
-                        return <Fragment key={button.name} />;
+                        return <Fragment key={button.name + idx} />;
                 }
             })}
         </FooterStyled>
