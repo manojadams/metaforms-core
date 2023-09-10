@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { IField, IMeta } from "../../constants/model-interfaces";
 import FormContext from "../form-context";
-import { EVENTS } from "../../constants/constants";
+import { EVENTS, FORM_ACTION } from "../../constants/constants";
 import { IEventPayload } from "../../constants/common-interface";
 
 interface IState {
@@ -35,6 +35,7 @@ export default abstract class BaseFormWizard extends React.Component<{
             activeIndex: 0,
             tabFields: []
         };
+        this.sync = this.sync.bind(this);
     }
 
     componentDidMount() {
@@ -43,10 +44,10 @@ export default abstract class BaseFormWizard extends React.Component<{
         });
         this.context.listener(EVENTS.SWITCH, (payload: { payload: string; callback?: () => void }) => {
             switch (payload.payload) {
-                case "next":
+                case FORM_ACTION.NEXT:
                     this.setActiveIndex(this.state.activeIndex + 1);
                     break;
-                case "previous":
+                case FORM_ACTION.PREVIOUS:
                     if (this.state.activeIndex > 0) {
                         this.setActiveIndex(this.state.activeIndex - 1);
                     }
@@ -60,17 +61,6 @@ export default abstract class BaseFormWizard extends React.Component<{
                     section: payload
                 }
             });
-        });
-        this.context.listener(EVENTS._ENABLE_CURRENT_TAB, () => {
-            const tabField: IField | undefined = this.state.tabFields.find(
-                (f: IField, index: number) => index === this.state.activeIndex
-            );
-            if (tabField) {
-                tabField.meta.isDisabled = undefined;
-                this.setState({
-                    tabFields: [...this.state.tabFields]
-                });
-            }
         });
         this.context.listener(EVENTS._END_OF_PAGE, (data: IEventPayload) => {
             this.context.setEndOfPage(data.payload as number);
@@ -107,4 +97,8 @@ export default abstract class BaseFormWizard extends React.Component<{
     }
 
     abstract screens(): JSX.Element;
+
+    sync() {
+        this.setState({...this.state});
+    }
 }
