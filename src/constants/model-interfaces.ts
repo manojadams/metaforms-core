@@ -116,6 +116,8 @@ export interface IThemeConfig {
     tabs?: {
         variant: string;
     };
+    gapX?: number;
+    gapY?: number;
 }
 
 export interface IFormConfig {

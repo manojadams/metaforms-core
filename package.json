@@ -1,6 +1,6 @@
 {
   "name": "@manojadams/metaforms-core",
-  "version": "3.0.28",
+  "version": "3.0.29",
   "description": "React Library for rendering dynamic forms from json schema",
   "author": "manojadams",
   "license": "MIT",
@@ -33,7 +33,7 @@
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "eventemitter3": "^4.0.7",
-    "layout-emotions": "^1.0.13"
+    "layout-emotions": "^1.0.18"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
