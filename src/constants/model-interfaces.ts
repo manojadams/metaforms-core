@@ -319,6 +319,10 @@ export interface IField {
  */
 export interface ISchema {
     /**
+     * 
+     */
+    rest: IRest;
+    /**
      * List of form fields
      */
     fields: Array<IField>;

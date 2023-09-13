@@ -58,7 +58,16 @@ export default class MetaForm implements IMetaForm {
     ) {
         this.form = {};
         this.formConfig = formConfig;
-        this.rest = new Rest(restConfig);
+        if (restConfig) {
+            // priority 1
+            this.rest = new Rest(restConfig);
+        } else if (schema.rest) {
+            // priority 2
+            this.rest = new Rest(schema.rest);
+        } else {
+            // default
+            this.rest = new Rest(restConfig);
+        }
         this.page = new Page(false, 1);
     }
 
