@@ -25,7 +25,7 @@ function FormFieldRenderer(props: IRenderField) {
         return <Fragment />;
     }
     if (isStandalone || isSection) {
-        const wrapClassName = isSection ? "mrow section" : isStandalone ? "mcol-md-12" : "";
+        const wrapClassName = isSection ? "mrow section" : isStandalone ? "mcol-md-12 my-0" : "";
         return (
             <div className={wrapClassName}>
                 <RenderColumn
