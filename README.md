@@ -2,7 +2,7 @@
 A framework for building react form libraries. Create your react form components and use this framework for adding form behaviour using json based schema.
 
 ## Change logs
-- Fix standalone field spacing
+- [https://github.com/manojadams/metaforms-core/issues/31](Change to validation message not working properly)
 
 ## Introduction
 This library reads the json based schema and layouts beautiful forms.

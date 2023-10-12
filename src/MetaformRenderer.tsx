@@ -44,12 +44,7 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
         this.name = props.name ?? DEFAULT;
         this.lastAction = "";
         this.formImpls = new FormImpls();
-        const formConfig = new FormConfig(
-            props.type ?? DEFAULT,
-            props.sectionLayout,
-            props.fieldLayout,
-            props.config
-        );
+        const formConfig = new FormConfig(props.type ?? DEFAULT, props.sectionLayout, props.fieldLayout, props.config);
         try {
             this.metaform = new MetaForm(this.props.schema, new EventEmitter(), formConfig, this.props.rest);
             this.metaformUpdater = new MetaFormUpdater(this.name, this.metaform);

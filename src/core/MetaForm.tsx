@@ -473,9 +473,9 @@ export default class MetaForm implements IMetaForm {
                                     }
                                 }
                             }
-                            if (changes.type === "setter") {
+                            if (changes.type === CHANGE_TYPE.SETTER) {
                                 this.setField(section, ref ?? "", actualValue);
-                            } else if (changes.type === "prop_setter") {
+                            } else if (changes.type === CHANGE_TYPE.PROP_SETTER) {
                                 if (actualValue !== undefined) {
                                     const actualRef = ref || gField;
                                     const field = this.getField(section, actualRef);

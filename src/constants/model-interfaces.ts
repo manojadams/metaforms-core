@@ -319,9 +319,9 @@ export interface IField {
  */
 export interface ISchema {
     /**
-     * 
+     * Rest configuration
      */
-    rest: IRest;
+    rest?: IRest;
     /**
      * List of form fields
      */
