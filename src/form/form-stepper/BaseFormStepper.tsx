@@ -26,20 +26,17 @@ abstract class BaseFormStepper extends BaseFormWizard {
         const fields = section?.fields || [];
         const form = this.context.form[section?.name ?? DEFAULT];
         return (
-            <Fragment>
-                {this.steps()}
-                <Row className="section">
-                    {fields.map((field) => 
-                        <FormFieldRenderer
-                            {...field}
-                            key={section?.name + field.name}
-                            section={section?.name ?? ""}
-                            form={form[field.name]}
-                            sync={this.sync}
-                        />
-                    )}
-                </Row>
-            </Fragment>
+            <Row className="section">
+                {fields.map((field) => 
+                    <FormFieldRenderer
+                        {...field}
+                        key={section?.name + field.name}
+                        section={section?.name ?? ""}
+                        form={form[field.name]}
+                        sync={this.sync}
+                    />
+                )}
+            </Row>
         );
     }
 
