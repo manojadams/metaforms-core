@@ -3,7 +3,7 @@ import { IElementTypes, IForm } from "../../constants/common-interface";
 import { SECTION_LAYOUT } from "../../constants/constants";
 import { IField, ISchema } from "../../constants/model-interfaces";
 import { TCallback } from "../../constants/types";
-import { Row as MRow } from "layout-emotions";
+import { Row } from "layout-emotions";
 import FormFieldRenderer from "../FormFieldRenderer";
 import Footer from "../form-controls/Footer";
 
@@ -29,19 +29,32 @@ const DefaultForm = (props: IProps) => {
     };
     return (
         <form name="metaform" className={`needs-validation ${props.validated ? "was-validated" : ""}`} noValidate>
-            <MRow>
-                {props.schema.fields.map((field: IField) => (
-                    <FormFieldRenderer
-                        {...field}
-                        key={field.name}
-                        section={SECTION_LAYOUT.DEFAULT}
-                        form={
-                            props.hasSection ? props.form[field.name] : props.form[SECTION_LAYOUT.DEFAULT][field.name]
-                        }
-                        sync={sync}
-                    />
-                ))}
-            </MRow>
+            <Row>
+                {props.schema.fields.map((field: IField) => {
+                    if (props.hasSection) {
+                        const subFields = Object.keys(props.form[field.name]);
+                        return subFields.map((subField) => (
+                            <FormFieldRenderer
+                                {...field}
+                                key={field.name}
+                                section={SECTION_LAYOUT.DEFAULT}
+                                form={props.form[field.name][subField]}
+                                sync={sync}
+                            />
+                        ));
+                    } else {
+                        return (
+                            <FormFieldRenderer
+                                {...field}
+                                key={field.name}
+                                section={SECTION_LAYOUT.DEFAULT}
+                                form={props.form[SECTION_LAYOUT.DEFAULT][field.name]}
+                                sync={sync}
+                            />
+                        );
+                    }
+                })}
+            </Row>
             <Footer
                 form={props.form}
                 buttons={props.buttons}

@@ -5,7 +5,14 @@ import {
     IValueMapRef,
     TVALUE_MAP_TYPE_REF
 } from "../constants/common-interface";
-import { API_METHOD, DEP_TYPE, FORM_CONSTANTS, _INTERNAL_VALUES } from "../constants/constants";
+import {
+    API_METHOD,
+    CHANGE_TYPE,
+    DEP_TYPE,
+    DEP_TYPE_OLD,
+    FORM_CONSTANTS,
+    _INTERNAL_VALUES
+} from "../constants/constants";
 import { IDependency, IField, IOption } from "../constants/model-interfaces";
 import { TValue } from "../constants/types";
 import MetaForm from "../core/MetaForm";
@@ -54,6 +61,7 @@ class DependencyUtil {
         }
         let extraParams = {};
         switch (type) {
+            case DEP_TYPE_OLD.PATTERN_MATCH_URL_LOADER:
             case DEP_TYPE.PATTERN_MATCH_URL_LOADER:
                 extraParams = {
                     pattern: dependency.pattern,
@@ -84,6 +92,7 @@ class DependencyUtil {
                     });
                 }
                 break;
+            case DEP_TYPE_OLD.LOAD_OPTIONS:
             case DEP_TYPE.LOAD_OPTIONS:
                 {
                     const valueMap = dependency.valueMap;
@@ -123,6 +132,7 @@ class DependencyUtil {
                     });
                 }
                 break;
+            case DEP_TYPE_OLD.PROP_UPDATE:
             case DEP_TYPE.PROP_UPDATE:
                 {
                     const propValue = dependency.propValue;
@@ -377,6 +387,7 @@ class DependencyUtil {
                                 resolved.next();
                             }
                             break;
+                        case DEP_TYPE_OLD.PATTERN_MATCH_URL_LOADER:
                         case DEP_TYPE.PATTERN_MATCH_URL_LOADER:
                             {
                                 const changeType = dep.changeType;
@@ -386,10 +397,10 @@ class DependencyUtil {
                                     if (pattern.test(value as string)) {
                                         if (changeType) {
                                             switch (changeType) {
-                                                case "url_loader":
+                                                case CHANGE_TYPE.URL_LOADER:
                                                     {
                                                         const itemConfig: IFieldConfig = {
-                                                            type: "url_loader",
+                                                            type: CHANGE_TYPE.URL_LOADER,
                                                             url: dep.url,
                                                             urlType: dep.urlType,
                                                             labelKey: dep.labelKey,
@@ -440,6 +451,7 @@ class DependencyUtil {
                             }
                             break;
                         case DEP_TYPE.PROP_UPDATE:
+                        case DEP_TYPE_OLD.PROP_UPDATE:
                             // condition match
                             if (dep.value !== undefined) {
                                 if (value === dep.value) {

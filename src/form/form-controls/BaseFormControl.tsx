@@ -53,6 +53,7 @@ export default abstract class BaseFormControl extends React.Component {
         this.handleValidation = this.handleValidation.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.setError = this.setError.bind(this);
+        this.validate = this.validate.bind(this);
     }
 
     setLoading(loading: boolean) {
@@ -249,7 +250,20 @@ export default abstract class BaseFormControl extends React.Component {
     customControl(): JSX.Element {
         if (this.displayType) {
             const customWrapperClass = this.getWrapperClassName();
-            return <div className={customWrapperClass}>{this.context.getControl(this.displayType)}</div>;
+            let control = this.context.getControl(this.displayType);
+            if (control) {
+                control = React.cloneElement(control, {
+                    field: this.props.form,
+                    name: this.props.name,
+                    form: this.context.form,
+                    error: this.state.error
+                });
+            }
+            return (
+                <div className={customWrapperClass}>
+                    {control}
+                </div>
+            );
         }
         return this.text();
     }

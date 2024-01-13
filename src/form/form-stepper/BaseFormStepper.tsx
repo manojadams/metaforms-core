@@ -1,7 +1,8 @@
 import React, { Fragment } from "react";
 import FormFieldRenderer from "../FormFieldRenderer";
 import BaseFormWizard from "../form-wizard/BaseFormWizard";
-import { IFormField } from "../../constants/common-interface";
+import { Row } from "layout-emotions";
+import { DEFAULT } from "../../constants/constants";
 
 /**
  * Displays a grouped form with many steps
@@ -20,16 +21,22 @@ abstract class BaseFormStepper extends BaseFormWizard {
     abstract steps(): JSX.Element;
 
     screens(): JSX.Element {
-        const field = this.fields.find((_f, i) => i === this.state.activeIndex);
-        const formField = this.context.form[field?.name ?? "default"] as IFormField;
-        const sync = () => false;
+        if (this.state.activeIndex < 0) return <Fragment />;
+        const section = this.fields.find((_f, i) => i === this.state.activeIndex);
+        const fields = section?.fields || [];
+        const form = this.context.form[section?.name ?? DEFAULT];
         return (
-            <Fragment>
-                {field && (
-                    <FormFieldRenderer {...field} key={field.name} section={field.name} form={formField} sync={sync} />
+            <Row className="section">
+                {fields.map((field) => 
+                    <FormFieldRenderer
+                        {...field}
+                        key={section?.name + field.name}
+                        section={section?.name ?? ""}
+                        form={form[field.name]}
+                        sync={this.sync}
+                    />
                 )}
-                {this.footer()}
-            </Fragment>
+            </Row>
         );
     }
 

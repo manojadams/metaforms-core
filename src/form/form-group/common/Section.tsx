@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { IForm } from "../../../constants/common-interface";
 import { SECTION_LAYOUT } from "../../../constants/constants";
 import { IField } from "../../../constants/model-interfaces";
 import { Row } from "layout-emotions";
 import FormFieldRenderer from "../../FormFieldRenderer";
 import styled from "@emotion/styled";
+import FormContext from "../../form-context";
 
 interface ISectionProps {
     section: IField;
@@ -17,6 +18,7 @@ interface ISectionProps {
 export function Section(props: ISectionProps) {
     const form2 = props.form[props.section.name ? props.section.name : SECTION_LAYOUT.DEFAULT];
     const [cField, setcField] = useState(form2);
+    const formContext = useContext(FormContext);
     const sync = () => {
         if (props.section.meta && props.section.meta.type === "section") {
             setcField({ ...form2 });
@@ -28,9 +30,9 @@ export function Section(props: ISectionProps) {
             className="tab-pane"
             id={props.section.name}
             role="tabpanel"
-            aria-labelledby="contact-tab"
+            aria-labelledby={props.section.name}
         >
-            <Row>
+            <Row gapX={formContext.formConfig.config?.gapX} gapY={formContext.formConfig.config?.gapY}>
                 {props.section.fields &&
                     props.section.fields.map((field: IField) => (
                         <FormFieldRenderer

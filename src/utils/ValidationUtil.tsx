@@ -10,6 +10,21 @@ export default class ValidationUtil {
             return hasError;
         }
         switch (meta.displayType) {
+            case CONTROLS.TEXT:
+            case CONTROLS.TEXT_FIELD:
+                if (value) {
+                    const strValue: string = value as string;
+                    const maxLength: number = parseInt(meta.validation.max as string);
+                    if (strValue.length > maxLength) {
+                        const errorMsg =
+                            meta.validation?.maxDetail?.errorMsg ||
+                            MSGS.ERROR_MSG.MAX_TEXT.replace("{CHARS}", maxLength.toString());
+                        setError(true, errorMsg);
+                        hasError = true;
+                        return hasError;
+                    }
+                }
+                break;
             case CONTROLS.NUMBER:
             case CONTROLS.CURRENCY:
                 if (value) {
@@ -46,6 +61,21 @@ export default class ValidationUtil {
             return hasError;
         }
         switch (meta.displayType) {
+            case CONTROLS.TEXT:
+            case CONTROLS.TEXT_FIELD:
+                if (value) {
+                    const strValue: string = value as string;
+                    const minLength: number = parseInt(meta.validation.min as string);
+                    if (strValue.length < minLength) {
+                        const errorMsg =
+                            meta.validation?.minDetail?.errorMsg ||
+                            MSGS.ERROR_MSG.MIN_TEXT.replace("{CHARS}", minLength.toString());
+                        setError(true, errorMsg);
+                        hasError = true;
+                        return hasError;
+                    }
+                }
+                break;
             case CONTROLS.NUMBER:
             case CONTROLS.CURRENCY:
                 if (value) {

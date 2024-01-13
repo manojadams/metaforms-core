@@ -1,4 +1,4 @@
-import { IFieldConfig, TFieldRef } from "./common-interface";
+import { IFieldConfig, TCondition, TFieldRef } from "./common-interface";
 import { TFormType, TSectionLayout, TValue } from "./types";
 
 export interface IParamType {
@@ -116,6 +116,8 @@ export interface IThemeConfig {
     tabs?: {
         variant: string;
     };
+    gapX?: number;
+    gapY?: number;
 }
 
 export interface IFormConfig {
@@ -211,9 +213,16 @@ export interface IInputEvent {
 
 export interface IChangeEvent {
     type: string; // setter
+    name?: string;
     ref?: string; // ref not mandatory for eventemitter
     valueKey?: string;
     value?: TValue;
+    valueFn?: string;
+    valueMap?: Record<string, TValue | IOption>;
+    section?: string;
+    condition?: TCondition[]; // for complex condition computation
+    eventType?: string; // for emitter events
+    payload?: any; // for emitter events
 }
 
 export interface IEvent {
@@ -309,6 +318,10 @@ export interface IField {
  * The schema definition used in metaforms
  */
 export interface ISchema {
+    /**
+     * Rest configuration
+     */
+    rest?: IRest;
     /**
      * List of form fields
      */
