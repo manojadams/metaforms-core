@@ -259,11 +259,7 @@ export default abstract class BaseFormControl extends React.Component {
                     error: this.state.error
                 });
             }
-            return (
-                <div className={customWrapperClass}>
-                    {control}
-                </div>
-            );
+            return <div className={customWrapperClass}>{control}</div>;
         }
         return this.text();
     }

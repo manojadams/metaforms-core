@@ -49,7 +49,7 @@ class MetaFormUpdater {
 
     /**
      * Cleanup
-     * @param name 
+     * @param name
      */
     destroy(name: string) {
         if (this.metaformMap && this.metaformMap.get(name)) {

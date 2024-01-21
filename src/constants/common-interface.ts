@@ -126,6 +126,10 @@ export interface IControlProps {
 
 export type TFormResponse = Promise<void> | Promise<boolean> | void;
 
+export interface IEventPayload {
+    payload: string | number | IFieldChange;
+}
+
 export interface IFormRenderer extends IUISchema, IFormConfig {
     baseFormControl?: typeof BaseFormControl;
     baseFormGroup?: typeof BaseFormGroup;
@@ -231,10 +235,6 @@ export interface IDepdendencyItem {
     pattern: string;
     propValue: TValue;
     propName: string;
-}
-
-export interface IEventPayload {
-    payload: string | number | IFieldChange;
 }
 
 export interface IMetaForm {
