@@ -2,7 +2,7 @@
 A framework for building react form libraries. Create your react form components and use this framework for adding form behavior using JSON-based schema.
 
 ## Change logs
-- [https://github.com/manojadams/metaforms-core/issues/35](Bug: fix columns in wizard forms)
+- [https://github.com/manojadams/metaforms-core/issues/35](Bug: fix columns in wizard grouped forms)
 
 ## Introduction
 This library reads the JSON-based schema and lays out beautiful forms.
