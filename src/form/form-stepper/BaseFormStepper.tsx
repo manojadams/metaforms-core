@@ -27,7 +27,7 @@ abstract class BaseFormStepper extends BaseFormWizard {
         const form = this.context.form[section?.name ?? DEFAULT];
         return (
             <Row className="section">
-                {fields.map((field) => 
+                {fields.map((field) => (
                     <FormFieldRenderer
                         {...field}
                         key={section?.name + field.name}
@@ -35,7 +35,7 @@ abstract class BaseFormStepper extends BaseFormWizard {
                         form={form[field.name]}
                         sync={this.sync}
                     />
-                )}
+                ))}
             </Row>
         );
     }

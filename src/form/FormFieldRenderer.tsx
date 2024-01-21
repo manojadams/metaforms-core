@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import FormUtils from "../utils/FormUtil";
 import { IFormField, IRenderField } from "../constants/common-interface";
+import { Row as MRow } from "layout-emotions";
 import Row from "./layout/Row";
 import FormControl from "./form-controls/FormControl";
 import { IField } from "../constants/model-interfaces";
@@ -24,10 +25,22 @@ function FormFieldRenderer(props: IRenderField) {
     if (cField && cField.display === false) {
         return <Fragment />;
     }
-    if (isStandalone || isSection) {
-        const wrapClassName = isSection ? "mrow section" : isStandalone ? "mcol-md-12 my-0" : "";
+    if (isSection) {
         return (
-            <div className={wrapClassName}>
+            <MRow>
+                <RenderColumn
+                    cssClassName={cssClassName}
+                    props={props}
+                    isStandAlone={isStandalone}
+                    isSection={isSection}
+                    sync={sync}
+                    cField={cField}
+                />
+            </MRow>
+        );
+    } else if (isStandalone) {
+        return (
+            <div className="mcol-md-12 my-0">
                 <RenderColumn
                     cssClassName={cssClassName}
                     props={props}

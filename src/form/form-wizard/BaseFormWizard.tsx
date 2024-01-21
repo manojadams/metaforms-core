@@ -99,6 +99,6 @@ export default abstract class BaseFormWizard extends React.Component<{
     abstract screens(): JSX.Element;
 
     sync() {
-        this.setState({...this.state});
+        this.setState({ ...this.state });
     }
 }

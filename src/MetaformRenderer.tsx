@@ -142,7 +142,7 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
     }
 
     render() {
-        const outerClassname = this.props?.className ?? this.props?.className;
+        const outerClassname = this.props?.className ?? this.props?.className ?? "";
         const rootClassname = `${outerClassname} ${this.lastAction}`;
         return (
             <SchemaErrorBoundary error={this.state.error}>
