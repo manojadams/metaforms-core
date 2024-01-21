@@ -1,16 +1,16 @@
 # metaform-core
-A framework for building react form libraries. Create your react form components and use this framework for adding form behaviour using json based schema.
+A framework for building react form libraries. Create your react form components and use this framework for adding form behavior using JSON-based schema.
 
 ## Change logs
-- [https://github.com/manojadams/metaforms-core/issues/31](Change to validation message not working properly)
+- [https://github.com/manojadams/metaforms-core/issues/35](Bug: fix columns in wizard forms)
 
 ## Introduction
-This library reads the json based schema and layouts beautiful forms.
+This library reads the JSON-based schema and lays out beautiful forms.
 It acts as a base for creating a dynamic form library.
 
 ## Main features
 - Layouting configuration
-- Support for multiple page forms
+- Support for multiple-page forms
 - Support for field dependencies
 - Support custom components
 
@@ -26,17 +26,17 @@ It acts as a base for creating a dynamic form library.
   Contains declarations of basic form grouping controls.
 
 ### Form stepper (BasicFormStepper)
-  This is another type of form grouping that contains declartions to implement stepper functionalities for your form.
+  This is another type of form grouping that contains declarations to implement stepper functionalities for your form.
 
 ## How to use
   This library contains abstract declarations and requires the user to implement his own core components.
   - BasicFormControl - for basic components
   - BasicFormGroup - for basic form grouping
   - BasicFormStepper = for stepper functionalities
-  - Write your own classes (typescript) and extend the above controls.
+  - Write your classes (typescript) and extend the above controls.
   - To know details, check the documentation.
   
-## Implement a `email` control
+## Implement an `email` control
 ````typescript
 class MyFormControl extends CoreFormControl {
   /**
