@@ -17,6 +17,7 @@ import {
     TParam
 } from "./model-interfaces";
 import { TChangeMode, TFormType, TNextCondition, TNextResponseMode, TOperator, TSectionLayout, TValue } from "./types";
+import { TChangeMode, TFormType, TNextCondition, TNextResponseMode, TOperator, TSectionLayout, TValue } from "./types";
 import BaseFormWizard from "../form/form-wizard/BaseFormWizard";
 
 export interface IBasicFormControl {
@@ -142,6 +143,8 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     className?: string;
     /** Input form data in key, value object format */
     data?: IFormData;
+    /** Input form data in key, value object format */
+    data?: IFormData;
     /** Form class */
     type?: TFormType;
     /** Section layout */
@@ -179,6 +182,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     /**
      * Event handling params
      */
+    onChange?: (change: IFieldChange, formData?: IFormData) => void;
     onChange?: (change: IFieldChange, formData?: IFormData) => void;
     onCustom?: (formData: IFormData, e: SyntheticEvent) => TFormResponse;
     onError?: (errorResponse: any) => TFormResponse;
