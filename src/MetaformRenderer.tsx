@@ -5,7 +5,6 @@ import { ISchema } from "./constants/model-interfaces";
 import { IError, IEventPayload, IFieldChange, IFormRenderer } from "./constants/common-interface";
 import { metaAPI } from "./meta-api";
 import { CHANGE_MODE, DEFAULT, EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE } from "./constants/constants";
-import { CHANGE_MODE, DEFAULT, EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE } from "./constants/constants";
 import MetaForm from "./core/MetaForm";
 import MetaFormUpdater from "./core/MetaFormUpdater";
 import SchemaErrorBoundary from "./SchemaErrorBoundary";
@@ -118,7 +117,6 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             }
         });
         this.metaform.listener(EVENTS._FIELD_CHANGE, (params: IEventPayload) => {
-            let formData;
             let formData;
             if (this.props.onChange) {
                 if (this.props.changeResponseMode === CHANGE_MODE.FORM_DATA) {
