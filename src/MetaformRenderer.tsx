@@ -5,6 +5,7 @@ import { ISchema } from "./constants/model-interfaces";
 import { IError, IEventPayload, IFieldChange, IFormRenderer } from "./constants/common-interface";
 import { metaAPI } from "./meta-api";
 import { CHANGE_MODE, DEFAULT, EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE } from "./constants/constants";
+import { CHANGE_MODE, DEFAULT, EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE } from "./constants/constants";
 import MetaForm from "./core/MetaForm";
 import MetaFormUpdater from "./core/MetaFormUpdater";
 import SchemaErrorBoundary from "./SchemaErrorBoundary";
@@ -118,10 +119,11 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
         });
         this.metaform.listener(EVENTS._FIELD_CHANGE, (params: IEventPayload) => {
             let formData;
+            let formData;
             if (this.props.onChange) {
-                if (this.props.onChangeMode === CHANGE_MODE.FORM_DATA) {
+                if (this.props.changeResponseMode === CHANGE_MODE.FORM_DATA) {
                     formData = FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter ?? {});
-                } else if (this.props.onChangeMode === CHANGE_MODE.SECTION_DATA) {
+                } else if (this.props.changeResponseMode === CHANGE_MODE.SECTION_DATA) {
                     const page = this.metaform.getPage();
                     const sectionData = this.metaform.getSection(page.pageNumber);
                     formData = FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter ?? {});
