@@ -24,6 +24,11 @@ export const NEXT_RESPONSE_MODE = {
     FORM_DATA: "form-data"
 };
 
+export const CHANGE_MODE = {
+    FORM_DATA: "form-data",
+    SECTION_DATA: "section-data"
+};
+
 export const FIELD_DISPLAY_TYPES = {
     TEXT: "text",
     SELECT: "select"
