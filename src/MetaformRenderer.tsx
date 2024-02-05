@@ -119,9 +119,9 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
         this.metaform.listener(EVENTS._FIELD_CHANGE, (params: IEventPayload) => {
             let formData;
             if (this.props.onChange) {
-                if (this.props.onChangeMode === CHANGE_MODE.FORM_DATA) {
+                if (this.props.changeResponseMode === CHANGE_MODE.FORM_DATA) {
                     formData = FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter ?? {});
-                } else if (this.props.onChangeMode === CHANGE_MODE.SECTION_DATA) {
+                } else if (this.props.changeResponseMode === CHANGE_MODE.SECTION_DATA) {
                     const page = this.metaform.getPage();
                     const sectionData = this.metaform.getSection(page.pageNumber);
                     formData = FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter ?? {});
