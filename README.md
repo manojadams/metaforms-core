@@ -2,8 +2,7 @@
 A framework for building react form libraries. Create your react form components and use this framework for adding form behavior using JSON-based schema.
 
 ## Change logs
-- [https://github.com/manojadams/metaforms-core/issues/37](Enhancement: Add form data for form change event)
-- Added input property `changeResponseMode` to configure change event parameters.
+- [https://github.com/manojadams/metaforms-core/issues/41](Simplify dynamic data loading for select component)
 
 ## Introduction
 This library reads the JSON-based schema and lays out beautiful forms.
