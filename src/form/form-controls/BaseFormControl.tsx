@@ -52,6 +52,7 @@ export default abstract class BaseFormControl extends React.Component {
         };
         this.handleValidation = this.handleValidation.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleOpen = this.handleOpen.bind(this);
         this.setError = this.setError.bind(this);
         this.validate = this.validate.bind(this);
     }
@@ -328,11 +329,16 @@ export default abstract class BaseFormControl extends React.Component {
     handleOpen() {
         const field = this.context.getField(this.section, this.field.name);
         const eventItem = field?.events?.open || field.config;
+        if (!eventItem || !eventItem?.url) {
+            return;
+        }
         switch (eventItem?.type) {
+            default:
             case "url":
             case "options_loader":
                 // eslint-disable-next-line no-lone-blocks
                 {
+                    this.setLoading(true);
                     this.context
                         .api("get", eventItem?.url + "", eventItem.queryParams as Array<TParam>, "", this.props.section)
                         .then((response: object) => {
@@ -348,10 +354,12 @@ export default abstract class BaseFormControl extends React.Component {
                             }
                             this.context.setFieldOptions(this.section, this.field.name, options);
                             this.setState({ form: { ...this.props.form } });
+                            this.setLoading(false);
                         })
                         .catch((error: Error) => {
                             this.context.handleError(error, this.section, this.field.name);
                             this.setState({ form: { ...this.props.form } });
+                            this.setLoading(false);
                         });
                 }
                 break;
