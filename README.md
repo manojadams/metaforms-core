@@ -120,4 +120,4 @@ export default FormRenderer;
 
 ## License
 
-MIT © [manojgetwealthy](https://github.com/manojgetwealthy)
+MIT © [manojgetwealthy](https://github.com/manojadams)
