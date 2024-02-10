@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { IEventPayload, ISectionError } from "../../constants/common-interface";
+import { IEventPayload, IFieldChange, ISectionError } from "../../constants/common-interface";
 import { EVENTS } from "../../constants/constants";
 import { IField, IMeta, ISchema } from "../../constants/model-interfaces";
 import { TCallback } from "../../constants/types";
@@ -94,11 +94,31 @@ export default abstract class BaseFormGroup extends React.Component<ISchema> {
         this.context.listener(EVENTS._RESET_END_OF_PAGE, () => {
             this.context.resetEndOfPage();
         });
+
+        this.context.listener(EVENTS._DISABLE_TAB, (data: IEventPayload) => {
+            let tabField: IField | undefined;
+            if (data.payload instanceof String) {
+                tabField = this.state.tabFields.find((f: IField, index: number) => index === data.payload);
+            } else {
+                const dataSection = (data.payload as IFieldChange)?.section;
+                if (dataSection) {
+                    tabField = this.state.tabFields.find((f: IField) => f.name === dataSection);
+                }
+            }
+            if (tabField) {
+                const isDisabled = (data.payload as IFieldChange)?.value as boolean;
+                tabField.meta.isDisabled = isDisabled ?? false;
+                this.setState({
+                    tabFields: [...this.state.tabFields]
+                });
+            }
+        });
     }
 
     componentWillUnmount() {
         this.context.removeListener(EVENTS.SWITCH);
         this.context.removeListener(EVENTS.VALIDATION_ERROR);
+        this.context.removeListener(EVENTS._DISABLE_TAB);
         this.context.removeListener(EVENTS._ENABLE_CURRENT_TAB);
         this.context.removeListener(EVENTS._END_OF_PAGE);
         this.context.removeListener(EVENTS._RESET_END_OF_PAGE);
