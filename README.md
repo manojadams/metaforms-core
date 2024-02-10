@@ -91,13 +91,13 @@ npm install --save @manojadams/metaform-core
 
 ## Basic usage of the library
 ```tsx
-import CoreFormRenderer, { IFormRenderer } from "@manojadams/metaforms-core";
+import MetaformRenderer from "@manojadams/metaforms-core";
 import React from "react";
 import FormControl from "./forms/FormControl";      // your form control implementation
 import FormGroup from "./forms/FormGroup";          // your form group implementation
 import { FormStepper } from "./forms/FormStepper";  // your form stepper implementation
 
-class FormRenderer extends React.Component<IFormRenderer> {
+class FormRenderer extends React.Component {
 
   constructor(props: IFormRenderer) {
     super(props);
@@ -105,7 +105,7 @@ class FormRenderer extends React.Component<IFormRenderer> {
 
   render() {
     return (
-      <CoreFormRenderer 
+      <MetaformRenderer 
         {...this.props} 
         baseFormControl={FormControl}
         baseFormGroup={FormGroup}
