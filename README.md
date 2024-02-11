@@ -2,7 +2,9 @@
 A framework for building react form libraries. Create your react form components and use this framework for adding form behavior using JSON-based schema.
 
 ## Change logs
-- [https://github.com/manojadams/metaforms-core/issues/43](Enhancement: hide the next tab based on the value of a field from previous tab)
+- [Enhancement: Making field vertical and horizontal spacing configurable](https://github.com/manojadams/metaforms-core/issues/48)
+- [Enhancement: hide the next tab based on the value of a field from previous tab](https://github.com/manojadams/metaforms-core/issues/43)
+- [Update for change events](https://github.com/manojadams/metaforms-core/issues/44)
 
 ## Introduction
 This library reads the JSON-based schema and lays out beautiful forms.
