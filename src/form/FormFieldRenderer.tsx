@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import FormUtils from "../utils/FormUtil";
 import { IFormField, IRenderField } from "../constants/common-interface";
 import { Row as MRow } from "layout-emotions";
@@ -7,8 +7,10 @@ import FormControl from "./form-controls/FormControl";
 import { IField } from "../constants/model-interfaces";
 import Col from "./layout/Col";
 import styled from "@emotion/styled";
+import FormContext from "./form-context";
 
 function FormFieldRenderer(props: IRenderField) {
+    const { formConfig } = useContext(FormContext);
     if (props?.meta?.type === "hidden") {
         return <Fragment />;
     }
@@ -27,7 +29,10 @@ function FormFieldRenderer(props: IRenderField) {
     }
     if (isSection) {
         return (
-            <MRow>
+            <MRow 
+                gapX={formConfig.config?.gapX} 
+                gapY={formConfig.config?.gapY}
+            >
                 <RenderColumn
                     cssClassName={cssClassName}
                     props={props}
@@ -82,14 +87,13 @@ function RenderColumn({
     cField: IFormField;
     sync: () => void;
 }) {
-    const vs = "my-2 my-md-3";
     const type = props.meta?.type ? props.meta.type : "field";
     const wrapClassName = cssClassName || (type === "field" ? "mcol-md-12" : "");
     if (wrapClassName) {
         return (
             <Row isStandalone={isStandAlone} align={props?.meta?.displayProps?.align}>
                 {props.meta.displayProps?.rs && <div className="mcol-md-12" />}
-                <div className={wrapClassName + " " + vs}>
+                <div className={wrapClassName}>
                     {isSection && props.meta.displayType === "title" && (
                         <h4 className="text-center mt-md-5 mb-md-2 mt-4 mb-2">{props.meta.displayName}</h4>
                     )}
@@ -103,7 +107,7 @@ function RenderColumn({
                                 form={props.form[field.name]}
                                 sync={sync}
                             />
-                        ))}
+                    ))}
                 </div>
             </Row>
         );
