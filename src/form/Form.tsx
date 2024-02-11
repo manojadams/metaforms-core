@@ -80,6 +80,7 @@ function Form(props: IProps) {
         props.emit(EVENTS.SWITCH, { payload: FORM_ACTION.PREVIOUS });
         props.onPrevious();
     };
+    
     if (hasSection && sectionLayout !== SECTION_LAYOUT.DEFAULT) {
         return (
             <SectionForm

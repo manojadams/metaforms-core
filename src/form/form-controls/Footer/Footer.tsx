@@ -74,8 +74,13 @@ function Footer(props: IProps) {
                 props.onCustom(e, button, callback);
         }
     };
+
     return (
-        <FooterStyled className="footer" data-pagenumber={page.pageNumber} useDefault={props.useDefaultButtons}>
+        <FooterStyled
+            className="footer" 
+            data-pagenumber={page.pageNumber} 
+            useDefault={props.useDefaultButtons}
+        >
             {props.formButtons.map((button: IField, idx: number) => {
                 const className = FormUtils.getCssClassName(button.meta?.displayProps);
                 const subprops = {
@@ -156,7 +161,7 @@ const FooterStyled = styled(Row)<{ useDefault: boolean }>`
     gap: 1.5rem;
     margin-top: 1.5rem;
     justify-content: flex-end;
-    ${(props) =>
+        ${(props) =>
         props.useDefault
             ? `
         display: flex;
