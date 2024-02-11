@@ -490,10 +490,10 @@ export default class MetaForm implements IMetaForm {
                             const { eventType, payload } = changes;
                             if (value !== undefined) {
                                 if (value === fieldValue) {
-                                    this.emit(eventType as string, payload);
+                                    this.emit(eventType as string, { payload });
                                 }
                             } else {
-                                this.emit(eventType as string, payload);
+                                this.emit(eventType as string, { payload });
                             }
                         }
                         break;

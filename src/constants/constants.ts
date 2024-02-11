@@ -104,8 +104,8 @@ export const EVENTS = {
     PAGE_CHANGE: "page_change",
     _FIELD_CHANGE: "$field_change",
     _FIELD_CLOSE: "$field_close",
-    _DISABLE_TAB: "$disable-tab",
-    _ENABLE_CURRENT_TAB: "$enable-current-tab",
+    _DISABLE_TAB: "$disable_tab",
+    _ENABLE_CURRENT_TAB: "$enable_current_tab",
     _END_OF_PAGE: "$end_of_page",
     _RESET_END_OF_PAGE: "$reset_end_of_page"
 };

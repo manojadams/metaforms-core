@@ -50,12 +50,24 @@ export default abstract class BaseFormGroup extends React.Component<ISchema> {
         });
         this.context.listener(EVENTS.SWITCH, (payload: { payload: string; callback?: TCallback }) => {
             switch (payload.payload) {
-                case "next":
-                    this.setActiveIndex(this.state.activeIndex + 1, payload.callback);
-                    break;
-                case "previous":
-                    this.setActiveIndex(this.state.activeIndex - 1, payload.callback);
-                    break;
+                case "next": {
+                    const nextIndex = this.getNextAvailableIndex(this.state.activeIndex + 1);
+                    if (nextIndex >= 0) {
+                        this.setActiveIndex(nextIndex, payload.callback);
+                    }
+                    const hasMorePages = this.getNextAvailableIndex(nextIndex + 1) === -1 ? false : true;
+                    if (!hasMorePages) {
+                        this.context.emit(EVENTS._END_OF_PAGE, { payload: nextIndex + 1});
+                    }
+                }
+                break;
+                case "previous": {
+                    const previousIndex = this.getPreviousAvailableIndex(this.state.activeIndex - 1);
+                    if (previousIndex >= 0) {
+                        this.setActiveIndex(previousIndex, payload.callback);
+                    }
+                }
+                break;
             }
         });
         this.context.listener(EVENTS.VALIDATION_ERROR, (payload: { payload: string; callback: TCallback }) => {
@@ -140,6 +152,28 @@ export default abstract class BaseFormGroup extends React.Component<ISchema> {
                 callback();
             }
         });
+    }
+
+    getNextAvailableIndex(index: number): number {
+        if (this.tabFields.length > index) {
+            if (this.tabFields[index]?.meta?.isDisabled === true) {
+                return this.getNextAvailableIndex(index + 1);
+            } else {
+                return index;
+            }
+        }
+        return -1;
+    }
+
+    getPreviousAvailableIndex(index: number): number {
+        if (this.tabFields.length > index) {
+            if (this.tabFields[index]?.meta?.isDisabled === true) {
+                return this.getPreviousAvailableIndex(index - 1);
+            } else {
+                return index;
+            }
+        }
+        return -1;
     }
 
     abstract tabs(): JSX.Element;
