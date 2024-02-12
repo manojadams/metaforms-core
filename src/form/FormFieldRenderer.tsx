@@ -29,10 +29,7 @@ function FormFieldRenderer(props: IRenderField) {
     }
     if (isSection) {
         return (
-            <MRow 
-                gapX={formConfig.config?.gapX} 
-                gapY={formConfig.config?.gapY}
-            >
+            <MRow gapX={formConfig.config?.gapX} gapY={formConfig.config?.gapY}>
                 <RenderColumn
                     cssClassName={cssClassName}
                     props={props}
@@ -107,7 +104,7 @@ function RenderColumn({
                                 form={props.form[field.name]}
                                 sync={sync}
                             />
-                    ))}
+                        ))}
                 </div>
             </Row>
         );

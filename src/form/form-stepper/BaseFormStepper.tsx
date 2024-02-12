@@ -26,7 +26,7 @@ abstract class BaseFormStepper extends BaseFormWizard {
         const fields = section?.fields || [];
         const form = this.context.form[section?.name ?? DEFAULT];
         return (
-            <Row 
+            <Row
                 className="section"
                 gapX={this.context.formConfig.config?.gapX}
                 gapY={this.context.formConfig.config?.gapY}

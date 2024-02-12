@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { IElementTypes, IForm } from "../../constants/common-interface";
 import { SECTION_LAYOUT } from "../../constants/constants";
 import { IField, ISchema } from "../../constants/model-interfaces";
@@ -6,6 +6,7 @@ import { TCallback } from "../../constants/types";
 import { Row } from "layout-emotions";
 import FormFieldRenderer from "../FormFieldRenderer";
 import Footer from "../form-controls/Footer";
+import FormContext from "../form-context";
 
 interface IProps {
     schema: ISchema;
@@ -24,12 +25,15 @@ interface IProps {
 
 const DefaultForm = (props: IProps) => {
     const [fields, setFields] = useState(props.schema.fields);
+    const formContext = useContext(FormContext);
+
     const sync = () => {
         setFields([...fields]);
     };
+
     return (
         <form name="metaform" className={`needs-validation ${props.validated ? "was-validated" : ""}`} noValidate>
-            <Row>
+            <Row gapX={formContext.formConfig.config?.gapX} gapY={formContext.formConfig.config?.gapY}>
                 {props.schema.fields.map((field: IField) => {
                     if (props.hasSection) {
                         const subFields = Object.keys(props.form[field.name]);
