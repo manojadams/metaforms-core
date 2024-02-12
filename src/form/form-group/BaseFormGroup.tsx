@@ -50,24 +50,26 @@ export default abstract class BaseFormGroup extends React.Component<ISchema> {
         });
         this.context.listener(EVENTS.SWITCH, (payload: { payload: string; callback?: TCallback }) => {
             switch (payload.payload) {
-                case "next": {
-                    const nextIndex = this.getNextAvailableIndex(this.state.activeIndex + 1);
-                    if (nextIndex >= 0) {
-                        this.setActiveIndex(nextIndex, payload.callback);
+                case "next":
+                    {
+                        const nextIndex = this.getNextAvailableIndex(this.state.activeIndex + 1);
+                        if (nextIndex >= 0) {
+                            this.setActiveIndex(nextIndex, payload.callback);
+                        }
+                        const hasMorePages = this.getNextAvailableIndex(nextIndex + 1) !== -1;
+                        if (!hasMorePages) {
+                            this.context.emit(EVENTS._END_OF_PAGE, { payload: nextIndex + 1 });
+                        }
                     }
-                    const hasMorePages = this.getNextAvailableIndex(nextIndex + 1) === -1 ? false : true;
-                    if (!hasMorePages) {
-                        this.context.emit(EVENTS._END_OF_PAGE, { payload: nextIndex + 1});
+                    break;
+                case "previous":
+                    {
+                        const previousIndex = this.getPreviousAvailableIndex(this.state.activeIndex - 1);
+                        if (previousIndex >= 0) {
+                            this.setActiveIndex(previousIndex, payload.callback);
+                        }
                     }
-                }
-                break;
-                case "previous": {
-                    const previousIndex = this.getPreviousAvailableIndex(this.state.activeIndex - 1);
-                    if (previousIndex >= 0) {
-                        this.setActiveIndex(previousIndex, payload.callback);
-                    }
-                }
-                break;
+                    break;
             }
         });
         this.context.listener(EVENTS.VALIDATION_ERROR, (payload: { payload: string; callback: TCallback }) => {
