@@ -180,6 +180,7 @@ export default class MetaForm implements IMetaForm {
         queryParams?: Array<TParam>,
         requestBodyParams?: Array<TParamType>,
         requestBody?: IRequestBody,
+        requestHeaders?: Record<string, string>,
         currentValue?: TValue,
         sectionName?: string,
         isRemote?: boolean
@@ -235,11 +236,11 @@ export default class MetaForm implements IMetaForm {
                         }
                     });
                     const updatedRequestBody = FormUtils.updateBodyParams(requestBody ?? {}, updatedParams);
-                    return this.rest.post(newUrl, updatedRequestBody, isRemote);
+                    return this.rest.post(newUrl, updatedRequestBody, isRemote, requestHeaders);
                 }
                 break;
             default:
-                return this.rest.get(newUrl, isRemote);
+                return this.rest.get(newUrl, isRemote, requestHeaders);
         }
 
         return Promise.resolve([]);
@@ -267,6 +268,7 @@ export default class MetaForm implements IMetaForm {
                             qParams,
                             config.requestBodyParams,
                             config.requestBody,
+                            config.requestHeaders,
                             val,
                             section,
                             // eslint-disable-next-line camelcase

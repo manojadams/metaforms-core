@@ -300,16 +300,16 @@ export default class FormUtils {
 
     /**
      * Updates request payload body
-     * @param requestBody 
-     * @param requestBodyParams 
-     * @returns 
+     * @param requestBody
+     * @param requestBodyParams
+     * @returns
      */
     static updateBodyParams(requestBody: IRequestBody, requestBodyParams: Array<TValue>) {
         if (requestBodyParams && requestBodyParams.length > 0) {
-            const stringified = JSON.stringify(requestBody);
+            let stringified = JSON.stringify(requestBody);
             requestBodyParams.forEach((param, idx) => {
                 if (param) {
-                    stringified.replace(`$${idx}`, String(param));
+                    stringified = stringified.replace(`$${idx}`, String(param));
                 }
             });
 

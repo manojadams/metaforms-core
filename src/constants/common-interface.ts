@@ -58,6 +58,8 @@ export interface IApiConfig {
     requestBody?: IRequestBody;
     // requst body payload parameters
     requestBodyParams?: Array<TParamType>;
+    // request header parameter
+    requestHeaders?: Record<string, string>;
     // query parameters
     queryParams?: Array<TParam>;
     // url of the api

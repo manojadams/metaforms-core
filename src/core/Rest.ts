@@ -12,27 +12,29 @@ export class Rest implements IRest {
         this.baseurl = apihost + basepath;
     }
 
-    getCommonHeaders() {
-        const headers = this.config.headers ?? {};
+    getCommonHeaders(requestHeaders?: Record<string, string>) {
+        const globalHeaders = this.config.headers ?? {};
+        const apiHeaders = requestHeaders ?? {};
         return {
             "Content-Type": "application/json",
-            ...headers
+            ...globalHeaders,
+            ...apiHeaders
         };
     }
 
-    get(url: string, isRemote?: boolean) {
+    get(url: string, isRemote?: boolean, requestHeaders?: Record<string, string>) {
         const finalUrl = isRemote ? url : this.baseurl + url;
         return fetch(finalUrl, {
             method: "GET",
-            headers: this.getCommonHeaders()
+            headers: this.getCommonHeaders(requestHeaders)
         }).then((res) => res.json());
     }
 
-    post(url: string, requestBody: IRequestBody, isRemote?: boolean) {
+    post(url: string, requestBody: IRequestBody, isRemote?: boolean, requestHeaders?: Record<string, string>) {
         const finalUrl = isRemote ? url : this.baseurl + url;
         return fetch(finalUrl, {
             method: "POST",
-            headers: this.getCommonHeaders(),
+            headers: this.getCommonHeaders(requestHeaders),
             body: JSON.stringify(requestBody)
         }).then((res) => res.json());
     }
