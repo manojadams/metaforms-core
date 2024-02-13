@@ -1,5 +1,5 @@
 import { IRequestBody } from "../constants/common-interface";
-import { IConfig, IRest, TParam } from "../constants/model-interfaces";
+import { IConfig, IRest } from "../constants/model-interfaces";
 
 export class Rest implements IRest {
     config: IConfig;

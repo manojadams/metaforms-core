@@ -276,7 +276,6 @@ class DependencyUtil {
                         case DEP_TYPE.LOAD:
                             if (value && dep.url) {
                                 const field = dep.field;
-                                const queryParams = dep.queryParams || [];
                                 // reset options
                                 metaform.setFieldOptions(dep.section, field, []);
                                 metaform

@@ -2,7 +2,7 @@ import React, { Fragment, ReactNode } from "react";
 import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
-import { IField, IOption, TParam } from "../../constants/model-interfaces";
+import { IField, IOption } from "../../constants/model-interfaces";
 import { IControlProps, IError, IFormField, IRenderField } from "../../constants/common-interface";
 import { EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
@@ -335,7 +335,6 @@ export default abstract class BaseFormControl extends React.Component {
         this.setLoading(true);
         this.context
             .getData(eventItem, "", this.section, eventItem?.type as string | undefined)
-            // .api("get", eventItem?.url + "", eventItem.queryParams as Array<TParam>, "", this.props.section)
             .then((options: IOption[]) => {
                 this.context.setFieldOptions(this.section, this.field.name, options);
                 this.setState({ form: { ...this.props.form } });
