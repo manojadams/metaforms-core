@@ -2,7 +2,7 @@ import React, { Fragment, ReactNode } from "react";
 import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
-import { IField, IOption, TParam } from "../../constants/model-interfaces";
+import { IField, IOption } from "../../constants/model-interfaces";
 import { IControlProps, IError, IFormField, IRenderField } from "../../constants/common-interface";
 import { EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
@@ -332,38 +332,19 @@ export default abstract class BaseFormControl extends React.Component {
         if (!eventItem || !eventItem?.url) {
             return;
         }
-        switch (eventItem?.type) {
-            default:
-            case "url":
-            case "options_loader":
-                // eslint-disable-next-line no-lone-blocks
-                {
-                    this.setLoading(true);
-                    this.context
-                        .api("get", eventItem?.url + "", eventItem.queryParams as Array<TParam>, "", this.props.section)
-                        .then((response: object) => {
-                            let options = eventItem.responseKey ? response[eventItem.responseKey as string] : response;
-                            const labelKey = eventItem.labelKey || "label";
-                            const valueKey = eventItem.valueKey || "value";
-                            if (options) {
-                                options = options.map((o: object) => ({
-                                    label: o[labelKey as string],
-                                    value: o[valueKey as string],
-                                    ref: o
-                                }));
-                            }
-                            this.context.setFieldOptions(this.section, this.field.name, options);
-                            this.setState({ form: { ...this.props.form } });
-                            this.setLoading(false);
-                        })
-                        .catch((error: Error) => {
-                            this.context.handleError(error, this.section, this.field.name);
-                            this.setState({ form: { ...this.props.form } });
-                            this.setLoading(false);
-                        });
-                }
-                break;
-        }
+        this.setLoading(true);
+        this.context
+            .getData(eventItem, "", this.section, eventItem?.type as string | undefined)
+            .then((options: IOption[]) => {
+                this.context.setFieldOptions(this.section, this.field.name, options);
+                this.setState({ form: { ...this.props.form } });
+                this.setLoading(false);
+            })
+            .catch((error: Error) => {
+                this.context.handleError(error, this.section, this.field.name);
+                this.setState({ form: { ...this.props.form } });
+                this.setLoading(false);
+            });
     }
 
     handleDependencies(value: TValue) {
