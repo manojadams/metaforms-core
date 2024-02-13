@@ -1,6 +1,6 @@
 {
   "name": "@manojadams/metaforms-core",
-  "version": "3.0.40",
+  "version": "3.0.41",
   "description": "React Library for rendering dynamic forms from json schema",
   "author": "manojadams",
   "license": "MIT",
