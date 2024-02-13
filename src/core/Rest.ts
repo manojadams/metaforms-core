@@ -1,3 +1,4 @@
+import { IRequestBody } from "../constants/common-interface";
 import { IConfig, IRest, TParam } from "../constants/model-interfaces";
 
 export class Rest implements IRest {
@@ -11,13 +12,29 @@ export class Rest implements IRest {
         this.baseurl = apihost + basepath;
     }
 
-    get(url: string, params?: Array<TParam>, isRemote?: boolean) {
-        const finalUrl = isRemote ? url : this.baseurl + url;
-        return fetch(finalUrl).then((res) => res.json());
+    getCommonHeaders() {
+        const headers = this.config.headers ?? {};
+        return {
+            "Content-Type": "application/json",
+            ...headers
+        };
     }
 
-    post() {
-        throw new Error("Not implemented");
+    get(url: string, isRemote?: boolean) {
+        const finalUrl = isRemote ? url : this.baseurl + url;
+        return fetch(finalUrl, {
+            method: "GET",
+            headers: this.getCommonHeaders()
+        }).then((res) => res.json());
+    }
+
+    post(url: string, requestBody: IRequestBody, isRemote?: boolean) {
+        const finalUrl = isRemote ? url : this.baseurl + url;
+        return fetch(finalUrl, {
+            method: "POST",
+            headers: this.getCommonHeaders(),
+            body: JSON.stringify(requestBody)
+        }).then((res) => res.json());
     }
 
     put() {

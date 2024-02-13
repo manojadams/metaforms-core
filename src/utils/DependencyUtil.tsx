@@ -280,22 +280,18 @@ class DependencyUtil {
                                 // reset options
                                 metaform.setFieldOptions(dep.section, field, []);
                                 metaform
-                                    .api(API_METHOD.GET, dep.url, queryParams, value, section)
-                                    .then((response: object) => {
-                                        const results = dep.responseKey ? response[dep.responseKey] : response;
-                                        let newResults = [];
-                                        if (dep.labelKey && dep.valueKey) {
-                                            newResults = results.map((r: object) => {
-                                                return {
-                                                    label: r[dep.labelKey],
-                                                    value: r[dep.valueKey],
-                                                    ref: r
-                                                };
-                                            });
-                                        } else {
-                                            newResults = results;
-                                        }
-                                        metaform.setFieldOptions(dep.section, field, newResults);
+                                    .getData(
+                                        {
+                                            requestType: dep.requestType ?? API_METHOD.GET,
+                                            requestBody: dep.requestBody,
+                                            requestBodyParams: dep.requestBodyParams,
+                                            queryParams: dep.queryParams
+                                        },
+                                        value,
+                                        section
+                                    )
+                                    .then((results: IOption[]) => {
+                                        metaform.setFieldOptions(dep.section, field, results);
                                         resolved.next();
                                     })
                                     .catch(() => {

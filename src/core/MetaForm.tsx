@@ -18,13 +18,24 @@ import {
     TFieldRef,
     IFieldConfig,
     IEventPayload,
-    IControlProps
+    IControlProps,
+    IRequestBody
 } from "../constants/common-interface";
 import MetaformError from "./MetaformError";
-import { IField, IFormConfig, IOption, IParamType, IRest, ISchema, TParam } from "../constants/model-interfaces";
+import {
+    IField,
+    IFormConfig,
+    IOption,
+    IParamType,
+    IRest,
+    ISchema,
+    TParam,
+    TParamType
+} from "../constants/model-interfaces";
 import { Rest } from "./Rest";
 import { Page } from "./Page";
 import {
+    API_METHOD,
     CHANGE_TYPE,
     DATA_LOADER,
     DEP_TYPE,
@@ -166,14 +177,16 @@ export default class MetaForm implements IMetaForm {
     api(
         type: string,
         url: string,
-        params?: Array<TParam>,
+        queryParams?: Array<TParam>,
+        requestBodyParams?: Array<TParamType>,
+        requestBody?: IRequestBody,
         currentValue?: TValue,
         sectionName?: string,
         isRemote?: boolean
     ) {
         let query = "";
-        params &&
-            params.forEach((param: TParam) => {
+        queryParams &&
+            queryParams.forEach((param: TParam) => {
                 const [name, value] = param;
                 if (typeof value === "undefined") {
                     query += `&${name}=${currentValue}`;
@@ -188,8 +201,8 @@ export default class MetaForm implements IMetaForm {
                             if (ref) {
                                 const section = (value as IParamType).section ?? sectionName;
                                 const field = this.getField(section ?? "", ref);
-                                const fielfValue = field?.value;
-                                query += `&${name}=${fielfValue}`;
+                                const fieldValue = field?.value;
+                                query += `&${name}=${fieldValue}`;
                             }
                             break;
                     }
@@ -197,9 +210,39 @@ export default class MetaForm implements IMetaForm {
             });
         const newUrl = query ? `${url}?${query}` : url;
         switch (type) {
+            case API_METHOD.POST:
+                if (requestBodyParams && requestBodyParams.length > 0) {
+                    const updatedParams: Array<TValue> = [];
+                    requestBodyParams.forEach((param: TParamType) => {
+                        if (typeof param === "object") {
+                            const type = (param as IParamType).type;
+                            switch (type) {
+                                case "fieldValue":
+                                    // eslint-disable-next-line no-case-declarations
+                                    const ref = (param as IParamType).ref;
+                                    if (ref) {
+                                        const section = (param as IParamType).section ?? sectionName;
+                                        const field = this.getField(section ?? "", ref);
+                                        const fieldValue = field?.value;
+                                        updatedParams.push(fieldValue);
+                                    }
+                                    break;
+                                default:
+                                    updatedParams.push(param as TValue);
+                            }
+                        } else {
+                            updatedParams.push(param);
+                        }
+                    });
+                    const updatedRequestBody = FormUtils.updateBodyParams(requestBody ?? {}, updatedParams);
+                    return this.rest.post(newUrl, updatedRequestBody, isRemote);
+                }
+                break;
             default:
-                return this.rest.get(newUrl, params, isRemote);
+                return this.rest.get(newUrl, isRemote);
         }
+
+        return Promise.resolve([]);
     }
 
     getData(config: IFieldConfig, val: TValue, section: string, eventType?: string): Promise<Array<IOption>> {
@@ -214,11 +257,16 @@ export default class MetaForm implements IMetaForm {
                         // eslint-disable-next-line no-case-declarations
                         const url = config?.url ?? "";
                         // eslint-disable-next-line no-case-declarations
-                        const qParams = FormUtils.updateParams(config.queryParams, eventType, val);
+                        const qParams = config.queryParams
+                            ? FormUtils.updateParams(config.queryParams, eventType, val)
+                            : undefined;
+                        // const bodyParams = config.requestBodyParams ? FormUtils.updateParams(config.requestBodyParams, eventType, val) : undefined;
                         this.api(
-                            "get",
+                            config.requestType ?? API_METHOD.GET,
                             url,
                             qParams,
+                            config.requestBodyParams,
+                            config.requestBody,
                             val,
                             section,
                             // eslint-disable-next-line camelcase
