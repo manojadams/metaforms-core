@@ -1,5 +1,6 @@
 import { EMAIL_PATTERN, MSGS } from "../constants/constants";
-import { IValidation } from "../constants/model-interfaces";
+import { IField, IValidation } from "../constants/model-interfaces";
+import { TValue } from "../constants/types";
 
 class MetaformUtil {
     static getDefaultValidation(displayType: string | undefined, validation: IValidation | undefined) {
@@ -21,6 +22,20 @@ class MetaformUtil {
             }
         }
         return validation;
+    }
+
+    /**
+     * Reads initial field value for form fields
+     * @param field
+     * @param value
+     * @returns
+     */
+    static getInitlalFieldValue(field: IField, value: Exclude<TValue, Date>) {
+        if (value !== undefined) {
+            return value;
+        }
+
+        return field?.meta?.value !== undefined ? field?.meta?.value : "";
     }
 }
 

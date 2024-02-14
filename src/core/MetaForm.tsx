@@ -19,7 +19,8 @@ import {
     IFieldConfig,
     IEventPayload,
     IControlProps,
-    IRequestBody
+    IRequestBody,
+    IFormData
 } from "../constants/common-interface";
 import MetaformError from "./MetaformError";
 import {
@@ -45,6 +46,7 @@ import {
     URL_TYPE
 } from "../constants/constants";
 import { TValue } from "../constants/types";
+import InitialData from "./InitialData";
 
 /**
  * This class is responsible for handling all the heavy lifting work in the forms
@@ -55,6 +57,7 @@ export default class MetaForm implements IMetaForm {
     form: IForm;
     rest: Rest;
     page: Page;
+    initialData?: InitialData;
     icons?: IElementTypes;
     fns?: IFnTypes;
     controls: IElementTypes;
@@ -82,8 +85,9 @@ export default class MetaForm implements IMetaForm {
         this.page = new Page(false, 1);
     }
 
-    init() {
+    init(initialData?: IFormData) {
         const schema = this.schema;
+        const initialFormData = initialData ? new InitialData(initialData) : undefined;
         let totalSections = 0;
         let hasSections = false;
         if (schema.fields) {
@@ -93,7 +97,8 @@ export default class MetaForm implements IMetaForm {
                     this.setSection(section.name);
                     section.fields &&
                         section.fields.forEach((field) => {
-                            this.initField(section.name, field);
+                            const value = initialFormData ? initialFormData.get(field) : undefined;
+                            this.initField(section.name, field, value);
                         });
                     totalSections++;
                 });
@@ -110,7 +115,8 @@ export default class MetaForm implements IMetaForm {
                 this.setSection(section);
                 schema.fields &&
                     schema.fields.forEach((field) => {
-                        this.initField(section, field);
+                        const value = initialFormData ? initialFormData.get(field) : undefined;
+                        this.initField(section, field, value);
                     });
                 DependencyUtil.initDependencies(this.form, section, schema.fields);
                 this.applyDependencies(section, schema.fields);
@@ -313,12 +319,12 @@ export default class MetaForm implements IMetaForm {
         this.form[section] = {};
     }
 
-    initField(section: string, field: IField) {
+    initField(section: string, field: IField, value: TValue) {
         const formField: IFormField = {
             prop: field.prop,
             display: true,
             type: field.meta.type,
-            value: field?.meta?.value !== undefined ? field?.meta?.value : "",
+            value: MetaformUtil.getInitlalFieldValue(field, value as Exclude<TValue, Date>),
             isDisabled: field.meta.isDisabled,
             isReadonly: field.meta.isReadonly,
             displayName: field.meta.displayName,
