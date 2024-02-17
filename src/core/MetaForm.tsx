@@ -330,6 +330,7 @@ export default class MetaForm implements IMetaForm {
             displayName: field.meta.displayName,
             displayType: field.meta.displayType,
             displayProps: field.meta.displayProps,
+            htmlProps: field.meta.htmlProps,
             options: field.meta.options,
             placeholder: field.meta.placeholder,
             isArray: field.meta.isArray,
