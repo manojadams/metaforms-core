@@ -102,6 +102,7 @@ export interface IFormField {
     display: boolean; // internal
     displayName?: string;
     displayProps?: IDisplayProps;
+    htmlProps?: Record<string, string>;
     displayType?: string;
     type?: string;
     value: Exclude<TValue, Date>;
