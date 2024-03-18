@@ -14,6 +14,7 @@ import {
     IThemeConfig,
     IUISchema,
     IValidation,
+    IconConfig,
     TParam
 } from "./model-interfaces";
 import { TChangeMode, TFormType, TNextCondition, TNextResponseMode, TOperator, TSectionLayout, TValue } from "./types";
@@ -92,8 +93,13 @@ export interface IFormField {
     files?: Array<File>; // for file type
     validation?: IValidation;
 
+    /** @deprecated */
     icons?: IIconConfig;
+    iconName?: string; // icon name
+    icon?: IconConfig; // icon config
+    
     isArray?: boolean;
+
 }
 
 export interface IFnTypes {

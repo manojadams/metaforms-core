@@ -162,6 +162,11 @@ export interface IIconConfig {
     };
 }
 
+export interface IconConfig {
+    name: string;
+    position: string;
+}
+
 export interface IBaseDependency {
     section?: string;
     ref: string;
@@ -287,8 +292,12 @@ export interface IMeta {
     /** Init config for the field */
     /** @deprecated */
     init?: IFieldConfig;
-    /** Icons used by the field */
+    /** @deprecated Icons used by the field */
     icons?: IIconConfig;
+    /** For icon name */
+    iconName?: string;
+    /** For configurable icon*/
+    icon?: IconConfig;
 }
 
 /**
