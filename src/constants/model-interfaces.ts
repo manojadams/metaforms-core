@@ -267,6 +267,8 @@ export interface IMeta {
     value?: string | number | boolean;
     /** Layout properties of the field */
     displayProps?: IDisplayProps;
+    /** Native html properties of the field */
+    htmlProps?: Record<string, string>;
     /** List of options available for the field (e.g-> dropdown, select etc) */
     options?: Array<IOption>;
     /** Marks a field as `disabled` */

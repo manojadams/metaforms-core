@@ -1,4 +1,4 @@
-import { IForm, IFormData, IFormField, IFormSection } from "../constants/common-interface";
+import { IForm, IFormData, IFormField, IFormSection, IRequestBody } from "../constants/common-interface";
 import { DEFAULT, DEFAULT_DATE_FORMAT, FORM_ACTION, _INTERNAL_VALUES } from "../constants/constants";
 import { TiconPositionType, TValue } from "../constants/types";
 import { Page } from "../core/Page";
@@ -268,6 +268,13 @@ export default class FormUtils {
         return data;
     }
 
+    /**
+     * Update parameters with special values ($input, $initial etc)
+     * @param queryParams
+     * @param eventType
+     * @param currentValue
+     * @returns
+     */
     static updateParams(queryParams: Array<TParam> | undefined, eventType: string | undefined, currentValue: TValue) {
         if (queryParams && eventType) {
             const updatedQueryParams: Array<TParam> = [];
@@ -289,6 +296,27 @@ export default class FormUtils {
             return updatedQueryParams;
         }
         return queryParams;
+    }
+
+    /**
+     * Updates request payload body
+     * @param requestBody
+     * @param requestBodyParams
+     * @returns
+     */
+    static updateBodyParams(requestBody: IRequestBody, requestBodyParams: Array<TValue>) {
+        if (requestBodyParams && requestBodyParams.length > 0) {
+            let stringified = JSON.stringify(requestBody);
+            requestBodyParams.forEach((param, idx) => {
+                if (param) {
+                    stringified = stringified.replace(`$${idx}`, String(param));
+                }
+            });
+
+            return JSON.parse(stringified);
+        }
+
+        return requestBody;
     }
 
     static updateFieldProp(field: IFormField, prop: string, value: TValue) {

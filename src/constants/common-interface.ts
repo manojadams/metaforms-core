@@ -47,17 +47,37 @@ export interface IRestConfig {
     responseKey?: string;
 }
 
-export interface IFieldConfig {
-    type?: string;
+export interface IRequestBody {
+    [key: string]: TValue | IRequestBody;
+}
+
+export interface IApiConfig {
+    // http request type - GET, POST, PUT, DELETE
+    requestType?: string;
+    // request body payload
+    requestBody?: IRequestBody;
+    // requst body payload parameters
+    requestBodyParams?: Array<TParamType>;
+    // request header parameter
+    requestHeaders?: Record<string, string>;
+    // query parameters
+    queryParams?: Array<TParam>;
+    // url of the api
+    url?: string;
+    // to setup url location type (local, remote)
+    urlType?: string;
     labelKey?: string;
     valueKey?: string;
     responseKey?: string;
-    queryParams?: Array<TParam>;
-    url?: string;
-    urlType?: string;
+}
+
+export interface IFieldConfig extends IApiConfig {
+    type?: string;
     loadOn?: string | Array<string>;
-    lazy?: boolean; // load data lazily
-    multiple?: boolean; // allow multiple values, e.g-> checkbox, multi-select
+    // load data lazily
+    lazy?: boolean;
+    // allow multiple values, e.g-> checkbox, multi-select
+    multiple?: boolean;
     // date config
     inputFormat?: string;
     views?: Array<string>;
@@ -82,6 +102,7 @@ export interface IFormField {
     display: boolean; // internal
     displayName?: string;
     displayProps?: IDisplayProps;
+    htmlProps?: Record<string, string>;
     displayType?: string;
     type?: string;
     value: Exclude<TValue, Date>;
@@ -221,7 +242,7 @@ export interface IValueMapRef {
     propName?: string;
 }
 
-export interface IDepdendencyItem {
+export interface IDepdendencyItem extends IApiConfig {
     ref?: string;
     section: string;
     type: string;

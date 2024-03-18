@@ -143,5 +143,6 @@ export const DATA_LOADER = {
 export const API_METHOD = {
     GET: "get",
     POST: "post",
-    PUT: "put"
+    PUT: "put",
+    DELETE: "delete"
 };
