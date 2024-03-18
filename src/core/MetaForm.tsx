@@ -339,7 +339,9 @@ export default class MetaForm implements IMetaForm {
             events: field.meta.events,
             error: { hasError: false, errorMsg: "" },
             config: field.meta.config,
-            icons: field.meta.icons
+            icons: field.meta.icons,
+            iconName: field.meta.iconName,
+            icon: field.meta.icon
         };
         this.form[section][field.name] = formField;
     }

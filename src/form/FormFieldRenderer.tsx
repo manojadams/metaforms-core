@@ -104,7 +104,7 @@ function RenderColumn({
                                 form={props.form[field.name]}
                                 sync={sync}
                             />
-                        ))}
+                    ))}
                 </div>
             </Row>
         );

@@ -32,7 +32,10 @@ export function Section(props: ISectionProps) {
             role="tabpanel"
             aria-labelledby={props.section.name}
         >
-            <Row gapX={formContext.formConfig.config?.gapX} gapY={formContext.formConfig.config?.gapY}>
+            <Row 
+                gapX={formContext.formConfig.config?.gapX} 
+                gapY={formContext.formConfig.config?.gapY}
+            >
                 {props.section.fields &&
                     props.section.fields.map((field: IField) => (
                         <FormFieldRenderer
