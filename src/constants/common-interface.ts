@@ -15,7 +15,8 @@ import {
     IUISchema,
     IValidation,
     IconConfig,
-    TParam
+    TParam,
+    TParamType
 } from "./model-interfaces";
 import { TChangeMode, TFormType, TNextCondition, TNextResponseMode, TOperator, TSectionLayout, TValue } from "./types";
 import BaseFormWizard from "../form/form-wizard/BaseFormWizard";
