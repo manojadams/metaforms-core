@@ -108,23 +108,23 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
     }
 
     componentDidMount() {
-        this.metaform.listener(EVENTS.SUBMIT, (...params) => {
+        this.metaform.listener(EVENTS.SUBMIT, async (...params) => {
             if (this.props.onSubmit) {
                 this.props.onSubmit(
-                    FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter ?? {}),
+                    await FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter ?? {}),
                     params
                 );
             }
         });
-        this.metaform.listener(EVENTS._FIELD_CHANGE, (params: IEventPayload) => {
+        this.metaform.listener(EVENTS._FIELD_CHANGE, async (params: IEventPayload) => {
             let formData;
             if (this.props.onChange) {
                 if (this.props.changeResponseMode === CHANGE_MODE.FORM_DATA) {
-                    formData = FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter ?? {});
+                    formData = await FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter ?? {});
                 } else if (this.props.changeResponseMode === CHANGE_MODE.SECTION_DATA) {
                     const page = this.metaform.getPage();
                     const sectionData = this.metaform.getSection(page.pageNumber);
-                    formData = FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter ?? {});
+                    formData = await FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter ?? {});
                 }
                 this.props.onChange(params.payload as IFieldChange, formData);
             }
@@ -196,13 +196,13 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
         return true;
     }
 
-    handleCustom(e: React.MouseEvent) {
+    async handleCustom(e: React.MouseEvent) {
         if (this.props.onCustom) {
-            this.props.onCustom(FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter || {}), e);
+            this.props.onCustom(await FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter || {}), e);
         }
     }
 
-    handlePrevious() {
+    async handlePrevious() {
         this.lastAction = FORM_ACTION.PREVIOUS;
         if (this.props.onPrevious) {
             const page = this.metaform.getPage();
@@ -210,13 +210,13 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
                 const sectionData = this.metaform.getSection(page.pageNumber);
                 this.props.onPrevious(
-                    FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
+                    await FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
                     page.pageNumber
                 );
             } else {
                 const formData = this.metaform.form;
                 this.props.onPrevious(
-                    FormUtils.updateFormData(formData, {}, this.props.formatter || {}),
+                    await FormUtils.updateFormData(formData, {}, this.props.formatter || {}),
                     page.pageNumber
                 );
             }
@@ -231,13 +231,13 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
                 const sectionData = this.metaform.getSection(page.pageNumber);
                 return await this.props.onNext(
-                    FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
+                    await FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
                     page.pageNumber
                 );
             } else {
                 const formData = this.metaform.form;
                 return await this.props.onNext(
-                    FormUtils.updateFormData(formData, {}, this.props.formatter || {}),
+                    await FormUtils.updateFormData(formData, {}, this.props.formatter || {}),
                     page.pageNumber
                 );
             }
@@ -245,7 +245,7 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
         return true;
     }
 
-    handleSubmit(...params: Array<unknown>) {
+    async handleSubmit(...params: Array<unknown>) {
         this.lastAction = FORM_ACTION.SUBMIT;
         if (this.props.onSubmit) {
             const nextResponseMode = this.props.nextResponseMode || NEXT_RESPONSE_MODE.FORM_DATA;
@@ -253,12 +253,12 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
                 const page = this.metaform.getPage();
                 const sectionData = this.metaform.getSection(page.pageNumber);
                 this.props.onSubmit(
-                    FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
+                    await FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
                     params
                 );
             } else {
                 this.props.onSubmit(
-                    FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter || {}),
+                    await FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter || {}),
                     params
                 );
             }
