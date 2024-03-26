@@ -86,8 +86,11 @@ export interface IFieldConfig extends IApiConfig {
 
     // autocomplete
     autocomplete?: any;
+
     // file input
     accept?: string;
+    blob?: boolean;
+    
     // template
     template?: string;
 }

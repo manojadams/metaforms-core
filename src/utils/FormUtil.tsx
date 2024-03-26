@@ -1,5 +1,6 @@
 import { IForm, IFormData, IFormField, IFormSection, IRequestBody } from "../constants/common-interface";
-import { DEFAULT, DEFAULT_DATE_FORMAT, FORM_ACTION, _INTERNAL_VALUES } from "../constants/constants";
+import { DEFAULT_DATE_FORMAT, FORM_ACTION, _INTERNAL_VALUES } from "../constants/constants";
+import { CONTROLS } from "../constants/controls";
 import { TiconPositionType, TValue } from "../constants/types";
 import { Page } from "../core/Page";
 import {
@@ -146,80 +147,104 @@ export default class FormUtils {
         return newFormData;
     }
 
-    static updateFormData(formData: IForm, newFormData: IFormData, formatter: IFormatterType) {
-        Object.keys(formData).forEach((key) => {
-            Object.keys(formData[key]).forEach((key2) => {
-                const prop = formData[key][key2].prop;
+    static getBase64(file: File) {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = () => resolve(fileReader.result);
+            fileReader.onerror = reject;
+        });
+    }
+
+    static async getFormFieldValue(formField: IFormField) {
+        switch (formField.displayType) {
+            case CONTROLS.FILE:
+                if (formField.files && formField.files.length > 0) {
+                    return ({
+                        name: formField.value,
+                        [formField.config?.blob ? "file": "fileData"]: formField.config?.blob 
+                            ? formField.files[0]
+                            : await this.getBase64(formField.files[0])
+                    });
+                }
+                return null;
+            default:
+                return formField.value;
+        }
+    }
+
+    static updateFormData(formData: IForm, newFormData: IFormData, formatter: IFormatterType): Promise<IFormData> {
+        return new Promise((resolve) => {
+            const allPendingUpdates = Object.keys(formData).flatMap((key) => {
+                return Object.keys(formData[key]).map((key2) => {
+                    const prop = formData[key][key2].prop;
+                    return this.getFormFieldValue(formData[key][key2]).then(fieldValue => {
+                        if (prop) {
+                            if (!newFormData[prop]) {
+                                newFormData[prop] = {};
+                            }
+                            if (formatter[key2]) {
+                                newFormData[prop][key2] = formatter[key2](fieldValue as TValue);
+                            } else {
+                                newFormData[prop][key2] = fieldValue;
+                            }
+                        } else {
+                            // null prop is ignored
+                            if (prop !== null) {
+                                if (formatter[key2]) {
+                                    newFormData[key2] = formatter[key2](fieldValue as TValue);
+                                } else {
+                                    newFormData[key2] = fieldValue as string;
+                                }
+                            }
+                        }
+                    })
+                });
+            });
+            Promise.all(allPendingUpdates)
+                .then(() => this.updateNestedFormData(newFormData))
+                .then(() => resolve(newFormData));
+        });
+    }
+
+    static async updateSectionFormData(formData: IFormSection | null, newFormData: IFormData, formatter: IFormatterType): Promise<IFormData> {
+        return new Promise((resolve) => {
+            if (!formData) {
+                resolve({});
+                return {};
+            }
+            const allPendingUpdates = Object.keys(formData).map(async (key) => {
+                const prop = formData[key].prop;
+                const formDataKey = formData[key];
+                const fieldValue = await this.getFormFieldValue(formDataKey) as string;
                 if (prop) {
-                    if (!newFormData[prop]) {
-                        newFormData[prop] = {};
+                    if (!newFormData[prop as string]) {
+                        newFormData[prop as string] = {};
                     }
-                    if (formatter[key2]) {
-                        newFormData[prop][key2] = formatter[key2](formData[key][key2].value);
+                    if (formatter[key]) {
+                        newFormData[prop as string][key] = formatter[key](fieldValue);
                     } else {
-                        newFormData[prop][key2] = formData[key][key2].value;
+                        newFormData[prop as string][key] = fieldValue;
                     }
                 } else {
                     // null prop is ignored
                     if (prop !== null) {
-                        if (formatter[key2]) {
-                            newFormData[key2] = formatter[key2](formData[key][key2].value);
+                        if (formatter[key]) {
+                            newFormData[key] = formatter[key](fieldValue as string);
                         } else {
-                            newFormData[key2] = formData[key][key2].value as string;
+                            newFormData[key] = fieldValue;
                         }
                     }
                 }
             });
-        });
-        this.updateNestedFormData(newFormData);
-        return newFormData;
+            return Promise.all(allPendingUpdates)
+                .then(() => this.updateNestedFormData(newFormData))
+                .then(() => resolve(newFormData));
+        })
     }
 
-    static updateSectionFormData(formData: IFormSection | null, newFormData: IFormData, formatter: IFormatterType) {
-        if (!formData) return {};
-        Object.keys(formData).forEach((key) => {
-            const prop = formData[key].prop;
-            const formDataKey = formData[key];
-            if (prop) {
-                if (!newFormData[prop as string]) {
-                    newFormData[prop as string] = {};
-                }
-                if (formatter[key]) {
-                    newFormData[prop as string][key] = formatter[key](formDataKey.value as string);
-                } else {
-                    newFormData[prop as string][key] = formDataKey.value;
-                }
-            } else {
-                // null prop is ignored
-                if (prop !== null) {
-                    if (formatter[key]) {
-                        newFormData[key] = formatter[key](formDataKey.value as string);
-                    } else {
-                        const displayType = formDataKey.displayType ?? DEFAULT;
-                        switch (displayType) {
-                            case "file":
-                                {
-                                    const files = formDataKey.files as Array<File>;
-                                    if (files && files.length > 0) {
-                                        newFormData[key] = files;
-                                    } else {
-                                        newFormData[key] = formDataKey.value as string;
-                                    }
-                                }
-                                break;
-                            default:
-                                newFormData[key] = formDataKey.value as string;
-                        }
-                    }
-                }
-            }
-        });
-        this.updateNestedFormData(newFormData);
-        return newFormData;
-    }
-
-    static updateNestedFormData(formData: IFormData) {
-        Object.keys(formData).forEach((key: string) => {
+    static async updateNestedFormData(formData: IFormData) {
+        Object.keys(formData).forEach(async (key: string) => {
             if (typeof formData[key] === "object") {
                 const props = key.split("#");
                 if (props.length > 1) {
@@ -227,14 +252,14 @@ export default class FormUtils {
                     if (!formData[props[0]]) {
                         formData[props[0]] = {};
                     }
-                    this.updateNestedProp(formData[props[0]] as IFormData, props.slice(1), formData[key] as TValue);
+                    await this.updateNestedProp(formData[props[0]] as IFormData, props.slice(1), formData[key] as TValue);
                     delete formData[key];
                 }
             }
         });
     }
 
-    static updateNestedProp(formData: IFormData, props: Array<string>, value: TValue) {
+    static async updateNestedProp(formData: IFormData, props: Array<string>, value: TValue) {
         if (props.length > 0) {
             if (props.length === 1) {
                 if (formData) {
@@ -244,7 +269,7 @@ export default class FormUtils {
                 if (!formData[props[0]]) {
                     formData[props[0]] = {};
                 }
-                this.updateNestedProp(formData[props[0]] as IFormData, props.slice(1), value);
+                await this.updateNestedProp(formData[props[0]] as IFormData, props.slice(1), value);
             }
         }
     }
