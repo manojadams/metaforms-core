@@ -18,6 +18,7 @@ export const CONTROLS = {
     FILE: "file",
     MULTITEXT: "multitext",
     TEXT: "text",
+    INPUT_MASK: "input-mask",
     TEXT_FIELD: "text_field",
     TEMPATE: "template",
     TEXT_CUSTOM: "text_custom",

@@ -298,7 +298,7 @@ export interface IMeta {
     icons?: IIconConfig;
     /** For icon name */
     iconName?: string;
-    /** For configurable icon*/
+    /** For configurable icon */
     icon?: IconConfig;
 }
 

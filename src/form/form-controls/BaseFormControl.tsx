@@ -195,6 +195,8 @@ export default abstract class BaseFormControl extends React.Component {
             case CONTROLS.TEXT:
             case CONTROLS.TEXT_FIELD:
                 return this.text();
+            case CONTROLS.INPUT_MASK:
+                return this.inputMask();
             case CONTROLS.TEMPATE:
                 return this.templateControl();
             case CONTROLS.TEXT_CUSTOM:
@@ -215,6 +217,7 @@ export default abstract class BaseFormControl extends React.Component {
      * Input text control
      */
     abstract text(): JSX.Element;
+    abstract inputMask(): JSX.Element;
     abstract label(): JSX.Element;
     abstract password(): JSX.Element;
     abstract email(): JSX.Element;
