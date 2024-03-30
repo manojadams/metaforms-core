@@ -90,7 +90,7 @@ export interface IFieldConfig extends IApiConfig {
     // file input
     accept?: string;
     blob?: boolean;
-    
+
     // template
     template?: string;
 }
@@ -122,9 +122,8 @@ export interface IFormField {
     icons?: IIconConfig;
     iconName?: string; // icon name
     icon?: IconConfig; // icon config
-    
-    isArray?: boolean;
 
+    isArray?: boolean;
 }
 
 export interface IFnTypes {

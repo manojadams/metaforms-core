@@ -160,12 +160,12 @@ export default class FormUtils {
         switch (formField.displayType) {
             case CONTROLS.FILE:
                 if (formField.files && formField.files.length > 0) {
-                    return ({
+                    return {
                         name: formField.value,
-                        [formField.config?.blob ? "file": "fileData"]: formField.config?.blob 
+                        [formField.config?.blob ? "file" : "fileData"]: formField.config?.blob
                             ? formField.files[0]
                             : await this.getBase64(formField.files[0])
-                    });
+                    };
                 }
                 return null;
             default:
@@ -178,7 +178,7 @@ export default class FormUtils {
             const allPendingUpdates = Object.keys(formData).flatMap((key) => {
                 return Object.keys(formData[key]).map((key2) => {
                     const prop = formData[key][key2].prop;
-                    return this.getFormFieldValue(formData[key][key2]).then(fieldValue => {
+                    return this.getFormFieldValue(formData[key][key2]).then((fieldValue) => {
                         if (prop) {
                             if (!newFormData[prop]) {
                                 newFormData[prop] = {};
@@ -198,7 +198,7 @@ export default class FormUtils {
                                 }
                             }
                         }
-                    })
+                    });
                 });
             });
             Promise.all(allPendingUpdates)
@@ -207,7 +207,11 @@ export default class FormUtils {
         });
     }
 
-    static async updateSectionFormData(formData: IFormSection | null, newFormData: IFormData, formatter: IFormatterType): Promise<IFormData> {
+    static async updateSectionFormData(
+        formData: IFormSection | null,
+        newFormData: IFormData,
+        formatter: IFormatterType
+    ): Promise<IFormData> {
         return new Promise((resolve) => {
             if (!formData) {
                 resolve({});
@@ -216,7 +220,7 @@ export default class FormUtils {
             const allPendingUpdates = Object.keys(formData).map(async (key) => {
                 const prop = formData[key].prop;
                 const formDataKey = formData[key];
-                const fieldValue = await this.getFormFieldValue(formDataKey) as string;
+                const fieldValue = (await this.getFormFieldValue(formDataKey)) as string;
                 if (prop) {
                     if (!newFormData[prop as string]) {
                         newFormData[prop as string] = {};
@@ -240,7 +244,7 @@ export default class FormUtils {
             return Promise.all(allPendingUpdates)
                 .then(() => this.updateNestedFormData(newFormData))
                 .then(() => resolve(newFormData));
-        })
+        });
     }
 
     static async updateNestedFormData(formData: IFormData) {
@@ -252,7 +256,11 @@ export default class FormUtils {
                     if (!formData[props[0]]) {
                         formData[props[0]] = {};
                     }
-                    await this.updateNestedProp(formData[props[0]] as IFormData, props.slice(1), formData[key] as TValue);
+                    await this.updateNestedProp(
+                        formData[props[0]] as IFormData,
+                        props.slice(1),
+                        formData[key] as TValue
+                    );
                     delete formData[key];
                 }
             }
