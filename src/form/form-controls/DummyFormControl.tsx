@@ -17,6 +17,10 @@ class DummyFormControl extends BaseFormControl {
         throw new Error("Method not implemented.");
     }
 
+    inputMask(): JSX.Element {
+        throw new Error("Method not implemented.");
+    }
+
     label(): JSX.Element {
         throw new Error("Method not implemented.");
     }
