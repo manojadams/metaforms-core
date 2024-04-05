@@ -115,6 +115,7 @@ export interface IFormField {
     isDisabled?: boolean;
     isReadonly?: boolean;
     options?: Array<IOption>;
+    file?: File; // for file type
     files?: Array<File>; // for file type
     validation?: IValidation;
 
