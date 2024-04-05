@@ -147,24 +147,28 @@ export default class FormUtils {
         return newFormData;
     }
 
-    static getBase64(file: File) {
+    static getBase64(file?: File) {
         return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.onload = () => resolve(fileReader.result);
-            fileReader.onerror = reject;
+            if (file) {
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(file);
+                fileReader.onload = () => resolve(fileReader.result);
+                fileReader.onerror = reject;
+            } else {
+                resolve(null);
+            }
         });
     }
 
     static async getFormFieldValue(formField: IFormField) {
         switch (formField.displayType) {
             case CONTROLS.FILE:
-                if (formField.files && formField.files.length > 0) {
+                if (formField.file && formField.file instanceof File) {
                     return {
                         name: formField.value,
                         [formField.config?.blob ? "file" : "fileData"]: formField.config?.blob
-                            ? formField.files[0]
-                            : await this.getBase64(formField.files[0])
+                            ? formField.file
+                            : await this.getBase64(formField.file)
                     };
                 }
                 return null;
