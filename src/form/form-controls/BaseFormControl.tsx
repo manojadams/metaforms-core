@@ -168,6 +168,8 @@ export default abstract class BaseFormControl extends React.Component {
                 return this.date();
             case CONTROLS.SELECT:
                 return this.select();
+            case CONTROLS.MULTISELECT:
+                return this.multiselect();
             case CONTROLS.RADIO:
                 return this.radio();
             case CONTROLS.RADIO_BUTTON:

@@ -17,6 +17,7 @@ export const CONTROLS = {
     MODALSEARCH: "modalsearch",
     FILE: "file",
     MULTITEXT: "multitext",
+    MULTISELECT: "multiselect",
     TEXT: "text",
     INPUT_MASK: "input-mask",
     TEXT_FIELD: "text_field",
