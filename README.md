@@ -2,7 +2,7 @@
 A framework for building react form libraries. Create your react form components and use this framework for adding form behavior using JSON-based schema.
 
 ## Change logs
-- [fix #66: file upload control not working for section forms](https://github.com/manojadams/metaforms-core/issues/66)
+- [fix #68: add support for multi-select control](https://github.com/manojadams/metaforms-core/issues/68)
 
 ## Introduction
 This library reads the JSON-based schema and lays out beautiful forms.
