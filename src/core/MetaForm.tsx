@@ -279,23 +279,27 @@ export default class MetaForm implements IMetaForm {
                             section,
                             // eslint-disable-next-line camelcase
                             config?.urlType === URL_TYPE.REMOTE
-                        ).then((response: object) => {
-                            const responseKey = config?.responseKey;
-                            const results = responseKey ? response[responseKey] : response;
-                            let newResults: Array<IOption> = [];
-                            if (Array.isArray(results)) {
-                                const labelKey = config?.labelKey ?? "label";
-                                const valueKey = config?.valueKey ?? "value";
-                                newResults = results.map((r: string) => {
-                                    const label = FormUtils.getDataFromValueKey(r, labelKey);
-                                    const value = FormUtils.getDataFromValueKey(r, valueKey);
-                                    return { label, value, ref: r };
-                                });
-                                resolve(newResults);
-                            } else {
-                                reject(new MetaformError("Response must be an array", response));
-                            }
-                        });
+                        )
+                            .then((response: object) => {
+                                const responseKey = config?.responseKey;
+                                const results = responseKey ? response[responseKey] : response;
+                                let newResults: Array<IOption> = [];
+                                if (Array.isArray(results)) {
+                                    const labelKey = config?.labelKey ?? "label";
+                                    const valueKey = config?.valueKey ?? "value";
+                                    newResults = results.map((r: string) => {
+                                        const label = FormUtils.getDataFromValueKey(r, labelKey);
+                                        const value = FormUtils.getDataFromValueKey(r, valueKey);
+                                        return { label, value, ref: r };
+                                    });
+                                    resolve(newResults);
+                                } else {
+                                    reject(new MetaformError("Response must be an array", response));
+                                }
+                            })
+                            .catch((error) => {
+                                reject(new MetaformError("Server error", error));
+                            });
                         break;
                 }
             }
