@@ -114,7 +114,8 @@ export interface IThemeConfig {
     variant?: string;
     size?: string;
     tabs?: {
-        variant: string;
+        variant?: string;
+        disabled?: Array<number | string>; // to be used to disable tab navigation
     };
     gapX?: number;
     gapY?: number;
