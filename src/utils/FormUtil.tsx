@@ -160,10 +160,33 @@ export default class FormUtils {
         });
     }
 
+    static async getFileValue(name: string, file: File | null, isBlob: boolean) {
+        if (file && file instanceof File) {
+            return {
+                name,
+                [isBlob ? "file" : "fileData"]: isBlob ? file : await this.getBase64(file)
+            };
+        }
+        return null;
+    }
+
     static async getFormFieldValue(formField: IFormField) {
         switch (formField.displayType) {
             case CONTROLS.FILE:
-                if (formField.file && formField.file instanceof File) {
+                if (formField.files) {
+                    const _files = Array.from(formField.files);
+                    let _filesData;
+                    if (!formField.config?.blob) {
+                        _filesData = await Promise.all(_files.map(async _file => await this.getBase64(_file)));
+                    }
+
+                    return {
+                        name: formField.value,
+                        [formField.config?.blob ? "files" : "filesData"]: formField.config?.blob
+                            ? formField.files
+                            : _filesData
+                    };
+                } else if (formField.file && formField.file instanceof File) {
                     return {
                         name: formField.value,
                         [formField.config?.blob ? "file" : "fileData"]: formField.config?.blob
@@ -171,6 +194,7 @@ export default class FormUtils {
                             : await this.getBase64(formField.file)
                     };
                 }
+
                 return null;
             default:
                 return formField.value;
