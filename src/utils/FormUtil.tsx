@@ -177,7 +177,7 @@ export default class FormUtils {
                     const _files = Array.from(formField.files);
                     let _filesData;
                     if (!formField.config?.blob) {
-                        _filesData = await Promise.all(_files.map(async _file => await this.getBase64(_file)));
+                        _filesData = await Promise.all(_files.map(async (_file) => await this.getBase64(_file)));
                     }
 
                     return {
