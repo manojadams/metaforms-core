@@ -16,8 +16,9 @@ import { Container } from "layout-emotions";
 import FormConfig from "./core/FormConfig";
 
 interface IState {
-    validated: boolean;
     error: IError;
+    isLoading: boolean;
+    validated: boolean;
 }
 
 /**
@@ -35,11 +36,14 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
 
     constructor(props: IFormRenderer) {
         super(props);
+
         this.handleCustom = this.handleCustom.bind(this);
         this.handlePrevious = this.handlePrevious.bind(this);
         this.handleNext = this.handleNext.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.validate = this.validate.bind(this);
+        this.setLoading = this.setLoading.bind(this);
+
         this.schema = FormUtils.cleanupSchema(props.schema);
         this.name = props.name ?? DEFAULT;
         this.lastAction = "";
@@ -53,8 +57,9 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
                 this.metaform.setIcons(props.icons);
             }
             this.state = {
+                error: { hasError: false, errorMsg: "" },
+                isLoading: false,
                 validated: false,
-                error: { hasError: false, errorMsg: "" }
             };
             if (props.fns) {
                 this.metaform.setFns(props.fns);
@@ -101,7 +106,8 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             this.metaformUpdater = new MetaFormUpdater(this.name, this.metaform);
             this.state = {
                 error: { hasError: true, errorMsg: e?.message },
-                validated: false
+                isLoading: false,
+                validated: false,
             };
             console.error(e);
         }
@@ -227,19 +233,24 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
         this.lastAction = FORM_ACTION.NEXT;
         if (this.props.onNext) {
             const page = this.metaform.getPage();
+            this.setLoading(true);
             const nextResponseMode = this.props.nextResponseMode || NEXT_RESPONSE_MODE.FORM_DATA;
-            if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
-                const sectionData = this.metaform.getSection(page.pageNumber);
-                return await this.props.onNext(
-                    await FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
-                    page.pageNumber
-                );
-            } else {
-                const formData = this.metaform.form;
-                return await this.props.onNext(
-                    await FormUtils.updateFormData(formData, {}, this.props.formatter || {}),
-                    page.pageNumber
-                );
+            try {
+                if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
+                    const sectionData = this.metaform.getSection(page.pageNumber);
+                    return await this.props.onNext(
+                        await FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
+                        page.pageNumber
+                    );
+                } else {
+                    const formData = this.metaform.form;
+                    return await this.props.onNext(
+                        await FormUtils.updateFormData(formData, {}, this.props.formatter || {}),
+                        page.pageNumber
+                    );
+                }
+            } finally {
+                this.setLoading(false);
             }
         }
         return true;
@@ -248,20 +259,32 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
     async handleSubmit(...params: Array<unknown>) {
         this.lastAction = FORM_ACTION.SUBMIT;
         if (this.props.onSubmit) {
+            this.setLoading(true);
             const nextResponseMode = this.props.nextResponseMode || NEXT_RESPONSE_MODE.FORM_DATA;
-            if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
-                const page = this.metaform.getPage();
-                const sectionData = this.metaform.getSection(page.pageNumber);
-                this.props.onSubmit(
-                    await FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
-                    params
-                );
-            } else {
-                this.props.onSubmit(
-                    await FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter || {}),
-                    params
-                );
+            try {
+                if (nextResponseMode === NEXT_RESPONSE_MODE.PAGE_DATA) {
+                    const page = this.metaform.getPage();
+                    const sectionData = this.metaform.getSection(page.pageNumber);
+                    return await this.props.onSubmit(
+                        await FormUtils.updateSectionFormData(sectionData, {}, this.props.formatter || {}),
+                        params
+                    );
+                } else {
+                    return await this.props.onSubmit(
+                        await FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter || {}),
+                        params
+                    );
+                }
+            } finally {
+                this.setLoading(false);
             }
+        }
+    }
+
+    setLoading(isLoading: boolean) {
+        this.setState({isLoading});
+        if (this.props.setLoading) {
+            this.props.setLoading(isLoading);
         }
     }
 }

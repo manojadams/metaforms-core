@@ -160,16 +160,6 @@ export default class FormUtils {
         });
     }
 
-    static async getFileValue(name: string, file: File | null, isBlob: boolean) {
-        if (file && file instanceof File) {
-            return {
-                name,
-                [isBlob ? "file" : "fileData"]: isBlob ? file : await this.getBase64(file)
-            };
-        }
-        return null;
-    }
-
     static async getFormFieldValue(formField: IFormField) {
         switch (formField.displayType) {
             case CONTROLS.FILE:
