@@ -59,7 +59,7 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             this.state = {
                 error: { hasError: false, errorMsg: "" },
                 isLoading: false,
-                validated: false,
+                validated: false
             };
             if (props.fns) {
                 this.metaform.setFns(props.fns);
@@ -107,7 +107,7 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             this.state = {
                 error: { hasError: true, errorMsg: e?.message },
                 isLoading: false,
-                validated: false,
+                validated: false
             };
             console.error(e);
         }
@@ -282,7 +282,7 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
     }
 
     setLoading(isLoading: boolean) {
-        this.setState({isLoading});
+        this.setState({ isLoading });
         if (this.props.setLoading) {
             this.props.setLoading(isLoading);
         }

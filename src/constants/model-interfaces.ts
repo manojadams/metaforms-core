@@ -122,7 +122,7 @@ export interface IThemeConfig {
     loader?: {
         color?: string;
         enabled?: boolean;
-    }
+    };
 }
 
 export interface IFormConfig {
