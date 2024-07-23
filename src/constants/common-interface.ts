@@ -165,6 +165,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     baseFormGroup?: typeof BaseFormGroup;
     baseFormStepper?: typeof BaseFormStepper;
     baseFormWizard?: typeof BaseFormWizard;
+    loader?: JSX.Element;
 
     /**
      * Basic inputs params
@@ -218,6 +219,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     onNext?: (formData: IFormData, pageNumber: number) => TFormResponse;
     onSubmit: (formData: IFormData, params: unknown) => TFormResponse;
     onSubmitError?: (params: IEventPayload) => void;
+    setLoading?: (isLoading: boolean) => void;
 }
 
 export type TComponent<T> = (props: T) => JSX.Element;

@@ -119,6 +119,10 @@ export interface IThemeConfig {
     };
     gapX?: number;
     gapY?: number;
+    loader?: {
+        color?: string;
+        enabled?: boolean;
+    };
 }
 
 export interface IFormConfig {
