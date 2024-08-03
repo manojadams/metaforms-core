@@ -21,6 +21,8 @@ class InitialData {
                 } else {
                     return this.data[field.prop][field.name];
                 }
+            } else {
+                return this.data[field.name];
             }
         } catch (e) {
             console.error("wrong initial data format", e);
