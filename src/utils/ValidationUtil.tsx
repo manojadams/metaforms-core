@@ -13,6 +13,7 @@ export default class ValidationUtil {
             this.getValidationErrorMsg(meta.validation, "maxDetail");
         switch (meta.displayType) {
             case CONTROLS.TEXT:
+            case CONTROLS.PASSWORD:
             case CONTROLS.TEXT_FIELD:
                 if (value) {
                     const strValue: string = value as string;
@@ -64,6 +65,7 @@ export default class ValidationUtil {
             this.getValidationErrorMsg(meta.validation, "minDetail");
         switch (meta.displayType) {
             case CONTROLS.TEXT:
+            case CONTROLS.PASSWORD:
             case CONTROLS.TEXT_FIELD:
                 if (value) {
                     const strValue: string = value as string;
