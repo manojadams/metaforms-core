@@ -367,7 +367,7 @@ export interface IUISchema {
 }
 
 /**
- * Represents a field error type 
+ * Represents a field error type
  */
 export interface IFieldError {
     field: string;

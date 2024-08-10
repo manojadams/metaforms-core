@@ -285,7 +285,7 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
         return true;
     }
 
-    async handleSubmit(e: React.MouseEvent, formData: IForm) {
+    async handleSubmit() {
         this.lastAction = FORM_ACTION.SUBMIT;
 
         if (this.props.onSubmit) {
