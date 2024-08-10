@@ -2,7 +2,7 @@ import React from "react";
 import FormUtils from "./utils/FormUtil";
 import EventEmitter from "eventemitter3";
 import { IFieldError, ISchema } from "./constants/model-interfaces";
-import { IError, IEventPayload, IFieldChange, IForm, IFormRenderer } from "./constants/common-interface";
+import { IError, IEventPayload, IFieldChange, IFormRenderer } from "./constants/common-interface";
 import { metaAPI } from "./meta-api";
 import { CHANGE_MODE, DEFAULT, EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE } from "./constants/constants";
 import MetaForm from "./core/MetaForm";
@@ -115,7 +115,7 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
     }
 
     componentDidMount() {
-        this.metaform.listener(EVENTS.SUBMIT, async (...params) => {
+        this.metaform.listener(EVENTS.SUBMIT, async () => {
             if (this.props.onSubmit) {
                 this.props.onSubmit(
                     await FormUtils.updateFormData(this.metaform.form, {}, this.props.formatter ?? {}),
