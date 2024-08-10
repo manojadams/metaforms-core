@@ -6,6 +6,7 @@ import {
     IDisplayProps,
     IEvent,
     IField,
+    IFieldError,
     IFormConfig,
     IFormatterType,
     IIconConfig,
@@ -216,8 +217,16 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     onError?: (errorResponse: any) => TFormResponse;
     onPopupClose?: (params: Array<unknown>) => void;
     onPrevious?: (formData: IFormData, pageNumber: number) => TFormResponse;
-    onNext?: (formData: IFormData, pageNumber: number) => TFormResponse;
-    onSubmit: (formData: IFormData, params: unknown) => TFormResponse;
+    onNext?: (
+        formData: IFormData,
+        pageNumber: number,
+        setErrors: (errors: IFieldError | Array<IFieldError>) => void
+    ) => TFormResponse;
+    onSubmit: (
+        formData: IFormData,
+        pageNumber: number,
+        setErrors: (errors: IFieldError | Array<IFieldError>) => void
+    ) => TFormResponse;
     onSubmitError?: (params: IEventPayload) => void;
     setLoading?: (isLoading: boolean) => void;
 }

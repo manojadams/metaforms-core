@@ -319,6 +319,16 @@ export default class MetaForm implements IMetaForm {
         return null;
     }
 
+    getSectionName(pageNumber: number) {
+        if (this.schema.fields) {
+            const hasSections = FormUtils.hasSections(this.schema.fields);
+            if (hasSections && this.schema.fields[pageNumber - 1]) {
+                return this.schema.fields[pageNumber - 1];
+            }
+        }
+        return null;
+    }
+
     setSection(section: string) {
         this.form[section] = {};
     }

@@ -365,3 +365,12 @@ export interface ISchema {
 export interface IUISchema {
     schema: ISchema;
 }
+
+/**
+ * Represents a field error type 
+ */
+export interface IFieldError {
+    field: string;
+    hasError: boolean;
+    errorMsg: string;
+}
