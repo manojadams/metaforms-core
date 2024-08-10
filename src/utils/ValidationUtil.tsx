@@ -1,24 +1,25 @@
 import { IForm, IFormField, TCondition } from "../constants/common-interface";
 import { MSGS } from "../constants/constants";
 import { CONTROLS } from "../constants/controls";
-import { ISetError, TValue } from "../constants/types";
+import { IFieldValidation, IValidation } from "../constants/model-interfaces";
+import { ISetError, IValidationType, TValue } from "../constants/types";
 
 export default class ValidationUtil {
     static updateMaxError(meta: IFormField, value: TValue, setError: ISetError) {
         let hasError = false;
-        if (!meta?.validation?.max) {
-            return hasError;
-        }
+        const maxValue = this.getValidationValue(meta.validation, "max");
+        const maxErrorMsg =
+            this.getValidationErrorMsg(meta.validation, "max") ||
+            this.getValidationErrorMsg(meta.validation, "maxDetail");
         switch (meta.displayType) {
             case CONTROLS.TEXT:
             case CONTROLS.TEXT_FIELD:
                 if (value) {
                     const strValue: string = value as string;
-                    const maxLength: number = parseInt(meta.validation.max as string);
+                    const maxLength: number = parseInt(maxValue as string);
                     if (strValue.length > maxLength) {
                         const errorMsg =
-                            meta.validation?.maxDetail?.errorMsg ||
-                            MSGS.ERROR_MSG.MAX_TEXT.replace("{CHARS}", maxLength.toString());
+                            maxErrorMsg || MSGS.ERROR_MSG.MAX_TEXT.replace("{CHARS}", maxLength.toString());
                         setError(true, errorMsg);
                         hasError = true;
                         return hasError;
@@ -30,8 +31,8 @@ export default class ValidationUtil {
                 if (value) {
                     const strValue = value ? value + "" : "";
                     const val = parseInt(strValue);
-                    if (val > parseInt(meta.validation.max as string)) {
-                        const errorMsg = meta.validation?.maxDetail?.errorMsg || MSGS.ERROR_MSG.MAX;
+                    if (val > parseInt(maxValue as string)) {
+                        const errorMsg = maxErrorMsg || MSGS.ERROR_MSG.MAX;
                         setError(true, errorMsg);
                         hasError = true;
                         return hasError;
@@ -43,9 +44,9 @@ export default class ValidationUtil {
                 if (value) {
                     const strValue = value ? value + "" : "";
                     const valDate = new Date(strValue);
-                    const maxDate = new Date(meta.validation.max);
+                    const maxDate = new Date(maxValue as string);
                     if (valDate.getTime() > maxDate.getTime()) {
-                        const errorMsg = meta.validation?.maxDetail?.errorMsg || MSGS.ERROR_MSG.MAX;
+                        const errorMsg = maxErrorMsg || MSGS.ERROR_MSG.MAX;
                         setError(true, errorMsg);
                         hasError = true;
                         return hasError;
@@ -57,19 +58,19 @@ export default class ValidationUtil {
 
     static updateMinError(meta: IFormField, value: TValue, setError: ISetError) {
         let hasError = false;
-        if (!meta?.validation?.min) {
-            return hasError;
-        }
+        const minValue = this.getValidationValue(meta.validation, "min");
+        const minErrorMsg =
+            this.getValidationErrorMsg(meta.validation, "min") ||
+            this.getValidationErrorMsg(meta.validation, "minDetail");
         switch (meta.displayType) {
             case CONTROLS.TEXT:
             case CONTROLS.TEXT_FIELD:
                 if (value) {
                     const strValue: string = value as string;
-                    const minLength: number = parseInt(meta.validation.min as string);
+                    const minLength: number = parseInt(minValue as string);
                     if (strValue.length < minLength) {
                         const errorMsg =
-                            meta.validation?.minDetail?.errorMsg ||
-                            MSGS.ERROR_MSG.MIN_TEXT.replace("{CHARS}", minLength.toString());
+                            minErrorMsg || MSGS.ERROR_MSG.MIN_TEXT.replace("{CHARS}", minLength.toString());
                         setError(true, errorMsg);
                         hasError = true;
                         return hasError;
@@ -81,8 +82,8 @@ export default class ValidationUtil {
                 if (value) {
                     const strValue = value ? value + "" : "";
                     const val = parseInt(strValue);
-                    if (val < parseInt(meta.validation.min as string)) {
-                        const errorMsg = meta.validation?.minDetail?.errorMsg || MSGS.ERROR_MSG.MIN;
+                    if (val < parseInt(minValue as string)) {
+                        const errorMsg = minErrorMsg || MSGS.ERROR_MSG.MIN;
                         setError(true, errorMsg);
                         hasError = true;
                         return hasError;
@@ -94,9 +95,9 @@ export default class ValidationUtil {
                 if (value) {
                     const strValue = value ? value + "" : "";
                     const valDate = new Date(strValue);
-                    const minDate = new Date(meta.validation?.min);
+                    const minDate = new Date(minValue as string);
                     if (valDate.getTime() < minDate.getTime()) {
-                        const errorMsg = meta.validation?.minDetail?.errorMsg || MSGS.ERROR_MSG.MIN;
+                        const errorMsg = minErrorMsg || MSGS.ERROR_MSG.MIN;
                         setError(true, errorMsg);
                         hasError = true;
                         return hasError;
@@ -111,6 +112,44 @@ export default class ValidationUtil {
             return true;
         }
         return false;
+    }
+
+    static getValidationValue(validation: IValidation | undefined, validationKey: IValidationType) {
+        if (!validation) {
+            return undefined;
+        }
+
+        switch (typeof validation[validationKey]) {
+            case "boolean":
+            case "string":
+            case "number":
+                return validation[validationKey];
+            case "object": {
+                const validationProp = validation[validationKey] as IFieldValidation<boolean | string | number>;
+                return validationProp?.value;
+            }
+        }
+
+        return undefined;
+    }
+
+    static getValidationErrorMsg(validation: IValidation | undefined, validationKey: IValidationType) {
+        if (!validation) {
+            return "";
+        }
+
+        switch (typeof validation[validationKey]) {
+            case "boolean":
+            case "string":
+            case "number":
+                return "";
+            case "object": {
+                const validationProp = validation[validationKey] as IFieldValidation<boolean | string | number>;
+                return validationProp?.errorMsg;
+            }
+        }
+
+        return "";
     }
 
     static validateFormSection(form: IForm, sectionName: string) {
@@ -129,22 +168,30 @@ export default class ValidationUtil {
                         if (formField.value !== false && formField.value !== 0) {
                             // for required field
                             if (formField.validation?.required && !formField.value) {
-                                formField.error.hasError = true;
-                                formField.error.errorMsg =
-                                    formField.validation?.requiredDetail?.errorMsg ?? MSGS.ERROR_MSG.REQUIRED;
-                                hasErrors = true;
+                                const requiredValue = this.getValidationValue(formField.validation, "required");
+                                if (requiredValue) {
+                                    formField.error.hasError = true;
+                                    formField.error.errorMsg =
+                                        this.getValidationErrorMsg(formField.validation, "required") ||
+                                        this.getValidationErrorMsg(formField.validation, "requiredDetail") ||
+                                        MSGS.ERROR_MSG.REQUIRED;
+                                    hasErrors = true;
+                                }
                             }
 
                             // for pattern validation - string only
                             if (formField.value && formField.validation?.pattern) {
-                                const regexp = new RegExp(formField.validation.pattern);
-                                if (!regexp.test(formField.value as string)) {
-                                    formField.error.hasError = true;
-                                    formField.error.errorMsg =
-                                        formField.validation.patternDetail?.errorMsg ??
-                                        formField.validation.patternDetail?.errorMsg ??
-                                        MSGS.ERROR_MSG.PATTERN;
-                                    hasErrors = true;
+                                const patternValue = this.getValidationValue(formField.validation, "pattern");
+                                if (patternValue) {
+                                    const regexp = new RegExp(patternValue as string);
+                                    if (!regexp.test(formField.value as string)) {
+                                        formField.error.hasError = true;
+                                        formField.error.errorMsg =
+                                            this.getValidationErrorMsg(formField.validation, "pattern") ||
+                                            this.getValidationErrorMsg(formField.validation, "patternDetail") ||
+                                            MSGS.ERROR_MSG.PATTERN;
+                                        hasErrors = true;
+                                    }
                                 }
                             }
 

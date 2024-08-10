@@ -1,3 +1,4 @@
+import { IError } from "../constants/common-interface";
 import { SECTION_LAYOUT } from "../constants/constants";
 import { TValue } from "../constants/types";
 import MetaForm from "./MetaForm";
@@ -25,6 +26,19 @@ class MetaFormUpdater {
     }
 
     /**
+     * Sets field error
+     * @param section
+     * @param field
+     * @param error
+     */
+    setFieldError(section: string, field: string, error: IError) {
+        const defaultForm = this.metaformMap.get(SECTION_LAYOUT.DEFAULT);
+        if (defaultForm) {
+            defaultForm.setError(section, field, error);
+        }
+    }
+
+    /**
      * Updates a form field
      * @param formName
      * @param section
@@ -35,6 +49,20 @@ class MetaFormUpdater {
         const defaultForm = this.metaformMap.get(formName);
         if (defaultForm) {
             defaultForm.updateField(section, field, value);
+        }
+    }
+
+    /**
+     * Sets error in a form field
+     * @param formName
+     * @param section
+     * @param field
+     * @param error
+     */
+    setFormFieldError(formName: string, section: string, field: string, error: IError) {
+        const defaultForm = this.metaformMap.get(formName);
+        if (defaultForm) {
+            defaultForm.setError(section, field, error);
         }
     }
 

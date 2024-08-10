@@ -1,6 +1,7 @@
 import { EMAIL_PATTERN, MSGS } from "../constants/constants";
 import { IField, IValidation } from "../constants/model-interfaces";
 import { TValue } from "../constants/types";
+import ValidationUtil from "./ValidationUtil";
 
 class MetaformUtil {
     static getDefaultValidation(displayType: string | undefined, validation: IValidation | undefined) {
@@ -12,11 +13,15 @@ class MetaformUtil {
                         emailValidation = {};
                     }
                     emailValidation.pattern = emailValidation?.pattern ?? EMAIL_PATTERN;
-                    if (!emailValidation.patternDetail) {
-                        emailValidation.patternDetail = {};
-                    }
-                    emailValidation.patternDetail.errorMsg =
-                        emailValidation?.patternDetail?.errorMsg ?? MSGS.ERROR_MSG.EMAIL_INVALID;
+                    emailValidation.pattern = {
+                        value:
+                            (ValidationUtil.getValidationValue(emailValidation, "pattern") as string | undefined) ??
+                            EMAIL_PATTERN,
+                        errorMsg:
+                            ValidationUtil.getValidationErrorMsg(emailValidation, "pattern") ??
+                            MSGS.ERROR_MSG.EMAIL_INVALID
+                    };
+
                     return emailValidation;
                 }
             }

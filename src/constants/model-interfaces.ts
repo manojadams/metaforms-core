@@ -66,27 +66,37 @@ export interface IPatternValidationDetail extends IValidationDetail {
     allowValidOnly?: boolean;
 }
 
+export interface IFieldValidation<T> {
+    value: T;
+    errorMsg: string;
+}
+
+export interface IPatternFieldValidation<T> extends IFieldValidation<T> {
+    allowValidOnly?: boolean;
+}
+
 /**
  * Validation properties for field
  */
 export interface IValidation {
     /** Marks the field as mandatory before form submission */
-    required?: boolean;
-    /** Validation details specific to required property */
+    required?: boolean | IFieldValidation<boolean>;
+    /** @deprecated Validation details specific to required property */
     requiredDetail?: IValidationDetail;
     /** Pattern to be used by the field -- valid for field of type text */
-    pattern?: string;
-    /** Pattern details specific to pattern property */
+    pattern?: string | IPatternFieldValidation<string>;
+    /** @deprecated Pattern details specific to pattern property */
     patternDetail?: IPatternValidationDetail;
     /** Minimum value acceptable by the field */
-    min?: number | string;
-    /** Details related to min. property */
+    min?: number | string | IFieldValidation<number | string>;
+    /** @deprecated Details related to min. property */
     minDetail?: IValidationDetail;
     /** Maximum value acceptable by the field */
-    max?: number | string;
-    /** Details related to max. property */
+    max?: number | string | IFieldValidation<number | string>;
+    /** @deprecated Details related to max. property */
     maxDetail?: IValidationDetail;
-    /** Generic info related to the field */
+    info?: string | IFieldValidation<string>;
+    /** @deprecated Generic info related to the field */
     infoDetail?: IInfoDetail;
 }
 
