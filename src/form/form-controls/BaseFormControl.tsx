@@ -40,10 +40,6 @@ export default abstract class BaseFormControl extends React.Component {
         this.section = props.section;
         this.isFormControl = FormUtils.isFormControl(props.meta);
         this.uuid = FormUtils.getUUID();
-        this.validation = {
-            required: props?.meta?.validation?.required ? true : undefined,
-            pattern: props?.meta?.validation?.pattern ? props?.meta?.validation?.pattern : undefined
-        };
         this.state = {
             error: { hasError: false, errorMsg: "" },
             componentError: { hasError: false, errorMsg: "" },
@@ -306,14 +302,17 @@ export default abstract class BaseFormControl extends React.Component {
         try {
             const value = val !== undefined ? val : (e?.target as HTMLInputElement)?.value;
             // do not allow invalid pattern, if configured
-            if (
-                value &&
-                this.field.meta.validation?.pattern &&
-                this.field.meta.validation?.patternDetail?.allowValidOnly
-            ) {
-                const regexp = new RegExp(this.field.meta.validation?.pattern);
-                if (!regexp.test(value.toString())) {
-                    return;
+            if (value && typeof this.field.meta.validation?.pattern !== "undefined") {
+                if (
+                    typeof this.field.meta.validation?.pattern === "object" &&
+                    this.field.meta.validation?.pattern?.allowValidOnly
+                ) {
+                    const regexp = new RegExp(
+                        ValidationUtil.getValidationValue(this.field.meta.validation, "pattern") as string
+                    );
+                    if (!regexp.test(value.toString())) {
+                        return;
+                    }
                 }
             }
             this.context.setField(this.section, this.field.name, value);
@@ -384,25 +383,27 @@ export default abstract class BaseFormControl extends React.Component {
         if (meta.validation?.required) {
             const isEmpty = ValidationUtil.isEmptyField(value);
             if (isEmpty) {
-                const errorMsg = meta.validation?.requiredDetail?.errorMsg ?? MSGS.ERROR_MSG.REQUIRED;
+                const errorMsg =
+                    ValidationUtil.getValidationErrorMsg(meta.validation, "required") ?? MSGS.ERROR_MSG.REQUIRED;
                 this.setError(true, errorMsg);
                 return;
             }
         }
-        if (meta.validation?.pattern) {
-            const regx = new RegExp(meta.validation?.pattern);
+        if (typeof meta.validation?.pattern !== "undefined") {
+            const regx = new RegExp(ValidationUtil.getValidationValue(meta.validation, "pattern") as string);
             const strValue = value ? value + "" : "";
             if (value && !regx.test(strValue)) {
-                const errorMsg = meta.validation.patternDetail?.errorMsg ?? MSGS.ERROR_MSG.PATTERN;
+                const errorMsg =
+                    ValidationUtil.getValidationErrorMsg(meta.validation, "pattern") ?? MSGS.ERROR_MSG.PATTERN;
                 this.setError(true, errorMsg);
                 return;
             }
         }
-        if (meta.validation?.min) {
+        if (typeof meta.validation?.min !== "undefined") {
             const hasError = ValidationUtil.updateMinError(meta, value, this.setError.bind(this));
             if (hasError) return;
         }
-        if (meta.validation?.max) {
+        if (typeof meta.validation?.max !== "undefined") {
             const hasError = ValidationUtil.updateMaxError(meta, value, this.setError.bind(this));
             if (hasError) return;
         }

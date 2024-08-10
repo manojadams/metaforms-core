@@ -19,3 +19,14 @@ export type TChangeMode = "form-data" | "section-data" | "default";
 export type TSectionLayout = "default" | "tabs" | "wizard" | "stepper";
 
 export type TFormType = "default" | "simple" | "grouped";
+
+export type IValidationType =
+    | "required"
+    | "pattern"
+    | "min"
+    | "max"
+    | "info"
+    | "requiredDetail"
+    | "patternDetail"
+    | "minDetail"
+    | "maxDetail";
