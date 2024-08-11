@@ -182,7 +182,6 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
                                 formValidated={(validated) => {
                                     this.setState({ validated });
                                 }}
-                                useNextResponse={this.props.useNextResponse}
                             />
                         </Container>
                     </FormImplsContext.Provider>

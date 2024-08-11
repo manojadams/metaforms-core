@@ -202,7 +202,6 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     /** */
     changeResponseMode?: TChangeMode;
     pageNumber?: number;
-    useNextResponse?: boolean;
 
     /**
      * REST API configruation params in the form

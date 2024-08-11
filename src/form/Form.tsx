@@ -24,7 +24,6 @@ interface IProps {
         }
     ) => void;
     buttons?: IElementTypes;
-    useNextResponse?: boolean;
     validate: (e: SyntheticEvent, type: string) => boolean;
     formValidated: (validated: boolean) => void;
 }
@@ -58,9 +57,14 @@ function Form(props: IProps) {
     };
 
     const handleNext = async (e: React.MouseEvent, section: IField, callback: TCallback) => {
+        if (!props.onNext) {
+            return;
+        }
+        
         if (props.validate(e, FORM_ACTION.NEXT)) {
-            if (props.useNextResponse === true) {
-                const result = await props.onNext();
+            const onNextResponse = props.onNext();
+            if (onNextResponse instanceof Promise) {
+                const result = await onNextResponse;
                 if (result) {
                     props.emit(EVENTS.SWITCH, {
                         payload: FORM_ACTION.NEXT,
@@ -68,7 +72,6 @@ function Form(props: IProps) {
                     });
                 }
             } else {
-                props.onNext();
                 props.emit(EVENTS.SWITCH, { payload: FORM_ACTION.NEXT, callback });
             }
         } else {
