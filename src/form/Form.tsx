@@ -60,7 +60,7 @@ function Form(props: IProps) {
         if (!props.onNext) {
             return;
         }
-        
+
         if (props.validate(e, FORM_ACTION.NEXT)) {
             const onNextResponse = props.onNext();
             if (onNextResponse instanceof Promise) {
