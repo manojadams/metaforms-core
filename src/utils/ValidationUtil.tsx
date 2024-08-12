@@ -178,7 +178,11 @@ export default class ValidationUtil {
                                         this.getValidationErrorMsg(formField.validation, "requiredDetail") ||
                                         MSGS.ERROR_MSG.REQUIRED;
                                     hasErrors = true;
+                                    return;
                                 }
+                            } else {
+                                formField.error.hasError = false;
+                                formField.error.errorMsg = "";
                             }
 
                             // for pattern validation - string only
@@ -193,6 +197,10 @@ export default class ValidationUtil {
                                             this.getValidationErrorMsg(formField.validation, "patternDetail") ||
                                             MSGS.ERROR_MSG.PATTERN;
                                         hasErrors = true;
+                                        return;
+                                    } else {
+                                        formField.error.hasError = false;
+                                        formField.error.errorMsg = "";
                                     }
                                 }
                             }
