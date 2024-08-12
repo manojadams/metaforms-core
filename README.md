@@ -2,7 +2,7 @@
 A framework for building react form libraries. Create your react form components and use this framework for adding form behavior using JSON-based schema.
 
 ## Change logs
-- [fix #86: remove property useNextResponse](https://github.com/manojadams/metaforms-core/issues/86)
+- [fix #88: fix validation errors with autofill](https://github.com/manojadams/metaforms-core/issues/88)
 
 ## Introduction
 This library reads the JSON-based schema and lays out beautiful forms.
