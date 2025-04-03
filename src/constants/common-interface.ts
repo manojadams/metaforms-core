@@ -12,7 +12,7 @@ import {
     IIconConfig,
     IOption,
     IRest,
-    IThemeConfig,
+    IFormConfigExtended,
     IUISchema,
     IValidation,
     IconConfig,
@@ -185,7 +185,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     spacing?: string;
 
     /** theme configuration input params */
-    themeConfig?: IThemeConfig;
+    themeConfig?: IFormConfigExtended;
 
     /**
      * Customization params
