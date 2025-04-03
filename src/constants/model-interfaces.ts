@@ -120,7 +120,7 @@ export interface IRest {
     config: IConfig;
 }
 
-export interface IThemeConfig {
+export interface IFormConfigExtended {
     variant?: string;
     size?: string;
     tabs?: {
@@ -133,13 +133,14 @@ export interface IThemeConfig {
         color?: string;
         enabled?: boolean;
     };
+    headers?: Record<string, string>;
 }
 
 export interface IFormConfig {
     type?: TFormType;
     sectionLayout?: TSectionLayout;
     fieldLayout?: string;
-    config?: IThemeConfig;
+    config?: IFormConfigExtended;
 }
 
 export interface ITemplateConfig {
