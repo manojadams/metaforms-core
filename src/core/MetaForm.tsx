@@ -20,7 +20,8 @@ import {
     IEventPayload,
     IControlProps,
     IRequestBody,
-    IFormData
+    IFormData,
+    IFooterProps
 } from "../constants/common-interface";
 import MetaformError from "./MetaformError";
 import {
@@ -57,6 +58,7 @@ export default class MetaForm implements IMetaForm {
     form: IForm;
     rest: Rest;
     page: Page;
+    footer: React.FunctionComponent<IFooterProps>;
     initialData?: InitialData;
     icons?: IElementTypes;
     fns?: IFnTypes;
@@ -709,5 +711,17 @@ export default class MetaForm implements IMetaForm {
 
     setControlElements(controlElements: Record<string, React.FunctionComponent>) {
         this.controlElements = controlElements;
+    }
+
+    hasFooter() {
+        return Boolean(this.footer);
+    }
+
+    getFooter() {
+        return this.footer;
+    }
+
+    setFooter(footer: React.FunctionComponent<IFooterProps>) {
+        this.footer = footer;
     }
 }

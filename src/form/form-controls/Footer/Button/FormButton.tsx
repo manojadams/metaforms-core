@@ -7,7 +7,7 @@ function FormButton({
     handleClick
 }: {
     button: IField;
-    className: string;
+    className?: string;
     handleClick: (e: React.MouseEvent, button: IField) => void;
 }) {
     const btnClassName = button?.meta?.className;
