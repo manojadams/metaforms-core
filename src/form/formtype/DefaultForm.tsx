@@ -7,6 +7,7 @@ import { Row } from "layout-emotions";
 import FormFieldRenderer from "../FormFieldRenderer";
 import Footer from "../form-controls/Footer";
 import FormContext from "../form-context";
+import CustomFooter from "../form-controls/Footer/CustomFooter";
 
 interface IProps {
     schema: ISchema;
@@ -26,6 +27,8 @@ interface IProps {
 const DefaultForm = (props: IProps) => {
     const [fields, setFields] = useState(props.schema.fields);
     const formContext = useContext(FormContext);
+
+    const hasCustomFooter = formContext.hasFooter();
 
     const sync = () => {
         setFields([...fields]);
@@ -59,17 +62,31 @@ const DefaultForm = (props: IProps) => {
                     }
                 })}
             </Row>
-            <Footer
-                form={props.form}
-                buttons={props.buttons}
-                formButtons={props.formButtons}
-                useDefaultButtons={props.useDefaultButtons}
-                onCustom={props.handleCustom}
-                onSubmit={props.handleSubmit}
-                onReset={props.handleReset}
-                onNext={props.handleNext}
-                onPrevious={props.handlePrevious}
-            />
+            {
+                hasCustomFooter ? (
+                    <CustomFooter
+                        buttons={props.buttons}
+                        formButtons={props.formButtons}
+                        onCustom={props.handleCustom}
+                        onSubmit={props.handleSubmit}
+                        onReset={props.handleReset}
+                        onNext={props.handleNext}
+                        onPrevious={props.handlePrevious}
+                    />
+                ) : (
+                    <Footer
+                        form={props.form}
+                        buttons={props.buttons}
+                        formButtons={props.formButtons}
+                        useDefaultButtons={props.useDefaultButtons}
+                        onCustom={props.handleCustom}
+                        onSubmit={props.handleSubmit}
+                        onReset={props.handleReset}
+                        onNext={props.handleNext}
+                        onPrevious={props.handlePrevious}
+                    />
+                )
+            }
         </form>
     );
 };
