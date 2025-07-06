@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { Fragment, useContext, useEffect, useMemo, useState } from "react";
 import FormContext from "../../form-context";
 import { IField } from "../../../constants/model-interfaces";
 import { BUTTON_TYPE, EVENTS, FORM_ACTION } from "../../../constants/constants";
@@ -22,10 +22,10 @@ const CustomFooter = (props: IProps) => {
 
     const buttons = useMemo(() => {
         return {
-            previous: props.formButtons.find(btn => btn.meta.type == BUTTON_TYPE.PREVIOUS),
-            next: props.formButtons.find(btn => btn.meta.type == BUTTON_TYPE.NEXT),
-            submit: props.formButtons.find(btn => btn.meta.type == BUTTON_TYPE.SUBMIT),
-        }
+            previous: props.formButtons.find((btn) => btn.meta.type === BUTTON_TYPE.PREVIOUS),
+            next: props.formButtons.find((btn) => btn.meta.type === BUTTON_TYPE.NEXT),
+            submit: props.formButtons.find((btn) => btn.meta.type === BUTTON_TYPE.SUBMIT)
+        };
     }, [props.formButtons]);
 
     const [showPage, setShowPage] = useState({
@@ -67,38 +67,42 @@ const CustomFooter = (props: IProps) => {
         }
     };
 
-    const nextBtn = showPage.next &&  buttons.next ? (
-        <FooterButton
-            key={buttons.next.name}
-            button={buttons.next}
-            className="next-btn"
-            handleClick={handleClick}
-        >
-            {props?.buttons?.next ?? <Fragment />}
-        </FooterButton>
-    ) : <Fragment />;
+    const nextBtn =
+        showPage.next && buttons.next ? (
+            <FooterButton key={buttons.next.name} button={buttons.next} className="next-btn" handleClick={handleClick}>
+                {props?.buttons?.next ?? <Fragment />}
+            </FooterButton>
+        ) : (
+            <Fragment />
+        );
 
-    const previousBtn = showPage.previous &&  buttons.previous ? (
-        <FooterButton
-            key={buttons.previous.name}
-            button={buttons.previous}
-            className="previous-btn"
-            handleClick={handleClick}
-        >
-            {props?.buttons?.previous ?? <Fragment />}
-        </FooterButton>
-    ) : <Fragment />;
+    const previousBtn =
+        showPage.previous && buttons.previous ? (
+            <FooterButton
+                key={buttons.previous.name}
+                button={buttons.previous}
+                className="previous-btn"
+                handleClick={handleClick}
+            >
+                {props?.buttons?.previous ?? <Fragment />}
+            </FooterButton>
+        ) : (
+            <Fragment />
+        );
 
-    const submitBtn = showPage.submit &&  buttons.submit ? (
-        <FooterButton
-            key={buttons.submit?.name}
-            button={buttons.submit}
-            className="submit-btn"
-            handleClick={handleClick}
-        >
-            {props?.buttons?.submit ?? <Fragment />}
-        </FooterButton>
-    ) : <Fragment />;
+    const submitBtn =
+        showPage.submit && buttons.submit ? (
+            <FooterButton
+                key={buttons.submit?.name}
+                button={buttons.submit}
+                className="submit-btn"
+                handleClick={handleClick}
+            >
+                {props?.buttons?.submit ?? <Fragment />}
+            </FooterButton>
+        ) : (
+            <Fragment />
+        );
 
     useEffect(() => {
         context.listener(EVENTS.PAGE_CHANGE, () => {
@@ -117,7 +121,7 @@ const CustomFooter = (props: IProps) => {
         <FooterComponent
             page={page.pageNumber}
             isGrouped={page.isGrouped}
-            nextBtn={nextBtn} 
+            nextBtn={nextBtn}
             previousBtn={previousBtn}
             submitBtn={submitBtn}
         />

@@ -55,31 +55,29 @@ const SectionForm = (props: IProps) => {
             noValidate
         >
             <SectionLayout fields={props.schema.fields} form={props.form} />
-            {
-                hasCustomFooter ? (
-                    <CustomFooter
-                        buttons={props.buttons}
-                        formButtons={props.formButtons}
-                        onCustom={props.handleCustom}
-                        onSubmit={props.handleSubmit}
-                        onReset={props.handleReset}
-                        onNext={props.handleNext}
-                        onPrevious={props.handlePrevious}
-                    />
-                ) : (
-                    <Footer
-                        form={props.form}
-                        buttons={props.buttons}
-                        formButtons={props.formButtons}
-                        useDefaultButtons={props.useDefaultButtons}
-                        onCustom={props.handleCustom}
-                        onSubmit={props.handleSubmit}
-                        onReset={props.handleReset}
-                        onNext={props.handleNext}
-                        onPrevious={props.handlePrevious}
-                    />
-                )
-            }
+            {hasCustomFooter ? (
+                <CustomFooter
+                    buttons={props.buttons}
+                    formButtons={props.formButtons}
+                    onCustom={props.handleCustom}
+                    onSubmit={props.handleSubmit}
+                    onReset={props.handleReset}
+                    onNext={props.handleNext}
+                    onPrevious={props.handlePrevious}
+                />
+            ) : (
+                <Footer
+                    form={props.form}
+                    buttons={props.buttons}
+                    formButtons={props.formButtons}
+                    useDefaultButtons={props.useDefaultButtons}
+                    onCustom={props.handleCustom}
+                    onSubmit={props.handleSubmit}
+                    onReset={props.handleReset}
+                    onNext={props.handleNext}
+                    onPrevious={props.handlePrevious}
+                />
+            )}
         </form>
     );
 };

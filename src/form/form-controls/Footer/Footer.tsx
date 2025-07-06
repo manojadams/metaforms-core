@@ -91,7 +91,7 @@ function Footer(props: IProps) {
                             <FooterButton
                                 key={button.name + idx}
                                 button={button}
-                                className={"next-btn"}
+                                className="next-btn"
                                 handleClick={handleClick}
                             >
                                 {props?.buttons?.next ?? <Fragment />}
@@ -104,7 +104,7 @@ function Footer(props: IProps) {
                             <FooterButton
                                 key={button.name + idx}
                                 button={button}
-                                className={"previous-btn"}
+                                className="previous-btn"
                                 handleClick={handleClick}
                             >
                                 {props?.buttons?.previous ?? <Fragment />}
@@ -117,7 +117,7 @@ function Footer(props: IProps) {
                             <FooterButton
                                 key={button.name + idx}
                                 button={button}
-                                className={"submit-btn"}
+                                className="submit-btn"
                                 handleClick={handleClick}
                             >
                                 {props?.buttons?.submit ?? <Fragment />}
