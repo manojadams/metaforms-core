@@ -161,6 +161,14 @@ export interface IEventPayload {
     payload: string | number | IFieldChange;
 }
 
+export interface IFooterProps {
+    page: number;
+    isGrouped: boolean;
+    previousBtn: JSX.Element;
+    nextBtn: JSX.Element;
+    submitBtn: JSX.Element;
+}
+
 export interface IFormRenderer extends IUISchema, IFormConfig {
     baseFormControl?: typeof BaseFormControl;
     baseFormGroup?: typeof BaseFormGroup;
@@ -194,6 +202,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     controls?: IElementTypes;
     components?: Record<string, React.FunctionComponent<IControlProps>>;
     fns?: IFnTypes;
+    footer?: React.FunctionComponent<IFooterProps>;
     formatter?: IFormatterType;
     icons?: IElementTypes;
     lastPageNumber?: number;

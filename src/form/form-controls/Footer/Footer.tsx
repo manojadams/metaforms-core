@@ -25,11 +25,13 @@ interface IProps {
 function Footer(props: IProps) {
     const context = useContext(FormContext);
     const page = context.getPage();
+
     const [showPage, setShowPage] = useState({
         submit: page.showSave(),
         previous: page.showPrev(),
         next: page.showNext()
     });
+
     useEffect(() => {
         context.listener(EVENTS.PAGE_CHANGE, () => {
             setShowPage({
@@ -78,9 +80,7 @@ function Footer(props: IProps) {
     return (
         <FooterStyled className="footer" data-pagenumber={page.pageNumber} useDefault={props.useDefaultButtons}>
             {props.formButtons.map((button: IField, idx: number) => {
-                const className = FormUtils.getCssClassName(button.meta?.displayProps);
                 const subprops = {
-                    className,
                     button,
                     form: props.form,
                     handleClick
@@ -91,7 +91,7 @@ function Footer(props: IProps) {
                             <FooterButton
                                 key={button.name + idx}
                                 button={button}
-                                className={className}
+                                className="next-btn"
                                 handleClick={handleClick}
                             >
                                 {props?.buttons?.next ?? <Fragment />}
@@ -104,7 +104,7 @@ function Footer(props: IProps) {
                             <FooterButton
                                 key={button.name + idx}
                                 button={button}
-                                className={className}
+                                className="previous-btn"
                                 handleClick={handleClick}
                             >
                                 {props?.buttons?.previous ?? <Fragment />}
@@ -117,7 +117,7 @@ function Footer(props: IProps) {
                             <FooterButton
                                 key={button.name + idx}
                                 button={button}
-                                className={className}
+                                className="submit-btn"
                                 handleClick={handleClick}
                             >
                                 {props?.buttons?.submit ?? <Fragment />}
@@ -134,7 +134,7 @@ function Footer(props: IProps) {
                             if (isButtonResolved) {
                                 return props.buttons && props.buttons[button.name] ? (
                                     <ExtButton
-                                        className={button.meta.className ?? "mcol mcol-md-4"}
+                                        className={button.meta.className ?? "mcol mcol-md-4 submit-btn"}
                                         key={button.name + idx}
                                         type={button.meta.type}
                                         onClick={(e) => handleClick(e, button)}
