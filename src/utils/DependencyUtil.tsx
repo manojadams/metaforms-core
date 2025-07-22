@@ -288,7 +288,10 @@ class DependencyUtil {
                                             requestType: dep.requestType ?? API_METHOD.GET,
                                             requestBody: dep.requestBody,
                                             requestBodyParams: dep.requestBodyParams,
-                                            queryParams: dep.queryParams
+                                            queryParams: dep.queryParams,
+                                            labelKey: dep.labelKey,
+                                            valueKey: dep.valueKey,
+                                            responseKey: dep.responseKey,
                                         },
                                         value,
                                         section
