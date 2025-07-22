@@ -284,6 +284,7 @@ class DependencyUtil {
                                 metaform
                                     .getData(
                                         {
+                                            url: dep.url,
                                             requestType: dep.requestType ?? API_METHOD.GET,
                                             requestBody: dep.requestBody,
                                             requestBodyParams: dep.requestBodyParams,
