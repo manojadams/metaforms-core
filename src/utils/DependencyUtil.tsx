@@ -281,6 +281,7 @@ class DependencyUtil {
                                 const field = dep.field;
                                 // reset options
                                 metaform.setFieldOptions(dep.section, field, []);
+                                metaform.setField(dep.section, field, "");
                                 metaform
                                     .getData(
                                         {
