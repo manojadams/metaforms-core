@@ -53,6 +53,7 @@ export const DEP_TYPE = {
     EQUALS: "equals",
     LOAD: "load",
     LOAD_OPTIONS: "loadOptions",
+    OPTIONS: "options",
     CHANGE: "change",
     VALIDATION: "validation",
     PROP_UPDATE: "propUpdate",

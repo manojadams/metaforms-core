@@ -71,12 +71,14 @@ class DependencyUtil {
                 };
             // eslint-disable-next-line no-fallthrough
             case DEP_TYPE.LOAD:
+            case DEP_TYPE.OPTIONS:
                 {
-                    const url = dependency.url;
-                    const labelKey = dependency?.labelKey;
-                    const valueKey = dependency?.valueKey;
-                    const responseKey = dependency.responseKey;
-                    const queryParams = dependency.queryParams;
+                    const config = form[formSection][field].config;
+                    const url = dependency.url || config?.url;
+                    const labelKey = dependency?.labelKey || config?.labelKey;
+                    const valueKey = dependency?.valueKey || config?.valueKey;
+                    const responseKey = dependency.responseKey || config?.responseKey;
+                    const queryParams = dependency.queryParams || config?.queryParams;
                     const pathParams = dependency.pathParams;
                     form[formSection][ref][D_KEY].push({
                         section,
@@ -274,17 +276,23 @@ class DependencyUtil {
                             }
                             break;
                         case DEP_TYPE.LOAD:
+                        case DEP_TYPE.OPTIONS:
                             if (value && dep.url) {
                                 const field = dep.field;
                                 // reset options
                                 metaform.setFieldOptions(dep.section, field, []);
+                                metaform.setField(dep.section, field, "");
                                 metaform
                                     .getData(
                                         {
+                                            url: dep.url,
                                             requestType: dep.requestType ?? API_METHOD.GET,
                                             requestBody: dep.requestBody,
                                             requestBodyParams: dep.requestBodyParams,
-                                            queryParams: dep.queryParams
+                                            queryParams: dep.queryParams,
+                                            labelKey: dep.labelKey,
+                                            valueKey: dep.valueKey,
+                                            responseKey: dep.responseKey
                                         },
                                         value,
                                         section
@@ -292,6 +300,17 @@ class DependencyUtil {
                                     .then((results: IOption[]) => {
                                         metaform.setFieldOptions(dep.section, field, results);
                                         resolved.next();
+                                    })
+                                    .then(() => {
+                                        // cascade
+                                        const subfield = metaform.getField(dep.section, field);
+                                        this.handleDependencies(
+                                            metaform,
+                                            dep.section,
+                                            field,
+                                            subfield.value,
+                                            false
+                                        ).then(() => resolved.next());
                                     })
                                     .catch(() => {
                                         resolved.next();
