@@ -301,6 +301,13 @@ class DependencyUtil {
                                         metaform.setFieldOptions(dep.section, field, results);
                                         resolved.next();
                                     })
+                                    .then(() => {
+                                        // cascade
+                                        const subfield = metaform.getField(dep.section, field);
+                                        this.handleDependencies(metaform, dep.section, field, subfield.value, false).then(
+                                            () => resolved.next()
+                                        );
+                                    })
                                     .catch(() => {
                                         resolved.next();
                                     });
