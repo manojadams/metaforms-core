@@ -292,7 +292,7 @@ class DependencyUtil {
                                             queryParams: dep.queryParams,
                                             labelKey: dep.labelKey,
                                             valueKey: dep.valueKey,
-                                            responseKey: dep.responseKey,
+                                            responseKey: dep.responseKey
                                         },
                                         value,
                                         section
@@ -304,9 +304,13 @@ class DependencyUtil {
                                     .then(() => {
                                         // cascade
                                         const subfield = metaform.getField(dep.section, field);
-                                        this.handleDependencies(metaform, dep.section, field, subfield.value, false).then(
-                                            () => resolved.next()
-                                        );
+                                        this.handleDependencies(
+                                            metaform,
+                                            dep.section,
+                                            field,
+                                            subfield.value,
+                                            false
+                                        ).then(() => resolved.next());
                                     })
                                     .catch(() => {
                                         resolved.next();
