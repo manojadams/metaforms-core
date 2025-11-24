@@ -3,10 +3,11 @@ A framework for building react form libraries. Create your react form components
 
 ## Change logs
 
-### 4.2.0-beta.141
+### 4.2.0
 - [feature: Dynamic Dependent Select Fields](https://github.com/manojadams/mui-forms/issues/115)
+- [fix 118: fix for conditions not working for string values](https://github.com/manojadams/mui-forms/issues/118)
 
-### 4.1.0
+### Previous version
 - [fix #90: fix validation errors with autofill](https://github.com/manojadams/metaforms-core/issues/90)
 
 ## Introduction

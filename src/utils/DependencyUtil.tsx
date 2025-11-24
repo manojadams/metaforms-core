@@ -3,6 +3,7 @@ import {
     IFieldConfig,
     IForm,
     IValueMapRef,
+    TCondition,
     TVALUE_MAP_TYPE_REF
 } from "../constants/common-interface";
 import {
@@ -36,6 +37,20 @@ class DependencyUtil {
         return form[section][field]["dependencies"];
     }
 
+    static getConditionalDependencies(conditions: TCondition[]) {
+        const conditionRefs: Array<string> = [];
+        conditions.forEach((condition) => {
+            const [leftOperand, _, rightOperand] = condition;
+            if (leftOperand.ref) {
+                conditionRefs.push(leftOperand.ref);
+            }
+            if (typeof rightOperand === "object" && rightOperand !== null && "ref" in rightOperand) {
+                conditionRefs.push(rightOperand.ref);
+            }
+        });
+        return conditionRefs;
+    }
+
     static setDependencies(form: IForm, section: string, field: string, dependencies: IDependency) {
         if (!dependencies) return;
         Object.keys(dependencies).forEach((type) => {
@@ -47,6 +62,13 @@ class DependencyUtil {
                 this.setDependency(form, dependencies[type], section, type, field);
             }
         });
+    }
+
+    static assignDependency(form: IForm, formSection: string, ref: string, properties: Record<string, any>) {
+        if (!form[formSection][ref][FORM_CONSTANTS.DEPENDENCY_KEY]) {
+            form[formSection][ref][FORM_CONSTANTS.DEPENDENCY_KEY] = [];
+        }
+        form[formSection][ref][FORM_CONSTANTS.DEPENDENCY_KEY].push(properties);
     }
 
     static setDependency(form: IForm, dependency: IDepdendencyItem, section: string, type: string, field: string) {
@@ -152,17 +174,35 @@ class DependencyUtil {
                 }
                 break;
             case DEP_TYPE.EXISTS:
-                extraParams = {
-                    condition: dependency.condition
-                };
-                form[formSection][ref][D_KEY].push({
-                    section,
-                    type,
-                    field,
-                    value,
-                    valueFn,
-                    ...extraParams
-                });
+                {
+                    const params = {
+                        section,
+                        type,
+                        field,
+                        value,
+                        valueFn
+                    };
+                    extraParams = {
+                        condition: dependency.condition
+                    };
+                    if (dependency.condition) {
+                        const conditionalRefs = this.getConditionalDependencies(dependency.condition);
+                        if (conditionalRefs && conditionalRefs.length > 0) {
+                            conditionalRefs.forEach((conditionalRef) => {
+                                this.assignDependency(form, formSection, conditionalRef, {
+                                    ...params,
+                                    ...extraParams
+                                });
+                            });
+                            // if refs from condition are determined, then ignore main ref
+                            break;
+                        }
+                    }
+                    form[formSection][ref][D_KEY].push({
+                        ...params,
+                        ...extraParams
+                    });
+                }
                 break;
             default:
                 form[formSection][ref][D_KEY].push({

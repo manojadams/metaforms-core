@@ -240,6 +240,22 @@ export default class ValidationUtil {
         return hasErrors;
     }
 
+    static getOperandValue(operand: string | number | boolean | Date | null | undefined) {
+        if (!operand) {
+            return;
+        }
+
+        const operandType = typeof operand;
+
+        switch (operandType) {
+            case "string":
+                return `'${operand}'`;
+            default:
+                // boolean, number etc.
+                return operand;
+        }
+    }
+
     /**
      * Condition parser
      */
@@ -249,7 +265,7 @@ export default class ValidationUtil {
             const [leftOperand, operator, rightOperand, nextCondition] = c;
             const lSection = leftOperand?.section ?? section;
             const lField = this.getField(form, lSection, leftOperand.ref);
-            const lValue = lField.value === "" ? '""' : lField.value;
+            const lValue = lField.value === "" ? '""' : this.getOperandValue(lField.value);
             let rValue;
             if (rightOperand && typeof rightOperand === "object" && "ref" in rightOperand) {
                 // means its an operand
@@ -259,7 +275,7 @@ export default class ValidationUtil {
             } else {
                 rValue = rightOperand;
             }
-            rValue = rValue === "" ? '""' : rValue;
+            rValue = rValue === "" ? '""' : this.getOperandValue(rValue);
             parsedCondition += "(" + lValue + operator + rValue + ")" + (nextCondition ?? "");
         });
         // eslint-disable-next-line no-new-func
