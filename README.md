@@ -2,6 +2,7 @@
 A framework for building react form libraries. Create your react form components and use this framework for adding form behavior using JSON-based schema.
 
 ## Change logs
+- 4.2.0 [fix 118: fix for conditions not working for string values](https://github.com/manojadams/mui-forms/issues/118)
 - [fix #90: fix validation errors with autofill](https://github.com/manojadams/metaforms-core/issues/90)
 
 ## Introduction
