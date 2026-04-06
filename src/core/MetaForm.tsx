@@ -21,7 +21,8 @@ import {
     IControlProps,
     IRequestBody,
     IFormData,
-    IFooterProps
+    IFooterProps,
+    IFormErrorDetails
 } from "../constants/common-interface";
 import MetaformError from "./MetaformError";
 import {
@@ -648,16 +649,17 @@ export default class MetaForm implements IMetaForm {
 
     validate() {
         let hasErrors = false;
+        const errors: Array<IFormErrorDetails> = [];
         if (this.page.isGrouped) {
             // validate page
             const section = this.schema.fields.find((section, index) => index + 1 === this.page.pageNumber);
             if (section) {
-                hasErrors = ValidationUtil.validateFormSection(this.form, section.name);
+                hasErrors = ValidationUtil.validateFormSection(this.form, section.name, errors);
             }
         } else {
-            hasErrors = ValidationUtil.validateFormSection(this.form, SECTION_LAYOUT.DEFAULT);
+            hasErrors = ValidationUtil.validateFormSection(this.form, SECTION_LAYOUT.DEFAULT, errors);
         }
-        return !hasErrors;
+        return { hasErrors, errors };
     }
 
     parseCondition(condition: Array<TCondition>, section: string) {
