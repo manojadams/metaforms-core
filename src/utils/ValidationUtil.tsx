@@ -1,4 +1,4 @@
-import { IForm, IFormField, TCondition } from "../constants/common-interface";
+import { IForm, IFormErrorDetails, IFormField, TCondition } from "../constants/common-interface";
 import { MSGS } from "../constants/constants";
 import { CONTROLS } from "../constants/controls";
 import { IFieldValidation, IValidation } from "../constants/model-interfaces";
@@ -154,7 +154,7 @@ export default class ValidationUtil {
         return "";
     }
 
-    static validateFormSection(form: IForm, sectionName: string) {
+    static validateFormSection(form: IForm, sectionName: string, errors: Array<IFormErrorDetails>) {
         let hasErrors = false;
         if (form && form[sectionName]) {
             Object.keys(form[sectionName]).forEach((field) => {
@@ -177,6 +177,7 @@ export default class ValidationUtil {
                                         this.getValidationErrorMsg(formField.validation, "required") ||
                                         this.getValidationErrorMsg(formField.validation, "requiredDetail") ||
                                         MSGS.ERROR_MSG.REQUIRED;
+                                    errors.push({ id: `${sectionName}.${field}`, errorMsg: formField.error.errorMsg });
                                     hasErrors = true;
                                     return;
                                 }
@@ -196,6 +197,10 @@ export default class ValidationUtil {
                                             this.getValidationErrorMsg(formField.validation, "pattern") ||
                                             this.getValidationErrorMsg(formField.validation, "patternDetail") ||
                                             MSGS.ERROR_MSG.PATTERN;
+                                        errors.push({
+                                            id: `${sectionName}.${field}`,
+                                            errorMsg: formField.error.errorMsg
+                                        });
                                         hasErrors = true;
                                         return;
                                     } else {
@@ -215,6 +220,9 @@ export default class ValidationUtil {
                                         (hasError: boolean, errorMsg: string) => {
                                             formField.error.hasError = hasError;
                                             formField.error.errorMsg = errorMsg;
+                                            if (hasError) {
+                                                errors.push({ id: `${sectionName}.${field}`, errorMsg: errorMsg });
+                                            }
                                             hasErrors = true;
                                         }
                                     );
@@ -227,6 +235,9 @@ export default class ValidationUtil {
                                         (hasError: boolean, errorMsg: string) => {
                                             formField.error.hasError = hasError;
                                             formField.error.errorMsg = errorMsg;
+                                            if (hasError) {
+                                                errors.push({ id: `${sectionName}.${field}`, errorMsg: errorMsg });
+                                            }
                                             hasErrors = true;
                                         }
                                     );

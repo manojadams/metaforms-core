@@ -310,3 +310,13 @@ interface IEventDetail {
 export class MetaformEvent extends Event {
     detail: IEventDetail;
 }
+
+export interface IErrorDetails {
+    hasErrors: boolean;
+    errors: Array<{ id: string; errorMsg: string }>;
+}
+
+export interface IFormErrorDetails {
+    id: string;
+    errorMsg: string;
+}

@@ -1,4 +1,4 @@
-import { IError } from "../constants/common-interface";
+import { IError, IErrorDetails } from "../constants/common-interface";
 import { SECTION_LAYOUT } from "../constants/constants";
 import { TValue } from "../constants/types";
 import MetaForm from "./MetaForm";
@@ -63,6 +63,20 @@ class MetaFormUpdater {
         const defaultForm = this.metaformMap.get(formName);
         if (defaultForm) {
             defaultForm.setError(section, field, error);
+        }
+    }
+
+    /**
+     * Validates a given form and return the error details
+     * @param formName
+     * @returns
+     */
+    validateForm(formName: string): IErrorDetails {
+        const defaultForm = this.metaformMap.get(formName);
+        if (defaultForm) {
+            return defaultForm.validate();
+        } else {
+            return { hasErrors: false, errors: [] };
         }
     }
 
