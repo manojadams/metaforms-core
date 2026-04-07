@@ -197,9 +197,9 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
         e.preventDefault();
         switch (type) {
             case FORM_ACTION.NEXT:
-                return this.metaform.validate().hasErrors;
+                return !this.metaform.validate().hasErrors;
             case FORM_ACTION.SUBMIT:
-                return this.metaform.validate().hasErrors;
+                return !this.metaform.validate().hasErrors;
             default:
                 this.setState({ validated: true });
         }
