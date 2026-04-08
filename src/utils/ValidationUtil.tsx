@@ -154,7 +154,12 @@ export default class ValidationUtil {
         return "";
     }
 
-    static validateFormSection(form: IForm, sectionName: string, errors: Array<IFormErrorDetails>, isDefaultForm: boolean) {
+    static validateFormSection(
+        form: IForm,
+        sectionName: string,
+        errors: Array<IFormErrorDetails>,
+        isDefaultForm: boolean
+    ) {
         let hasErrors = false;
         if (form && form[sectionName]) {
             Object.keys(form[sectionName]).forEach((field) => {
