@@ -227,7 +227,7 @@ export default class ValidationUtil {
                                             formField.error.hasError = hasError;
                                             formField.error.errorMsg = errorMsg;
                                             if (hasError) {
-                                                errors.push({ id: fieldId, errorMsg: errorMsg });
+                                                errors.push({ id: fieldId, errorMsg });
                                             }
                                             hasErrors = true;
                                         }
@@ -242,7 +242,7 @@ export default class ValidationUtil {
                                             formField.error.hasError = hasError;
                                             formField.error.errorMsg = errorMsg;
                                             if (hasError) {
-                                                errors.push({ id: fieldId, errorMsg: errorMsg });
+                                                errors.push({ id: fieldId, errorMsg });
                                             }
                                             hasErrors = true;
                                         }
