@@ -654,10 +654,10 @@ export default class MetaForm implements IMetaForm {
             // validate page
             const section = this.schema.fields.find((section, index) => index + 1 === this.page.pageNumber);
             if (section) {
-                hasErrors = ValidationUtil.validateFormSection(this.form, section.name, errors);
+                hasErrors = ValidationUtil.validateFormSection(this.form, section.name, errors, false);
             }
         } else {
-            hasErrors = ValidationUtil.validateFormSection(this.form, SECTION_LAYOUT.DEFAULT, errors);
+            hasErrors = ValidationUtil.validateFormSection(this.form, SECTION_LAYOUT.DEFAULT, errors, true);
         }
         return { hasErrors, errors };
     }
