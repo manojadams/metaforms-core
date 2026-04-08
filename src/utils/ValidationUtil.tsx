@@ -154,12 +154,18 @@ export default class ValidationUtil {
         return "";
     }
 
-    static validateFormSection(form: IForm, sectionName: string, errors: Array<IFormErrorDetails>) {
+    static validateFormSection(
+        form: IForm,
+        sectionName: string,
+        errors: Array<IFormErrorDetails>,
+        isDefaultForm: boolean
+    ) {
         let hasErrors = false;
         if (form && form[sectionName]) {
             Object.keys(form[sectionName]).forEach((field) => {
                 const formField: IFormField = form[sectionName][field];
                 if (formField.display) {
+                    const fieldId = isDefaultForm ? field : `${sectionName}.${field}`;
                     // for displayed fields only
                     // reset disabled fields
                     // disabled fields do not require validation
@@ -177,7 +183,7 @@ export default class ValidationUtil {
                                         this.getValidationErrorMsg(formField.validation, "required") ||
                                         this.getValidationErrorMsg(formField.validation, "requiredDetail") ||
                                         MSGS.ERROR_MSG.REQUIRED;
-                                    errors.push({ id: `${sectionName}.${field}`, errorMsg: formField.error.errorMsg });
+                                    errors.push({ id: fieldId, errorMsg: formField.error.errorMsg });
                                     hasErrors = true;
                                     return;
                                 }
@@ -198,7 +204,7 @@ export default class ValidationUtil {
                                             this.getValidationErrorMsg(formField.validation, "patternDetail") ||
                                             MSGS.ERROR_MSG.PATTERN;
                                         errors.push({
-                                            id: `${sectionName}.${field}`,
+                                            id: fieldId,
                                             errorMsg: formField.error.errorMsg
                                         });
                                         hasErrors = true;
@@ -221,7 +227,7 @@ export default class ValidationUtil {
                                             formField.error.hasError = hasError;
                                             formField.error.errorMsg = errorMsg;
                                             if (hasError) {
-                                                errors.push({ id: `${sectionName}.${field}`, errorMsg: errorMsg });
+                                                errors.push({ id: fieldId, errorMsg });
                                             }
                                             hasErrors = true;
                                         }
@@ -236,7 +242,7 @@ export default class ValidationUtil {
                                             formField.error.hasError = hasError;
                                             formField.error.errorMsg = errorMsg;
                                             if (hasError) {
-                                                errors.push({ id: `${sectionName}.${field}`, errorMsg: errorMsg });
+                                                errors.push({ id: fieldId, errorMsg });
                                             }
                                             hasErrors = true;
                                         }
