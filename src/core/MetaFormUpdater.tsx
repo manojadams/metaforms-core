@@ -13,6 +13,40 @@ class MetaFormUpdater {
     }
 
     /**
+     * Get field value
+     * @param formName
+     * @param section
+     * @param field
+     */
+    getFieldValue(formName: string, section: string, field: string): TValue | undefined {
+        const defaultForm = this.metaformMap.get(formName);
+        if (defaultForm) {
+            return defaultForm.getField(section, field)?.value;
+        }
+        return undefined;
+    }
+
+    /**
+     * Get field property
+     * @param formName
+     * @param section
+     * @param field
+     * @param property
+     */
+    getFieldProperty(
+        formName: string,
+        section: string,
+        field: string,
+        property: string
+    ): any | undefined {
+        const defaultForm = this.metaformMap.get(formName);
+        if (defaultForm) {
+            return defaultForm.getFieldProp(section, field, property);
+        }
+        return undefined;
+    }
+
+    /**
      * Updates a form field (for a non-grouped forms)
      * @param section
      * @param field
