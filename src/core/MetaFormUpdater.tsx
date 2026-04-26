@@ -33,12 +33,7 @@ class MetaFormUpdater {
      * @param field
      * @param property
      */
-    getFieldProperty(
-        formName: string,
-        section: string,
-        field: string,
-        property: string
-    ): any | undefined {
+    getFieldProperty(formName: string, section: string, field: string, property: string): any | undefined {
         const defaultForm = this.metaformMap.get(formName);
         if (defaultForm) {
             return defaultForm.getFieldProp(section, field, property);
