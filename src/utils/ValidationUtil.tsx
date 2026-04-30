@@ -203,7 +203,7 @@ export default class ValidationUtil {
                 continue;
             }
 
-            const isValid = validators[validationKey](value, meta);
+            const isValid = validators[validationKey](value, meta.validation[validationKey]);
             if (!isValid) {
                 const errorMsg = this.getValidationErrorMsg(meta.validation, validationKey) || MSGS.ERROR_MSG.CUSTOM;
                 setError(true, errorMsg);

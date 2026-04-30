@@ -17,7 +17,9 @@ import {
     IValidation,
     IconConfig,
     TParam,
-    TParamType
+    TParamType,
+    IValidationDetail,
+    TValidationEntry
 } from "./model-interfaces";
 import { TChangeMode, TFormType, TNextCondition, TNextResponseMode, TOperator, TSectionLayout, TValue } from "./types";
 import BaseFormWizard from "../form/form-wizard/BaseFormWizard";
@@ -128,7 +130,7 @@ export interface IFormField {
     isArray?: boolean;
 }
 
-export type TValidator = (value: TValue, formField?: IFormField) => boolean;
+export type TValidator = (value: TValue, validationArgs?: TValidationEntry) => boolean;
 
 export interface IFnTypes {
     [key: string]: (arg: TValue, ref?: IOption, formField?: IFormField) => TValue | IOption[];
