@@ -407,6 +407,13 @@ export default abstract class BaseFormControl extends React.Component {
             const hasError = ValidationUtil.updateMaxError(meta, value, this.setError.bind(this));
             if (hasError) return;
         }
+        const hasCustomValidationError = ValidationUtil.updateCustomValidationError(
+            meta,
+            value,
+            this.context.validators,
+            this.setError.bind(this)
+        );
+        if (hasCustomValidationError) return;
         this.setError(false, "");
     }
 

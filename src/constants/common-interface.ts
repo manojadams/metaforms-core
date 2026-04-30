@@ -128,6 +128,8 @@ export interface IFormField {
     isArray?: boolean;
 }
 
+export type TValidator = (value: TValue, formField?: IFormField) => boolean;
+
 export interface IFnTypes {
     [key: string]: (arg: TValue, ref?: IOption, formField?: IFormField) => TValue | IOption[];
 }
@@ -202,6 +204,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     controls?: IElementTypes;
     components?: Record<string, React.FunctionComponent<IControlProps>>;
     fns?: IFnTypes;
+    validators?: Record<string, TValidator>;
     footer?: React.FunctionComponent<IFooterProps>;
     formatter?: IFormatterType;
     icons?: IElementTypes;

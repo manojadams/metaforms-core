@@ -97,6 +97,9 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             if (props.baseFormWizard) {
                 this.formImpls.setFormWizard(props.baseFormWizard);
             }
+            if (props.validators) {
+                this.metaform.setValidators(props.validators);
+            }
         } catch (e) {
             this.metaform = new MetaForm(
                 {
