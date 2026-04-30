@@ -1,10 +1,23 @@
-import { IForm, IFormErrorDetails, IFormField, TCondition } from "../constants/common-interface";
+import { IForm, IFormErrorDetails, IFormField, TCondition, TValidator } from "../constants/common-interface";
 import { MSGS } from "../constants/constants";
 import { CONTROLS } from "../constants/controls";
 import { IFieldValidation, IValidation } from "../constants/model-interfaces";
 import { ISetError, IValidationType, TValue } from "../constants/types";
 
 export default class ValidationUtil {
+    static readonly DEFAULT_VALIDATION_KEYS = [
+        "required",
+        "requiredDetail",
+        "pattern",
+        "patternDetail",
+        "min",
+        "minDetail",
+        "max",
+        "maxDetail",
+        "info",
+        "infoDetail"
+    ];
+
     static updateMaxError(meta: IFormField, value: TValue, setError: ISetError) {
         let hasError = false;
         const maxValue = this.getValidationValue(meta.validation, "max");
@@ -154,11 +167,59 @@ export default class ValidationUtil {
         return "";
     }
 
+    static isCustomValidationEnabled(validation: IValidation, validationKey: string) {
+        const validationEntry = validation[validationKey];
+        if (validationEntry === undefined) {
+            return false;
+        }
+
+        if (typeof validationEntry === "boolean") {
+            return validationEntry;
+        }
+
+        if (typeof validationEntry === "object" && validationEntry !== null && "value" in validationEntry) {
+            return Boolean(validationEntry.value);
+        }
+
+        return true;
+    }
+
+    static updateCustomValidationError(
+        meta: IFormField,
+        value: TValue,
+        validators: Record<string, TValidator> | undefined,
+        setError: ISetError
+    ) {
+        if (!meta.validation || !validators) {
+            return false;
+        }
+
+        const customValidationKeys = Object.keys(meta.validation).filter(
+            (key) => !this.DEFAULT_VALIDATION_KEYS.includes(key) && validators[key]
+        );
+
+        for (const validationKey of customValidationKeys) {
+            if (!this.isCustomValidationEnabled(meta.validation, validationKey)) {
+                continue;
+            }
+
+            const isValid = validators[validationKey](value, meta);
+            if (!isValid) {
+                const errorMsg = this.getValidationErrorMsg(meta.validation, validationKey) || MSGS.ERROR_MSG.CUSTOM;
+                setError(true, errorMsg);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     static validateFormSection(
         form: IForm,
         sectionName: string,
         errors: Array<IFormErrorDetails>,
-        isDefaultForm: boolean
+        isDefaultForm: boolean,
+        validators?: Record<string, TValidator>
     ) {
         let hasErrors = false;
         if (form && form[sectionName]) {
@@ -220,7 +281,7 @@ export default class ValidationUtil {
                             if (formField.value !== undefined) {
                                 // min validation
                                 if (formField.validation?.min !== undefined) {
-                                    this.updateMinError(
+                                    const hasMinError = this.updateMinError(
                                         formField,
                                         formField.value,
                                         (hasError: boolean, errorMsg: string) => {
@@ -232,10 +293,13 @@ export default class ValidationUtil {
                                             hasErrors = true;
                                         }
                                     );
+                                    if (hasMinError) {
+                                        return;
+                                    }
                                 }
                                 // max validation
                                 if (formField.validation?.max !== undefined) {
-                                    this.updateMaxError(
+                                    const hasMaxError = this.updateMaxError(
                                         formField,
                                         formField.value,
                                         (hasError: boolean, errorMsg: string) => {
@@ -247,8 +311,28 @@ export default class ValidationUtil {
                                             hasErrors = true;
                                         }
                                     );
+                                    if (hasMaxError) {
+                                        return;
+                                    }
                                 }
                             }
+                        }
+
+                        // for custom validations
+                        const hasCustomValidationError = this.updateCustomValidationError(
+                            formField,
+                            formField.value,
+                            validators,
+                            (hasError: boolean, errorMsg: string) => {
+                                formField.error.hasError = hasError;
+                                formField.error.errorMsg = errorMsg;
+                                if (hasError) {
+                                    errors.push({ id: fieldId, errorMsg });
+                                }
+                            }
+                        );
+                        if (hasCustomValidationError) {
+                            hasErrors = true;
                         }
                     }
                 }

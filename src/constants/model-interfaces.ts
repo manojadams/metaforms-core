@@ -66,14 +66,25 @@ export interface IPatternValidationDetail extends IValidationDetail {
     allowValidOnly?: boolean;
 }
 
-export interface IFieldValidation<T> {
+export interface IFieldValidation<T> extends IValidationDetail {
     value: T;
-    errorMsg: string;
 }
 
 export interface IPatternFieldValidation<T> extends IFieldValidation<T> {
     allowValidOnly?: boolean;
 }
+
+export type TValidationValue = IFieldValidation<TValue>;
+
+export type TValidationEntry =
+    | boolean
+    | string
+    | number
+    | TValidationValue
+    | IPatternFieldValidation<string>
+    | IValidationDetail
+    | IInfoDetail
+    | undefined;
 
 /**
  * Validation properties for field
@@ -98,6 +109,8 @@ export interface IValidation {
     info?: string | IFieldValidation<string>;
     /** @deprecated Generic info related to the field */
     infoDetail?: IInfoDetail;
+    /** Custom validation entries */
+    [key: string]: TValidationEntry;
 }
 
 export interface IConfigParam {

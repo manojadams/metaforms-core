@@ -29,4 +29,5 @@ export type IValidationType =
     | "requiredDetail"
     | "patternDetail"
     | "minDetail"
-    | "maxDetail";
+    | "maxDetail"
+    | string;

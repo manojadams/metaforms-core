@@ -22,7 +22,8 @@ import {
     IRequestBody,
     IFormData,
     IFooterProps,
-    IFormErrorDetails
+    IFormErrorDetails,
+    TValidator
 } from "../constants/common-interface";
 import MetaformError from "./MetaformError";
 import {
@@ -66,6 +67,7 @@ export default class MetaForm implements IMetaForm {
     controls: IElementTypes;
     controlElements: Record<string, React.FunctionComponent<IControlProps>> | undefined;
     errorHandler?: TErrorCallback;
+    validators?: Record<string, TValidator>;
 
     constructor(
         private schema: ISchema,
@@ -150,6 +152,10 @@ export default class MetaForm implements IMetaForm {
     resetEndOfPage() {
         this.page.resetEndOfPage();
         this.eventEmitter.emit(EVENTS.PAGE_CHANGE);
+    }
+
+    setValidators(validators: Record<string, TValidator>) {
+        this.validators = validators;
     }
 
     /** event emitter functions */
@@ -654,10 +660,16 @@ export default class MetaForm implements IMetaForm {
             // validate page
             const section = this.schema.fields.find((section, index) => index + 1 === this.page.pageNumber);
             if (section) {
-                hasErrors = ValidationUtil.validateFormSection(this.form, section.name, errors, false);
+                hasErrors = ValidationUtil.validateFormSection(this.form, section.name, errors, false, this.validators);
             }
         } else {
-            hasErrors = ValidationUtil.validateFormSection(this.form, SECTION_LAYOUT.DEFAULT, errors, true);
+            hasErrors = ValidationUtil.validateFormSection(
+                this.form,
+                SECTION_LAYOUT.DEFAULT,
+                errors,
+                true,
+                this.validators
+            );
         }
         return { hasErrors, errors };
     }

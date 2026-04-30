@@ -6,6 +6,7 @@ export const MSGS = {
         MIN_TEXT: "Minimum length is {CHARS} chars.",
         MAX: "Out of range",
         MAX_TEXT: "Maximum length is {CHARS} chars.",
+        CUSTOM: "Is not a valid value",
         DATE_INVALID: "Date is not valid",
         EMAIL_INVALID: "Email is not valid"
     }
