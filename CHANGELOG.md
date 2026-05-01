@@ -1,5 +1,11 @@
 # Change logs
 
+## 4.4.0
+- [feature: Adding custom validators support](https://github.com/manojadams/metaforms-core/issues/100)
+
+## 4.3.3
+- Update metaAPI to get field value and field property value
+
 ## 4.3.2
 - Fix for fieldid contains default keyword in single page forms
 
