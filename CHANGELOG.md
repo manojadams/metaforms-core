@@ -1,5 +1,8 @@
 # Change logs
 
+## 4.4.1
+- [feature: Adding support for custom properties](https://github.com/manojadams/metaforms-core/issues/103)
+
 ## 4.4.0
 - [feature: Adding custom validators support](https://github.com/manojadams/metaforms-core/issues/100)
 
