@@ -90,21 +90,17 @@ export const metaAPI: IMetaAPI = {
     metaForm: new MetaFormUpdater(SECTION_LAYOUT.DEFAULT, null),
 
     // === Default form methods ===
-    getFieldValue: (field) =>
-        metaAPI.metaForm.getFieldValue(DEFAULT, SECTION_LAYOUT.DEFAULT, field),
+    getFieldValue: (field) => metaAPI.metaForm.getFieldValue(DEFAULT, SECTION_LAYOUT.DEFAULT, field),
 
     getFieldProperty: (field, property) =>
         metaAPI.metaForm.getFieldProperty(DEFAULT, SECTION_LAYOUT.DEFAULT, field, property),
 
-    updateField: (field, value) =>
-        metaAPI.metaForm.updateField(SECTION_LAYOUT.DEFAULT, field, value),
+    updateField: (field, value) => metaAPI.metaForm.updateField(SECTION_LAYOUT.DEFAULT, field, value),
 
-    setFieldError: (field, error) =>
-        metaAPI.metaForm.setFieldError(SECTION_LAYOUT.DEFAULT, field, error),
+    setFieldError: (field, error) => metaAPI.metaForm.setFieldError(SECTION_LAYOUT.DEFAULT, field, error),
 
     // === Any form methods ===
-    getFormFieldValue: (formName, section, field) =>
-        metaAPI.metaForm.getFieldValue(formName, section, field),
+    getFormFieldValue: (formName, section, field) => metaAPI.metaForm.getFieldValue(formName, section, field),
 
     getFormFieldProperty: (formName, section, field, property) =>
         metaAPI.metaForm.getFieldProperty(formName, section, field, property),
@@ -115,9 +111,7 @@ export const metaAPI: IMetaAPI = {
     setFormFieldError: (formName, section, field, error) =>
         metaAPI.metaForm.setFormFieldError(formName, section, field, error),
 
-    validateForm: (formName) =>
-        metaAPI.metaForm.validateForm(formName),
+    validateForm: (formName) => metaAPI.metaForm.validateForm(formName),
 
-    validateDefaultForm: () =>
-        metaAPI.metaForm.validateForm(DEFAULT)
+    validateDefaultForm: () => metaAPI.metaForm.validateForm(DEFAULT)
 };

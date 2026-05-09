@@ -132,7 +132,7 @@ export interface IFormField {
 
 /**
  *  type for custom validator function, it should return true if validation is passed, otherwise return error message string
- */ 
+ */
 export type TValidator = (value: TValue, validationArgs?: TValidationEntry) => boolean | string;
 
 export interface IFnTypes {
