@@ -204,7 +204,14 @@ export default class ValidationUtil {
             }
 
             const isValid = validators[validationKey](value, meta.validation[validationKey]);
-            if (!isValid) {
+            const trimmedIsValid = typeof isValid === "string" ? (isValid as string).trim() : isValid;
+
+            if (typeof trimmedIsValid === "string" && trimmedIsValid) {
+                // isValid is a custom error message
+                setError(true, trimmedIsValid);
+                return true;
+            } else if (!trimmedIsValid) {
+                // isValid is falsy (validation failed)
                 const errorMsg = this.getValidationErrorMsg(meta.validation, validationKey) || MSGS.ERROR_MSG.CUSTOM;
                 setError(true, errorMsg);
                 return true;

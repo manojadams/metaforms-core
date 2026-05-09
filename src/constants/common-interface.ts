@@ -130,7 +130,10 @@ export interface IFormField {
     isArray?: boolean;
 }
 
-export type TValidator = (value: TValue, validationArgs?: TValidationEntry) => boolean;
+/**
+ *  type for custom validator function, it should return true if validation is passed, otherwise return error message string
+ */
+export type TValidator = (value: TValue, validationArgs?: TValidationEntry) => boolean | string;
 
 export interface IFnTypes {
     [key: string]: (arg: TValue, ref?: IOption, formField?: IFormField) => TValue | IOption[];
