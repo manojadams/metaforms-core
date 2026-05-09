@@ -349,6 +349,10 @@ export interface IField {
      */
     meta: IMeta;
     /**
+     * Custom properties for the field
+     */
+    customProps?: Record<string, boolean | string | number>;
+    /**
      * A list of children fields
      */
     fields?: Array<IField>;
