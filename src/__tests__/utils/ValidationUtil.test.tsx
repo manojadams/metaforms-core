@@ -74,4 +74,104 @@ describe("ValidationUtil", () => {
         expect(hasErrors).toBe(true);
         expect(errors).toEqual([{ id: "accepted", errorMsg: "Must be accepted" }]);
     });
+
+    it("uses returned string from validator as error message", () => {
+        const form: IForm = {
+            default: {
+                email: getField("invalid-email", {
+                    customEmail: {
+                        value: true,
+                        errorMsg: "Fallback error message"
+                    }
+                })
+            }
+        };
+        const errors: Array<IFormErrorDetails> = [];
+
+        const hasErrors = ValidationUtil.validateFormSection(form, "default", errors, true, {
+            customEmail: (value) => "Email format is invalid"
+        });
+
+        expect(hasErrors).toBe(true);
+        expect(form.default.email.error).toEqual({
+            hasError: true,
+            errorMsg: "Email format is invalid"
+        });
+        expect(errors).toEqual([{ id: "email", errorMsg: "Email format is invalid" }]);
+    });
+
+    it("trims whitespace from error message returned by validator", () => {
+        const form: IForm = {
+            default: {
+                email: getField("invalid-email", {
+                    customEmail: {
+                        value: true,
+                        errorMsg: "Fallback error message"
+                    }
+                })
+            }
+        };
+        const errors: Array<IFormErrorDetails> = [];
+
+        const hasErrors = ValidationUtil.validateFormSection(form, "default", errors, true, {
+            customEmail: (value) => "   Email format is invalid   "
+        });
+
+        expect(hasErrors).toBe(true);
+        expect(form.default.email.error).toEqual({
+            hasError: true,
+            errorMsg: "Email format is invalid"
+        });
+        expect(errors).toEqual([{ id: "email", errorMsg: "Email format is invalid" }]);
+    });
+
+    it("uses fallback error message when validator returns whitespace-only string", () => {
+        const form: IForm = {
+            default: {
+                email: getField("invalid-email", {
+                    customEmail: {
+                        value: true,
+                        errorMsg: "Fallback error message"
+                    }
+                })
+            }
+        };
+        const errors: Array<IFormErrorDetails> = [];
+
+        const hasErrors = ValidationUtil.validateFormSection(form, "default", errors, true, {
+            customEmail: (value) => "   "
+        });
+
+        expect(hasErrors).toBe(true);
+        expect(form.default.email.error).toEqual({
+            hasError: true,
+            errorMsg: "Fallback error message"
+        });
+        expect(errors).toEqual([{ id: "email", errorMsg: "Fallback error message" }]);
+    });
+
+    it("uses fallback error message when validator returns falsy value", () => {
+        const form: IForm = {
+            default: {
+                email: getField("invalid-email", {
+                    customEmail: {
+                        value: true,
+                        errorMsg: "Email validation failed"
+                    }
+                })
+            }
+        };
+        const errors: Array<IFormErrorDetails> = [];
+
+        const hasErrors = ValidationUtil.validateFormSection(form, "default", errors, true, {
+            customEmail: (value) => false
+        });
+
+        expect(hasErrors).toBe(true);
+        expect(form.default.email.error).toEqual({
+            hasError: true,
+            errorMsg: "Email validation failed"
+        });
+        expect(errors).toEqual([{ id: "email", errorMsg: "Email validation failed" }]);
+    });
 });
