@@ -78,10 +78,12 @@ class DependencyUtil {
         const valueFn = dependency?.valueFn;
         // dependency key
         const D_KEY = FORM_CONSTANTS.DEPENDENCY_KEY;
-        if (ref && !form[formSection][ref][D_KEY]) {
-            form[formSection][ref][D_KEY] = [];
+        const fieldRef = form[formSection][ref] as Record<string, any>;
+        if (ref && fieldRef && !fieldRef[D_KEY]) {
+            fieldRef[D_KEY] = [];
         }
         let extraParams = {};
+        const fieldDependency = fieldRef[D_KEY];
         switch (type) {
             case DEP_TYPE_OLD.PATTERN_MATCH_URL_LOADER:
             case DEP_TYPE.PATTERN_MATCH_URL_LOADER:
@@ -102,7 +104,7 @@ class DependencyUtil {
                     const responseKey = dependency.responseKey || config?.responseKey;
                     const queryParams = dependency.queryParams || config?.queryParams;
                     const pathParams = dependency.pathParams;
-                    form[formSection][ref][D_KEY].push({
+                    fieldDependency.push({
                         section,
                         type,
                         field,
@@ -120,7 +122,7 @@ class DependencyUtil {
             case DEP_TYPE.LOAD_OPTIONS:
                 {
                     const valueMap = dependency.valueMap;
-                    form[formSection][ref][D_KEY].push({
+                    fieldDependency.push({
                         section,
                         type,
                         field,
@@ -131,7 +133,7 @@ class DependencyUtil {
             case DEP_TYPE.EQUALS:
                 // eslint-disable-next-line no-lone-blocks
                 {
-                    form[formSection][ref][D_KEY].push({
+                    fieldDependency.push({
                         section,
                         type,
                         field,
@@ -146,7 +148,7 @@ class DependencyUtil {
                 {
                     const changeType = dependency.type;
                     const valueMap = dependency.valueMap;
-                    form[formSection][ref][D_KEY].push({
+                    fieldDependency.push({
                         section,
                         type,
                         field,
@@ -162,7 +164,7 @@ class DependencyUtil {
                     const propValue = dependency.propValue;
                     const propName = dependency.propName;
                     const valueMap = dependency.valueMap;
-                    form[formSection][ref][D_KEY].push({
+                    fieldDependency.push({
                         section,
                         type,
                         field,
@@ -198,14 +200,27 @@ class DependencyUtil {
                             break;
                         }
                     }
-                    form[formSection][ref][D_KEY].push({
+                    fieldDependency.push({
                         ...params,
                         ...extraParams
                     });
                 }
                 break;
+            case DEP_TYPE.ENABLED:
+                {
+                    const resetValue = dependency.resetValue;
+                    fieldDependency.push({
+                        section,
+                        type,
+                        field,
+                        value,
+                        valueFn,
+                        resetValue
+                    });
+                }
+                break;
             default:
-                form[formSection][ref][D_KEY].push({
+                fieldDependency.push({
                     section,
                     type,
                     field,
@@ -383,7 +398,12 @@ class DependencyUtil {
                         case DEP_TYPE.ENABLED:
                             {
                                 const field = dep.field;
-                                metaform.setFieldDisabled(dep.section, field, value !== dep.value);
+                                const resetValueOnDisabled = dep.resetValue;
+                                const isEnabled = value === dep.value;
+                                metaform.setFieldDisabled(dep.section, field, !isEnabled);
+                                if (!isEnabled && resetValueOnDisabled !== undefined) {
+                                    metaform.setField(dep.section, field, resetValueOnDisabled);
+                                }
                                 resolved.next();
                             }
                             break;
