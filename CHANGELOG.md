@@ -1,5 +1,8 @@
 # Change logs
 
+## 4.4.3
+- [enhancement: Reset value of disabled field on enabled dependency](https://github.com/manojadams/metaforms-core/issues/107)
+
 ## 4.4.2
 - [enhancement: update validator to return custom error message and enhance metaAPI methods to be directly accessible](https://github.com/manojadams/metaforms-core/issues/105)
 
