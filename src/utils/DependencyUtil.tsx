@@ -219,6 +219,20 @@ class DependencyUtil {
                     });
                 }
                 break;
+            case DEP_TYPE.VALUE:
+                {
+                    const valueKey = dependency.valueKey;
+                    const valueFn = dependency.valueFn;
+                    fieldDependency.push({
+                        section,
+                        type,
+                        field,
+                        value,
+                        valueKey,
+                        valueFn
+                    });
+                }
+                break;
             default:
                 fieldDependency.push({
                     section,
@@ -414,6 +428,33 @@ class DependencyUtil {
                                     metaform.setField(dep.section, field, dep.currentValue);
                                 } else if (dep.resetValue !== undefined) {
                                     metaform.setField(dep.section, field, dep.resetValue);
+                                }
+                                resolved.next();
+                            }
+                            break;
+                        case DEP_TYPE.VALUE:
+                            {
+                                const field = dep.field;
+                                let newValue: TValue = dep.value;
+
+                                const options = metaform.getFieldProp(section, fieldName, "options");
+                                // Try to get value from reference field options using valueKey
+                                if (dep.valueKey && dep.section && Array.isArray(options) && options.length > 0) {
+                                    const optionMatch = options.find((opt: IOption) => opt.value === value);
+                                    const refObjectValue = optionMatch && optionMatch.ref ? optionMatch.ref : null;
+                                    if (refObjectValue && refObjectValue[dep.valueKey] !== undefined) {
+                                        newValue = refObjectValue[dep.valueKey] as TValue;
+                                    }
+                                } else if (dep.valueFn) {
+                                    // Use valueFn to compute the value
+                                    const fn = metaform.getFn(dep.valueFn);
+                                    if (fn) {
+                                        newValue = fn(value) as TValue;
+                                    }
+                                }
+                                // Set the field value
+                                if (newValue !== undefined) {
+                                    metaform.setField(dep.section, field, newValue);
                                 }
                                 resolved.next();
                             }

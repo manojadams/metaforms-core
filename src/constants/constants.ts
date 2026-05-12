@@ -58,7 +58,8 @@ export const DEP_TYPE = {
     CHANGE: "change",
     VALIDATION: "validation",
     PROP_UPDATE: "propUpdate",
-    PATTERN_MATCH_URL_LOADER: "patternMatchUrlLoader"
+    PATTERN_MATCH_URL_LOADER: "patternMatchUrlLoader",
+    VALUE: "value"
 };
 
 // to be deprecated

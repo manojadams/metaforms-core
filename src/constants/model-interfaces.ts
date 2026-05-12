@@ -217,6 +217,11 @@ export interface IEqualsDependency extends IBaseDependency {
 
 export type IDisplayTypeDependency = IBaseDependency;
 
+export interface IValueDependency extends IBaseDependency {
+    valueKey?: string;
+    valueFn?: string;
+}
+
 // interface IFieldChange {
 //     type: string;
 //     reference: string;
@@ -228,6 +233,7 @@ export interface IDependency {
     load?: ILoadDependency;
     equals?: IEqualsDependency;
     displayType?: IDisplayTypeDependency;
+    value?: IValueDependency;
 }
 
 export interface IClickEvent {
