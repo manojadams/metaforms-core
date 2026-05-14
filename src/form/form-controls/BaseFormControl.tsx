@@ -25,6 +25,7 @@ export default abstract class BaseFormControl extends React.Component {
     /** @internal */
     static contextType = FormContext;
     declare context: React.ContextType<typeof FormContext>;
+    className: string;
     displayType?: string;
     field: IField;
     isFormControl: boolean;
@@ -45,6 +46,7 @@ export default abstract class BaseFormControl extends React.Component {
             form: this.props.form,
             loading: false
         };
+        this.className = this.getWrapperClassName();
         this.handleValidation = this.handleValidation.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
@@ -152,7 +154,7 @@ export default abstract class BaseFormControl extends React.Component {
     custom(CustomComponent: React.FC<IFieldProps>): JSX.Element {
         return (
             <CustomComponent
-                className={this.getWrapperClassName()}
+                className={this.className}
                 field={this.field}
                 form={this.props.form}
                 name={this.props.name}
@@ -256,7 +258,7 @@ export default abstract class BaseFormControl extends React.Component {
     }
 
     header() {
-        return <Header className={this.getWrapperClassName()}>{this.props.form.displayName}</Header>;
+        return <Header className={this.className}>{this.props.form.displayName}</Header>;
     }
 
     modalsearch(): JSX.Element {
@@ -264,12 +266,11 @@ export default abstract class BaseFormControl extends React.Component {
     }
 
     paragraph(): JSX.Element {
-        return <p className={this.getWrapperClassName()}>{this.props.form.displayName}</p>;
+        return <p className={this.className}>{this.props.form.displayName}</p>;
     }
 
     customControl(): JSX.Element {
         if (this.displayType) {
-            const customWrapperClass = this.getWrapperClassName();
             let control = this.context.getControl(this.displayType);
             if (control) {
                 control = React.cloneElement(control, {
@@ -279,14 +280,14 @@ export default abstract class BaseFormControl extends React.Component {
                     error: this.state.error
                 });
             }
-            return <div className={customWrapperClass}>{control}</div>;
+            return <div className={this.className}>{control}</div>;
         }
         return this.text();
     }
 
     templateControl(): JSX.Element {
         if (this.displayType) {
-            const customWrapperClass = this.getWrapperClassName();
+            const customWrapperClass = this.className;
             const template = (this.props.form?.config?.template as string) || "";
             const control = this.context.getControlElements(template) as React.FunctionComponent<IControlProps>;
             let customComponent: JSX.Element | null = null;
