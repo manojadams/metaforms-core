@@ -21,7 +21,7 @@ import {
     IValidationDetail,
     TValidationEntry
 } from "./model-interfaces";
-import { TChangeMode, TFormType, TNextCondition, TNextResponseMode, TOperator, TSectionLayout, TValue } from "./types";
+import { TChangeMode, TFormType, TMouseEvent, TNextCondition, TNextResponseMode, TOperator, TSectionLayout, TValue } from "./types";
 import BaseFormWizard from "../form/form-wizard/BaseFormWizard";
 
 export interface IBasicFormControl {
@@ -176,6 +176,18 @@ export interface IFooterProps {
     submitBtn: JSX.Element;
 }
 
+export interface IFieldProps {
+    className: string;
+    field: IField;
+    form: IFormField;
+    name: string;
+    size?: string;
+    error: IError;
+    handleChange(e: TMouseEvent, val?: TValue, ref?: IOption): void;
+    handleValidation: () => void;
+    setError: (hasError: boolean, errorMsg: string) => void;
+}
+
 export interface IFormRenderer extends IUISchema, IFormConfig {
     baseFormControl?: typeof BaseFormControl;
     baseFormGroup?: typeof BaseFormGroup;
@@ -224,6 +236,11 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
      * REST API configruation params in the form
      */
     rest?: IRest;
+
+    /**
+     * Map fields to custom components
+     */
+    fieldMapper?: Record<string, React.FC<IFieldProps>>;
 
     /**
      * Event handling params

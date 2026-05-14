@@ -3,7 +3,7 @@ import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IOption } from "../../constants/model-interfaces";
-import { IControlProps, IError, IFormField, IRenderField } from "../../constants/common-interface";
+import { IControlProps, IError, IFieldProps, IFormField, IRenderField } from "../../constants/common-interface";
 import { EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
@@ -30,7 +30,6 @@ export default abstract class BaseFormControl extends React.Component {
     isFormControl: boolean;
     uuid: string;
     section: string;
-    validation: { required: boolean | undefined; pattern: string | undefined };
     state: IState;
 
     constructor(public props: IRenderField) {
@@ -150,7 +149,26 @@ export default abstract class BaseFormControl extends React.Component {
         return <Fragment />;
     }
 
+    custom(CustomComponent: React.FC<IFieldProps>): JSX.Element {
+        return (
+            <CustomComponent
+                className={this.getWrapperClassName()}
+                field={this.field}
+                form={this.props.form}
+                name={this.props.name}
+                error={this.state.error}
+                handleChange={this.handleChange}
+                handleValidation={this.handleValidation}
+                setError={this.setError}
+            />
+        );
+    }
+
     control() {
+        const CustomComponent = this.context.getFieldMapperComponent(this.displayType || "");
+        if (CustomComponent) {
+            return this.custom(CustomComponent);
+        }
         switch (this.displayType) {
             case CONTROLS.HEADER:
                 return this.header();

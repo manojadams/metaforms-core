@@ -23,7 +23,8 @@ import {
     IFormData,
     IFooterProps,
     IFormErrorDetails,
-    TValidator
+    TValidator,
+    IFieldProps
 } from "../constants/common-interface";
 import MetaformError from "./MetaformError";
 import {
@@ -60,14 +61,15 @@ export default class MetaForm implements IMetaForm {
     form: IForm;
     rest: Rest;
     page: Page;
-    footer: React.FunctionComponent<IFooterProps>;
+    footer?: React.FunctionComponent<IFooterProps>;
     initialData?: InitialData;
     icons?: IElementTypes;
     fns?: IFnTypes;
-    controls: IElementTypes;
+    controls?: IElementTypes;
     controlElements: Record<string, React.FunctionComponent<IControlProps>> | undefined;
     errorHandler?: TErrorCallback;
     validators?: Record<string, TValidator>;
+    fieldMapper?: Record<string, React.FC<IFieldProps>>;
 
     constructor(
         private schema: ISchema,
@@ -703,6 +705,17 @@ export default class MetaForm implements IMetaForm {
 
     setErrorHandler(errorHandler: TErrorCallback) {
         this.errorHandler = errorHandler;
+    }
+
+    getFieldMapperComponent(displayType: string): React.FC<IFieldProps> | null {
+        if (this.fieldMapper && this.fieldMapper[displayType]) {
+            return this.fieldMapper[displayType];
+        }
+        return null;
+    }
+
+    setFieldMapper(fieldMapper: Record<string, React.FC<IFieldProps>>) {
+        this.setFieldMapper(fieldMapper);
     }
 
     getControl(displayType: string) {
