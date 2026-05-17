@@ -3,7 +3,7 @@ import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IOption } from "../../constants/model-interfaces";
-import { IControlProps, IError, IFieldProps, IFormField, IRenderField } from "../../constants/common-interface";
+import { IControlProps, ICustomFieldProps, IError, IFormField, IRenderField } from "../../constants/common-interface";
 import { EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
@@ -25,7 +25,7 @@ export default abstract class BaseFormControl extends React.Component {
     /** @internal */
     static contextType = FormContext;
     declare context: React.ContextType<typeof FormContext>;
-    className: string;
+    className = "";
     displayType?: string;
     field: IField;
     isFormControl: boolean;
@@ -46,7 +46,6 @@ export default abstract class BaseFormControl extends React.Component {
             form: this.props.form,
             loading: false
         };
-        this.className = this.getWrapperClassName();
         this.handleValidation = this.handleValidation.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
@@ -60,6 +59,7 @@ export default abstract class BaseFormControl extends React.Component {
 
     initConfig() {
         const configData = this.props.form?.config || null;
+        this.className = this.getWrapperClassName();
         let initData = null;
         if (configData) {
             // check init mode
@@ -151,17 +151,19 @@ export default abstract class BaseFormControl extends React.Component {
         return <Fragment />;
     }
 
-    custom(CustomComponent: React.FC<IFieldProps>): JSX.Element {
+    custom(CustomComponent: React.FC<ICustomFieldProps>): JSX.Element {
         return (
             <CustomComponent
-                className={this.className}
-                field={this.field}
-                form={this.props.form}
                 name={this.props.name}
-                error={this.state.error}
-                handleChange={this.handleChange}
-                handleValidation={this.handleValidation}
-                setError={this.setError}
+                className={this.props.form.className}
+                label={this.props.form.displayName ?? ""}
+                value={this.props.form.value}
+                placeholder={this.props.form.placeholder}
+                readOnly={this.props.form.isReadonly}
+                disabled={this.props.form.isDisabled}
+                error={this.props.form.error}
+                onChange={this.handleChange}
+                onBlur={this.handleValidation}
             />
         );
     }

@@ -18,10 +18,18 @@ import {
     IconConfig,
     TParam,
     TParamType,
-    IValidationDetail,
     TValidationEntry
 } from "./model-interfaces";
-import { TChangeMode, TFormType, TMouseEvent, TNextCondition, TNextResponseMode, TOperator, TSectionLayout, TValue } from "./types";
+import {
+    TChangeMode,
+    TFormType,
+    TMouseEvent,
+    TNextCondition,
+    TNextResponseMode,
+    TOperator,
+    TSectionLayout,
+    TValue
+} from "./types";
 import BaseFormWizard from "../form/form-wizard/BaseFormWizard";
 
 export interface IBasicFormControl {
@@ -103,7 +111,7 @@ export interface IFormField {
 
     className?: string;
     config?: IFieldConfig | Record<string, unknown>;
-    events?: IEvent;
+    events?: IEvent; // to be deprecated, use dependencies with condition type instead
     error: IError; // internal
 
     display: boolean; // internal
@@ -186,6 +194,32 @@ export interface IFieldProps {
     handleChange(e: TMouseEvent, val?: TValue, ref?: IOption): void;
     handleValidation: () => void;
     setError: (hasError: boolean, errorMsg: string) => void;
+}
+
+export interface ICustomFieldProps extends Omit<IFormField, "display" | "readonly" | "displayProps"> {
+    name: string;
+    label: string;
+    value: Exclude<TValue, Date>;
+    error: IError;
+
+    className?: string;
+    placeHolder?: string;
+
+    // states
+    disabled?: boolean;
+    readOnly?: boolean;
+
+    config?: IFieldConfig | Record<string, unknown>;
+    customProps?: Record<string, boolean | string | number>;
+
+    /**
+     * Use it to update the field value
+     * @param e
+     * @param val
+     * @param ref
+     */
+    onChange(e: TMouseEvent, val?: TValue, ref?: IOption): void;
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 export interface IFormRenderer extends IUISchema, IFormConfig {
