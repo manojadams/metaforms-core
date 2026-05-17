@@ -274,7 +274,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     /**
      * Map fields to custom components
      */
-    fieldMapper?: Record<string, React.FC<IFieldProps>>;
+    fieldMapper?: Record<string, React.FC<ICustomFieldProps>>;
 
     /**
      * Event handling params
