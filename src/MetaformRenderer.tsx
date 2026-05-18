@@ -77,6 +77,9 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             if (props.onError) {
                 this.metaform.setErrorHandler(props.onError);
             }
+            if (props.fieldMapper) {
+                this.metaform.setFieldMapper(props.fieldMapper);
+            }
             // initialize metaform only after all properties are set
             this.metaform.init(props.data);
             if (props.pageNumber) {

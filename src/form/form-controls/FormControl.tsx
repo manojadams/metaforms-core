@@ -8,7 +8,9 @@ interface IProps {
     sync: () => void;
 }
 function FormControl(props: IProps) {
-    const { IBaseFormControl } = useContext(FormImplsContext);
+    const formImplContext = useContext(FormImplsContext);
+    if (!formImplContext) return null;
+    const { IBaseFormControl } = formImplContext;
     return <IBaseFormControl {...props.props} sync={props.sync} />;
 }
 

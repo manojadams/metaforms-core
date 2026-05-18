@@ -117,7 +117,7 @@ const CustomFooter = (props: IProps) => {
         };
     }, []);
 
-    return (
+    return typeof FooterComponent !== "undefined" ? (
         <FooterComponent
             page={page.pageNumber}
             isGrouped={page.isGrouped}
@@ -125,6 +125,8 @@ const CustomFooter = (props: IProps) => {
             previousBtn={previousBtn}
             submitBtn={submitBtn}
         />
+    ) : (
+        <Fragment />
     );
 };
 
