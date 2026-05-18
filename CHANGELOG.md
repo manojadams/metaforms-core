@@ -1,5 +1,8 @@
 # Change logs
 
+## 5.0.2
+- [feature: enable fields mapping](https://github.com/manojadams/metaforms-core/issues/111)
+
 ## 4.4.5
 - [feature: adding value dependency](https://github.com/manojadams/metaforms-core/issues/108)
 
