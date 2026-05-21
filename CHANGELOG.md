@@ -1,5 +1,8 @@
 # Change logs
 
+## 5.0.3
+- Adding support for advanced mode signature in field mapping
+
 ## 5.0.2
 - [feature: enable fields mapping](https://github.com/manojadams/metaforms-core/issues/111)
 
