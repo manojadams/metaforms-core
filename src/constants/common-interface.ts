@@ -203,7 +203,7 @@ export interface ICustomFieldProps extends Omit<IFormField, "display" | "readonl
     error: IError;
 
     className?: string;
-    placeHolder?: string;
+    placeholder?: string;
 
     // states
     disabled?: boolean;
@@ -221,6 +221,14 @@ export interface ICustomFieldProps extends Omit<IFormField, "display" | "readonl
     onChange(e: TMouseEvent, val?: TValue, ref?: IOption): void;
     onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
+
+export interface IFieldAdapter {
+    component: React.ComponentType<ICustomFieldProps>;
+    defaultProps?: Partial<ICustomFieldProps>;
+    metadata?: Record<string, unknown>;
+}
+
+export type TFieldMapper = Record<string, React.ComponentType<ICustomFieldProps> | IFieldAdapter>;
 
 export interface IFormRenderer extends IUISchema, IFormConfig {
     baseFormControl?: typeof BaseFormControl;
@@ -274,7 +282,7 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     /**
      * Map fields to custom components
      */
-    fieldMapper?: Record<string, React.FC<ICustomFieldProps>>;
+    fieldMapper?: TFieldMapper;
 
     /**
      * Event handling params
