@@ -1,5 +1,8 @@
 # Change logs
 
+## 5.0.4
+- Adding prop with name type to field mapper
+
 ## 5.0.3
 - Adding support for advanced mode signature in field mapping
 
