@@ -198,6 +198,7 @@ export interface IFieldProps {
 
 export interface ICustomFieldProps extends Omit<IFormField, "display" | "readonly" | "displayProps"> {
     name: string;
+    type: string;
     label: string;
     value: Exclude<TValue, Date>;
     error: IError;
