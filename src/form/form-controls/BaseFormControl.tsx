@@ -151,9 +151,13 @@ export default abstract class BaseFormControl extends React.Component {
         return <Fragment />;
     }
 
-    custom(CustomComponent: React.FC<ICustomFieldProps>): JSX.Element {
+    custom(
+        CustomComponent: React.ComponentType<ICustomFieldProps>,
+        defaultProps?: Partial<ICustomFieldProps>
+    ): JSX.Element {
         return (
             <CustomComponent
+                {...defaultProps}
                 name={this.props.name}
                 className={this.props.form.className}
                 label={this.props.form.displayName ?? ""}
@@ -169,9 +173,9 @@ export default abstract class BaseFormControl extends React.Component {
     }
 
     control() {
-        const CustomComponent = this.context.getFieldMapperComponent(this.displayType || "");
-        if (CustomComponent) {
-            return this.custom(CustomComponent);
+        const customField = this.context.getFieldMapperComponent(this.displayType || "");
+        if (customField) {
+            return this.custom(customField.component as React.FC<ICustomFieldProps>, customField.defaultProps);
         }
         switch (this.displayType) {
             case CONTROLS.HEADER:
