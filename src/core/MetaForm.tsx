@@ -23,9 +23,7 @@ import {
     IFormData,
     IFooterProps,
     IFormErrorDetails,
-    TValidator,
-    TFieldMapper,
-    IFieldAdapter
+    TValidator
 } from "../constants/common-interface";
 import MetaformError from "./MetaformError";
 import {
@@ -52,6 +50,7 @@ import {
 } from "../constants/constants";
 import { TValue } from "../constants/types";
 import InitialData from "./InitialData";
+import { IFieldAdapter, IFieldPropsMap, TFieldMapper } from "../constants/adapter-interface";
 
 /**
  * This class is responsible for handling all the heavy lifting work in the forms
@@ -70,7 +69,7 @@ export default class MetaForm implements IMetaForm {
     controlElements: Record<string, React.FunctionComponent<IControlProps>> | undefined;
     errorHandler?: TErrorCallback;
     validators?: Record<string, TValidator>;
-    fieldMapper?: TFieldMapper;
+    fieldMapper?: TFieldMapper<keyof IFieldPropsMap>;
 
     constructor(
         private schema: ISchema,
@@ -708,24 +707,26 @@ export default class MetaForm implements IMetaForm {
         this.errorHandler = errorHandler;
     }
 
-    getFieldMapperComponent(displayType: string): IFieldAdapter | null {
+    getFieldMapperComponent(displayType: string): IFieldAdapter<keyof IFieldPropsMap> | null {
         if (this.fieldMapper) {
             const CustomComponent = this.fieldMapper[displayType];
             if (CustomComponent !== undefined) {
                 if (typeof CustomComponent === "function") {
                     return {
                         component: CustomComponent,
-                        defaultProps: {}
+                        baseProps: {},
+                        customProps: {},
+                        config: {}
                     };
                 } else {
-                    return CustomComponent as IFieldAdapter;
+                    return CustomComponent as IFieldAdapter<keyof IFieldPropsMap>;
                 }
             }
         }
         return null;
     }
 
-    setFieldMapper(fieldMapper: TFieldMapper) {
+    setFieldMapper(fieldMapper: TFieldMapper<keyof IFieldPropsMap>) {
         this.fieldMapper = fieldMapper;
     }
 

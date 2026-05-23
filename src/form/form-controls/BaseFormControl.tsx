@@ -3,7 +3,8 @@ import FormUtils from "../../utils/FormUtil";
 import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IOption } from "../../constants/model-interfaces";
-import { IControlProps, ICustomFieldProps, IError, IFormField, IRenderField } from "../../constants/common-interface";
+import { IControlProps, IError, IFormField, IRenderField } from "../../constants/common-interface";
+import { IFieldPropsMap } from "../../constants/adapter-interface";
 import { EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
@@ -152,12 +153,14 @@ export default abstract class BaseFormControl extends React.Component {
     }
 
     custom(
-        CustomComponent: React.ComponentType<ICustomFieldProps>,
-        defaultProps?: Partial<ICustomFieldProps>
+        CustomComponent: React.ComponentType<IFieldPropsMap[keyof IFieldPropsMap]>,
+        baseProps?: Partial<IFieldPropsMap[keyof IFieldPropsMap]>,
+        customProps?: Record<string, unknown>
     ): JSX.Element {
         return (
             <CustomComponent
-                {...defaultProps}
+                {...customProps}
+                {...baseProps}
                 name={this.props.name}
                 className={this.props.form.className}
                 label={this.props.form.displayName ?? ""}
@@ -175,7 +178,11 @@ export default abstract class BaseFormControl extends React.Component {
     control() {
         const customField = this.context.getFieldMapperComponent(this.displayType || "");
         if (customField) {
-            return this.custom(customField.component as React.FC<ICustomFieldProps>, customField.defaultProps);
+            return this.custom(
+                customField.component as React.FC<IFieldPropsMap[keyof IFieldPropsMap]>,
+                customField.baseProps,
+                customField.customProps
+            );
         }
         switch (this.displayType) {
             case CONTROLS.HEADER:
