@@ -101,7 +101,7 @@ export interface IFormField {
     htmlProps?: Record<string, string>;
     displayType?: string;
     type?: string;
-    value: Exclude<TValue, Date>;
+    value: Exclude<TValue, Date | null>;
     placeholder?: string;
 
     isDisabled?: boolean;

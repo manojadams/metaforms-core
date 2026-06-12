@@ -17,10 +17,10 @@ export interface IBaseProps {
     value: TValueFiltered;
     disabled?: boolean;
     readOnly?: boolean;
-    error: IError;
+    error?: string;
 
     // evenst handlers
-    onChange(e: TMouseEvent, val?: TValue): void;
+    onChange(e?: TMouseEvent, val?: TValue): void;
     onBlur?: (e: React.FocusEvent<HTMLElement>) => void;
 }
 

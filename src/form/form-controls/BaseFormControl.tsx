@@ -4,7 +4,7 @@ import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IOption } from "../../constants/model-interfaces";
 import { IControlProps, IError, IFormField, IRenderField } from "../../constants/common-interface";
-import { IFieldPropsMap } from "../../constants/adapter-interface";
+import { IFieldPropsMap, TValueFiltered } from "../../constants/adapter-interface";
 import { EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
@@ -154,21 +154,17 @@ export default abstract class BaseFormControl extends React.Component {
 
     custom(
         CustomComponent: React.ComponentType<IFieldPropsMap[keyof IFieldPropsMap]>,
-        baseProps?: Partial<IFieldPropsMap[keyof IFieldPropsMap]>,
-        customProps?: Record<string, unknown>
+        baseProps?: Partial<IFieldPropsMap[keyof IFieldPropsMap]> & { type?: string },
+        customProps?: Record<string, unknown>,
+        muiProps?: Record<string, string | boolean | number | undefined>
     ): JSX.Element {
         return (
             <CustomComponent
                 {...customProps}
                 {...baseProps}
-                name={this.props.name}
-                className={this.props.form.className}
-                label={this.props.form.displayName ?? ""}
-                value={this.props.form.value}
-                placeholder={this.props.form.placeholder}
-                readOnly={this.props.form.isReadonly}
-                disabled={this.props.form.isDisabled}
-                error={this.props.form.error}
+                {...muiProps}
+                type={baseProps?.type || this.displayType || CONTROLS.TEXT}
+                value={muiProps?.value}
                 onChange={this.handleChange}
                 onBlur={this.handleValidation}
             />
@@ -178,10 +174,21 @@ export default abstract class BaseFormControl extends React.Component {
     control() {
         const customField = this.context.getFieldMapperComponent(this.displayType || "");
         if (customField) {
+            const muiProps = {
+                name: this.props.name,
+                className: this.props.form.className,
+                label: this.getDisplayLabel(),
+                value: this.props.form.value,
+                placeholder: this.props.form.placeholder,
+                readOnly: this.props.form.isReadonly,
+                disabled: this.props.form.isDisabled,
+                error: this.props.form.error?.errorMsg
+            };
             return this.custom(
                 customField.component as React.FC<IFieldPropsMap[keyof IFieldPropsMap]>,
                 customField.baseProps,
-                customField.customProps
+                customField.customProps,
+                muiProps
             );
         }
         switch (this.displayType) {
@@ -330,7 +337,7 @@ export default abstract class BaseFormControl extends React.Component {
         throw Error("Not Implemented");
     }
 
-    handleChange(e: TMouseEvent, val?: TValue, ref?: IOption) {
+    handleChange(e?: TMouseEvent, val?: TValue, ref?: IOption) {
         try {
             const value = val !== undefined ? val : (e?.target as HTMLInputElement)?.value;
             // do not allow invalid pattern, if configured
