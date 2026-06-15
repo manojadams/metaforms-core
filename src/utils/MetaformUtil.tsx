@@ -35,7 +35,7 @@ class MetaformUtil {
      * @param value
      * @returns
      */
-    static getInitlalFieldValue(field: IField, value: Exclude<TValue, Date>) {
+    static getInitlalFieldValue(field: IField, value: Exclude<TValue, Date | null>) {
         if (value !== undefined) {
             return value;
         }

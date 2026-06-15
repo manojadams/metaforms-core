@@ -1,36 +1,17 @@
-import { SyntheticEvent } from "react";
-import BaseFormControl from "../form/form-controls/BaseFormControl";
-import BaseFormGroup from "../form/form-group/BaseFormGroup";
-import BaseFormStepper from "../form/form-stepper/BaseFormStepper";
 import {
     IDisplayProps,
     IEvent,
     IField,
-    IFieldError,
     IFormConfig,
-    IFormatterType,
     IIconConfig,
     IOption,
-    IRest,
-    IFormConfigExtended,
-    IUISchema,
     IValidation,
     IconConfig,
     TParam,
     TParamType,
     TValidationEntry
 } from "./model-interfaces";
-import {
-    TChangeMode,
-    TFormType,
-    TMouseEvent,
-    TNextCondition,
-    TNextResponseMode,
-    TOperator,
-    TSectionLayout,
-    TValue
-} from "./types";
-import BaseFormWizard from "../form/form-wizard/BaseFormWizard";
+import { TMouseEvent, TNextCondition, TOperator, TValue } from "./types";
 
 export interface IBasicFormControl {
     date: () => Element;
@@ -120,7 +101,7 @@ export interface IFormField {
     htmlProps?: Record<string, string>;
     displayType?: string;
     type?: string;
-    value: Exclude<TValue, Date>;
+    value: Exclude<TValue, Date | null>;
     placeholder?: string;
 
     isDisabled?: boolean;
@@ -196,117 +177,6 @@ export interface IFieldProps {
     setError: (hasError: boolean, errorMsg: string) => void;
 }
 
-export interface ICustomFieldProps extends Omit<IFormField, "display" | "readonly" | "displayProps"> {
-    name: string;
-    type: string;
-    label: string;
-    value: Exclude<TValue, Date>;
-    error: IError;
-
-    className?: string;
-    placeholder?: string;
-
-    // states
-    disabled?: boolean;
-    readOnly?: boolean;
-
-    config?: IFieldConfig | Record<string, unknown>;
-    customProps?: Record<string, boolean | string | number>;
-
-    /**
-     * Use it to update the field value
-     * @param e
-     * @param val
-     * @param ref
-     */
-    onChange(e: TMouseEvent, val?: TValue, ref?: IOption): void;
-    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-}
-
-export interface IFieldAdapter {
-    component: React.ComponentType<ICustomFieldProps>;
-    defaultProps?: Partial<ICustomFieldProps>;
-    metadata?: Record<string, unknown>;
-}
-
-export type TFieldMapper = Record<string, React.ComponentType<ICustomFieldProps> | IFieldAdapter>;
-
-export interface IFormRenderer extends IUISchema, IFormConfig {
-    baseFormControl?: typeof BaseFormControl;
-    baseFormGroup?: typeof BaseFormGroup;
-    baseFormStepper?: typeof BaseFormStepper;
-    baseFormWizard?: typeof BaseFormWizard;
-    loader?: JSX.Element;
-
-    /**
-     * Basic inputs params
-     */
-    /** Form class */
-    className?: string;
-    /** Input form data in key, value object format */
-    data?: IFormData;
-    /** Form class */
-    type?: TFormType;
-    /** Section layout */
-    sectionLayout?: TSectionLayout;
-    /** Field layout - row | column (default) */
-    fieldLayout?: "row" | "column" | string;
-    /** Spacing around the field */
-    spacing?: string;
-
-    /** theme configuration input params */
-    themeConfig?: IFormConfigExtended;
-
-    /**
-     * Customization params
-     */
-    buttons?: IElementTypes;
-    controls?: IElementTypes;
-    components?: Record<string, React.FunctionComponent<IControlProps>>;
-    fns?: IFnTypes;
-    validators?: Record<string, TValidator>;
-    footer?: React.FunctionComponent<IFooterProps>;
-    formatter?: IFormatterType;
-    icons?: IElementTypes;
-    lastPageNumber?: number;
-    name?: string;
-    nextResponseMode?: TNextResponseMode;
-    /** */
-    changeResponseMode?: TChangeMode;
-    pageNumber?: number;
-
-    /**
-     * REST API configruation params in the form
-     */
-    rest?: IRest;
-
-    /**
-     * Map fields to custom components
-     */
-    fieldMapper?: TFieldMapper;
-
-    /**
-     * Event handling params
-     */
-    onChange?: (change: IFieldChange, formData?: IFormData) => void;
-    onCustom?: (formData: IFormData, e: SyntheticEvent) => TFormResponse;
-    onError?: (errorResponse: any) => TFormResponse;
-    onPopupClose?: (params: Array<unknown>) => void;
-    onPrevious?: (formData: IFormData, pageNumber: number) => TFormResponse;
-    onNext?: (
-        formData: IFormData,
-        pageNumber: number,
-        setErrors: (errors: IFieldError | Array<IFieldError>) => void
-    ) => TFormResponse;
-    onSubmit: (
-        formData: IFormData,
-        pageNumber: number,
-        setErrors: (errors: IFieldError | Array<IFieldError>) => void
-    ) => TFormResponse;
-    onSubmitError?: (params: IEventPayload) => void;
-    setLoading?: (isLoading: boolean) => void;
-}
-
 export type TComponent<T> = (props: T) => JSX.Element;
 
 export interface ISectionError {
@@ -375,8 +245,12 @@ interface IEventDetail {
     eventType: string;
 }
 
-export class MetaformEvent extends Event {
+export abstract class MetaformEvent extends Event {
     detail: IEventDetail;
+    constructor(eventType: string, eventInitDict?: CustomEventInit) {
+        super(eventType, eventInitDict);
+        this.detail = { eventType };
+    }
 }
 
 export interface IErrorDetails {

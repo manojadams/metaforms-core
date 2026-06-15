@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IElementTypes, IForm } from "../../constants/common-interface";
 import { SECTION_LAYOUT } from "../../constants/constants";
 import { IField, ISchema } from "../../constants/model-interfaces";
@@ -8,6 +8,8 @@ import FormFieldRenderer from "../FormFieldRenderer";
 import Footer from "../form-controls/Footer";
 import FormContext from "../form-context";
 import CustomFooter from "../form-controls/Footer/CustomFooter";
+import classNames from "classnames";
+import { getFormClassNames } from "../../utils/FormConfigUtil";
 
 interface IProps {
     schema: ISchema;
@@ -29,14 +31,27 @@ const DefaultForm = (props: IProps) => {
     const formContext = useContext(FormContext);
 
     const hasCustomFooter = formContext.hasFooter();
+    const config = formContext.formConfig.config;
+    const [formClassNames, setFormClassNames] = useState("");
+
+    useEffect(() => {
+        const formAdapterStaticConfig = formContext.formAdapter?.formConfig;
+        const formClassVariants = formAdapterStaticConfig?.variants || {};
+        const adapterConfig = formContext.formAdapterConfig;
+        const formClassName = formAdapterStaticConfig?.className;
+        const formClassNames = getFormClassNames(formClassVariants, adapterConfig);
+        setFormClassNames(
+            classNames("needs-validation", props.validated ? "was-validated" : "", formClassName, { ...formClassNames })
+        );
+    }, []);
 
     const sync = () => {
         setFields([...fields]);
     };
 
     return (
-        <form name="metaform" className={`needs-validation ${props.validated ? "was-validated" : ""}`} noValidate>
-            <Row gapX={formContext.formConfig.config?.gapX} gapY={formContext.formConfig.config?.gapY}>
+        <form name="metaform" className={formClassNames} noValidate>
+            <Row gapX={config?.gapX} gapY={config?.gapY}>
                 {props.schema.fields.map((field: IField) => {
                     if (props.hasSection) {
                         const subFields = Object.keys(props.form[field.name]);

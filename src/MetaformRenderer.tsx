@@ -2,7 +2,7 @@ import React from "react";
 import FormUtils from "./utils/FormUtil";
 import EventEmitter from "eventemitter3";
 import { IFieldError, ISchema } from "./constants/model-interfaces";
-import { IError, IEventPayload, IFieldChange, IFormRenderer } from "./constants/common-interface";
+import { IError, IEventPayload, IFieldChange } from "./constants/common-interface";
 import { metaAPI } from "./meta-api";
 import { CHANGE_MODE, DEFAULT, EVENTS, FORM_ACTION, NEXT_RESPONSE_MODE } from "./constants/constants";
 import MetaForm from "./core/MetaForm";
@@ -14,6 +14,7 @@ import FormImpls from "./core/FormImpl";
 import FormImplsContext from "./form/form-impl-context";
 import { Container } from "layout-emotions";
 import FormConfig from "./core/FormConfig";
+import { IFormRenderer } from "./constants/renderer-interface";
 
 interface IState {
     error: IError;
@@ -57,6 +58,9 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             if (props.icons) {
                 this.metaform.setIcons(props.icons);
             }
+            if (props.formAdapter) {
+                this.metaform.setFormAdapter(props.formAdapter, props.adapterConfig);
+            }
             this.state = {
                 error: { hasError: false, errorMsg: "" },
                 isLoading: false,
@@ -76,9 +80,6 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             }
             if (props.onError) {
                 this.metaform.setErrorHandler(props.onError);
-            }
-            if (props.fieldMapper) {
-                this.metaform.setFieldMapper(props.fieldMapper);
             }
             // initialize metaform only after all properties are set
             this.metaform.init(props.data);
