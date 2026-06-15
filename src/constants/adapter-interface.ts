@@ -19,6 +19,8 @@ export interface IBaseProps {
     readOnly?: boolean;
     error?: string;
 
+    config?: Record<string, any>;
+
     // evenst handlers
     onChange(e?: TMouseEvent, val?: TValue): void;
     onBlur?: (e: React.FocusEvent<HTMLElement>) => void;
@@ -83,8 +85,24 @@ export interface IFieldAdapter<TKey extends keyof IFieldPropsMap> {
     config?: IFieldConfig;
 }
 
+export interface IFieldAdapterExtended extends IFieldAdapter<keyof IFieldPropsMap> {
+    adapterConfig?: Record<string, any>;
+}
+
 export type TFieldMapper = {
     [TKey in keyof IFieldPropsMap]?: ComponentType<IFieldPropsMap[TKey]> | IFieldAdapter<TKey>; // known keys — fully typed
 } & {
     [key: string]: ComponentType<any> | IFieldAdapter<any>; // unknown keys — less strict typing
 };
+
+export type VariantConfig = Record<string, string>;
+
+export interface IFormElementConfig {
+    className?: string;
+    variants: Record<string, VariantConfig>;
+}
+
+export interface IFormAdapter {
+    fields: TFieldMapper;
+    formConfig?: IFormElementConfig;
+}

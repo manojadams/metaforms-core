@@ -58,6 +58,9 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             if (props.icons) {
                 this.metaform.setIcons(props.icons);
             }
+            if (props.formAdapter) {
+                this.metaform.setFormAdapter(props.formAdapter, props.adapterConfig);
+            }
             this.state = {
                 error: { hasError: false, errorMsg: "" },
                 isLoading: false,
@@ -77,9 +80,6 @@ export default class MetaFormRenderer extends React.Component<IFormRenderer> {
             }
             if (props.onError) {
                 this.metaform.setErrorHandler(props.onError);
-            }
-            if (props.fieldMapper) {
-                this.metaform.setFieldMapper(props.fieldMapper);
             }
             // initialize metaform only after all properties are set
             this.metaform.init(props.data);

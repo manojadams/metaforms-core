@@ -50,7 +50,7 @@ import {
 } from "../constants/constants";
 import { TValue } from "../constants/types";
 import InitialData from "./InitialData";
-import { IFieldAdapter, IFieldPropsMap, TFieldMapper } from "../constants/adapter-interface";
+import { IFieldAdapterExtended, IFormAdapter } from "../constants/adapter-interface";
 
 /**
  * This class is responsible for handling all the heavy lifting work in the forms
@@ -69,7 +69,8 @@ export default class MetaForm implements IMetaForm {
     controlElements: Record<string, React.FunctionComponent<IControlProps>> | undefined;
     errorHandler?: TErrorCallback;
     validators?: Record<string, TValidator>;
-    fieldMapper?: TFieldMapper<keyof IFieldPropsMap>;
+    formAdapter?: IFormAdapter;
+    formAdapterConfig?: Record<string, string>;
 
     constructor(
         private schema: ISchema,
@@ -349,7 +350,7 @@ export default class MetaForm implements IMetaForm {
             prop: field.prop,
             display: true,
             type: field.meta.type,
-            value: MetaformUtil.getInitlalFieldValue(field, value as Exclude<TValue, Date>),
+            value: MetaformUtil.getInitlalFieldValue(field, value as Exclude<TValue, Date | null>),
             isDisabled: field.meta.isDisabled,
             isReadonly: field.meta.isReadonly,
             displayName: field.meta.displayName,
@@ -376,7 +377,7 @@ export default class MetaForm implements IMetaForm {
     }
 
     setField(section: string, field: string, value: TValue) {
-        this.form[section][field].value = value as Exclude<TValue, Date>;
+        this.form[section][field].value = value as Exclude<TValue, Date | null>;
     }
 
     updateField(section: string, field: string, value: TValue) {
@@ -707,27 +708,32 @@ export default class MetaForm implements IMetaForm {
         this.errorHandler = errorHandler;
     }
 
-    getFieldMapperComponent(displayType: string): IFieldAdapter<keyof IFieldPropsMap> | null {
-        if (this.fieldMapper) {
-            const CustomComponent = this.fieldMapper[displayType];
+    getFieldMapperComponent(displayType: string): IFieldAdapterExtended | null {
+        if (this.formAdapter) {
+            const fieldMapperFields = this.formAdapter?.fields;
+            const CustomComponent = fieldMapperFields ? fieldMapperFields[displayType] : undefined;
             if (CustomComponent !== undefined) {
                 if (typeof CustomComponent === "function") {
                     return {
                         component: CustomComponent,
                         baseProps: {},
                         customProps: {},
-                        config: {}
+                        adapterConfig: { ...this.formAdapterConfig }
                     };
                 } else {
-                    return CustomComponent as IFieldAdapter<keyof IFieldPropsMap>;
+                    return {
+                        ...(CustomComponent as IFieldAdapterExtended),
+                        adapterConfig: { ...this.formAdapterConfig }
+                    };
                 }
             }
         }
         return null;
     }
 
-    setFieldMapper(fieldMapper: TFieldMapper<keyof IFieldPropsMap>) {
-        this.fieldMapper = fieldMapper;
+    setFormAdapter(formAdapter: IFormAdapter, adapterConfig?: Record<string, string>) {
+        this.formAdapter = formAdapter;
+        this.formAdapterConfig = adapterConfig;
     }
 
     getControl(displayType: string) {

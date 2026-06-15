@@ -3,7 +3,7 @@ import BaseFormControl from "../form/form-controls/BaseFormControl";
 import BaseFormGroup from "../form/form-group/BaseFormGroup";
 import BaseFormStepper from "../form/form-stepper/BaseFormStepper";
 import BaseFormWizard from "../form/form-wizard/BaseFormWizard";
-import { IFieldPropsMap, TFieldMapper } from "./adapter-interface";
+import { IFormAdapter } from "./adapter-interface";
 import {
     IControlProps,
     IElementTypes,
@@ -70,7 +70,8 @@ export interface IFormRenderer extends IUISchema, IFormConfig {
     /**
      * Map fields to custom components
      */
-    fieldMapper?: TFieldMapper;
+    formAdapter?: IFormAdapter;
+    adapterConfig?: Record<string, string>;
 
     /**
      * Event handling params

@@ -4,7 +4,7 @@ import FormContext from "../form-context";
 import ValidationUtil from "../../utils/ValidationUtil";
 import { IField, IOption } from "../../constants/model-interfaces";
 import { IControlProps, IError, IFormField, IRenderField } from "../../constants/common-interface";
-import { IFieldPropsMap, TValueFiltered } from "../../constants/adapter-interface";
+import { IFieldPropsMap } from "../../constants/adapter-interface";
 import { EVENTS, FIELD_LAYOUT, MSGS, _INTERNAL_VALUES } from "../../constants/constants";
 import { TMouseEvent, TValue } from "../../constants/types";
 import { CONTROLS } from "../../constants/controls";
@@ -156,13 +156,15 @@ export default abstract class BaseFormControl extends React.Component {
         CustomComponent: React.ComponentType<IFieldPropsMap[keyof IFieldPropsMap]>,
         baseProps?: Partial<IFieldPropsMap[keyof IFieldPropsMap]> & { type?: string },
         customProps?: Record<string, unknown>,
-        muiProps?: Record<string, string | boolean | number | undefined>
+        muiProps?: Record<string, string | boolean | number | undefined>,
+        config?: Record<string, any>
     ): JSX.Element {
         return (
             <CustomComponent
                 {...customProps}
                 {...baseProps}
                 {...muiProps}
+                config={config}
                 type={baseProps?.type || this.displayType || CONTROLS.TEXT}
                 value={muiProps?.value}
                 onChange={this.handleChange}
@@ -188,7 +190,8 @@ export default abstract class BaseFormControl extends React.Component {
                 customField.component as React.FC<IFieldPropsMap[keyof IFieldPropsMap]>,
                 customField.baseProps,
                 customField.customProps,
-                muiProps
+                muiProps,
+                customField.adapterConfig // all future config needs to be merged into a single config
             );
         }
         switch (this.displayType) {
