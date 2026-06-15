@@ -1,5 +1,8 @@
 # Change logs
 
+## 5.0.11
+- Adding support for form adapters
+
 ## 5.0.4
 - Adding prop with name type to field mapper
 
