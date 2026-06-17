@@ -56,6 +56,7 @@ export interface IDateProps extends IBaseProps {
 
 export interface ICheckboxProps extends IBaseProps {
     type: string;
+    options: IOption[];
     value: TCheckboxValue;
 }
 

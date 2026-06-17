@@ -186,9 +186,13 @@ export default abstract class BaseFormControl extends React.Component {
                 disabled: this.props.form.isDisabled,
                 error: this.props.form.error?.errorMsg
             };
+            const baseProps = {
+                ...customField.baseProps,
+                options: this.props.form.options
+            };
             return this.custom(
                 customField.component as React.FC<IFieldPropsMap[keyof IFieldPropsMap]>,
-                customField.baseProps,
+                baseProps,
                 customField.customProps,
                 muiProps,
                 customField.adapterConfig // all future config needs to be merged into a single config
